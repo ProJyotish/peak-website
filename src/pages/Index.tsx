@@ -473,40 +473,90 @@ function What() {
   );
 }
 
+function FounderProfile({
+  name,
+  bio,
+  detail,
+  tags,
+  href,
+  linkLabel,
+  delay = 0,
+}: {
+  name: string;
+  bio: string;
+  detail: string;
+  tags: string[];
+  href: string;
+  linkLabel: string;
+  delay?: number;
+}) {
+  return (
+    <motion.article
+      {...fade}
+      transition={{ duration: 0.8, delay }}
+      className="flex h-full flex-col rounded-sm border border-border bg-parchment p-6 sm:p-7 md:p-8 shadow-[0_16px_48px_-32px_hsl(24_15%_9%_/_0.28)]"
+    >
+      <div className="mb-5 flex items-center gap-3">
+        <div className="h-px w-10 bg-gold shrink-0" aria-hidden />
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-clay">Co-founder</p>
+      </div>
+      <h3 className="font-display text-2xl sm:text-[1.65rem] md:text-3xl leading-tight text-gold">{name}</h3>
+      <div className="mt-4 space-y-4 text-base leading-relaxed text-muted-foreground flex-1">
+        <p>{bio}</p>
+        <p>{detail}</p>
+      </div>
+      <div className="mt-6 md:mt-8 flex flex-wrap gap-2">
+        {tags.map((c) => (
+          <span key={c} className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink border border-ink/20 px-3 py-1.5 rounded-full bg-parchment-deep/40">
+            {c}
+          </span>
+        ))}
+      </div>
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="mt-6 md:mt-8 inline-flex items-center gap-2 self-start font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors"
+      >
+        {linkLabel}
+        <ArrowRight className="h-3.5 w-3.5" />
+      </a>
+    </motion.article>
+  );
+}
+
 function Founder() {
   return (
     <section id="founder" className="py-28 md:py-36 bg-parchment-deep/50 border-y border-border">
-      <div className="container-peak grid md:grid-cols-12 gap-12 items-start">
-        <motion.div {...fade} className="md:col-span-5">
-          <p className="eyebrow mb-4">The founder</p>
+      <div className="container-peak">
+        <motion.div {...fade} className="mb-12 md:mb-16 lg:mb-20">
+          <p className="eyebrow mb-4">The founders</p>
           <h2 className="font-display text-4xl md:text-5xl leading-[1.05] text-ink">
             First principles meet modern life.
           </h2>
+          <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+            Peak is co-built by IIT Delhi batchmates — a practicing jyotishi and a production AI engineer — bringing scriptural depth and large-scale engineering to the same product.
+          </p>
         </motion.div>
-        <motion.div {...fade} transition={{ duration: 0.8, delay: 0.1 }} className="md:col-span-7">
-          <p className="font-display text-2xl md:text-[1.6rem] leading-snug text-ink">
-            Peak is built by <span className="text-gold">Abhimanyu Singh Rana</span> — an IIT Delhi graduate and practicing jyotishi who has run businesses, built SaaS products, raised venture capital, and worked on the Prime Minister's team.
-          </p>
-          <p className="mt-6 text-base leading-relaxed text-muted-foreground max-w-xl">
-            His edge is the rare overlap: scriptural jyotisha studied as a science, applied through years of consulting clients across the world on professional and personal decisions. That operator's lens is why Peak is goal-oriented — not predictive theatre.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-2">
-            {["IIT Delhi", "Practicing jyotishi", "Global clientele", "Operator background"].map((c) => (
-              <span key={c} className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink border border-ink/20 px-3 py-1.5 rounded-full">
-                {c}
-              </span>
-            ))}
-          </div>
-          <a
+        <div className="grid gap-6 sm:gap-8 md:grid-cols-2 md:gap-8 lg:gap-10">
+          <FounderProfile
+            name="Abhimanyu Singh Rana"
+            bio="An IIT Delhi graduate and practicing jyotishi who has run businesses, built SaaS products, raised venture capital, and worked on the Prime Minister's team."
+            detail="His edge is the rare overlap: scriptural jyotisha studied as a science, applied through years of consulting clients across the world on professional and personal decisions. That operator's lens is why Peak is goal-oriented — not predictive theatre."
+            tags={["IIT Delhi", "Practicing jyotishi", "Global clientele", "Operator background"]}
             href="https://www.pinpointjyotish.com/my-jyotisha-journey"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors"
-          >
-            Read his journey into jyotisha
-            <ArrowRight className="h-3.5 w-3.5" />
-          </a>
-        </motion.div>
+            linkLabel="Read his journey into jyotisha"
+          />
+          <FounderProfile
+            name="Nishant Kyal"
+            bio="An IIT Delhi graduate who has led technology at Amazon and Freecharge, co-founded startups, and built LLM solutions for a leading Indian law firm."
+            detail="Two decades of shipping large-scale products — the same rigor behind legal research for hundreds of lawyers, now applied to making jyotisha practical, personal, and trustworthy at scale. He is also a certified yoga teacher."
+            tags={["IIT Delhi", "Amazon & Freecharge", "LLM for legal", "Startup experience", "Certified yoga teacher"]}
+            href="https://linkedin.com/in/nishant-kyal"
+            linkLabel="View on LinkedIn"
+            delay={0.1}
+          />
+        </div>
       </div>
     </section>
   );
