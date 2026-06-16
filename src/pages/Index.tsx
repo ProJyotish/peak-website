@@ -632,7 +632,10 @@ function Footer() {
     <footer className="border-t border-border py-10">
       <div className="container-peak flex flex-col md:flex-row items-center justify-between gap-4">
         <Wordmark />
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-clay">© Peak {new Date().getFullYear()} · All rights reserved</p>
+        <div className="text-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-clay">© Peak {new Date().getFullYear()} · All rights reserved</p>
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">Built and maintained by <strong className="text-ink">Aryaman Knowledge Services Private Limited</strong></p>
+        </div>
         <div className="flex gap-6 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">
           <a href="mailto:contact@peaklife.me" className="hover:text-ink transition-colors">Contact</a>
         </div>
