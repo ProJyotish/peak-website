@@ -4,7 +4,8 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { ArrowRight, Check } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import peakLogo from "@/assets/peak-logo.svg";
+import { SiteFooter } from "@/components/site/SiteFooter";
+import { Wordmark } from "@/components/site/Wordmark";
 
 const phoneSchema = z
   .string()
@@ -19,15 +20,6 @@ const fade = {
   viewport: { once: true, margin: "-80px" },
   transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
 };
-
-function Wordmark() {
-  return (
-    <a href="#" className="flex items-center gap-2.5 group">
-      <img src={peakLogo} alt="" className="h-8 w-8 rounded-sm" />
-      <span className="font-display text-xl tracking-tight">Peak</span>
-    </a>
-  );
-}
 
 function Nav() {
   return (
@@ -552,7 +544,7 @@ function Founder() {
             bio="An IIT Delhi graduate who has led technology at Amazon and Freecharge, co-founded startups, and built LLM solutions for a leading Indian law firm."
             detail="Two decades of shipping large-scale products — the same rigor behind legal research for hundreds of lawyers, now applied to making jyotisha practical, personal, and trustworthy at scale. He is also a certified yoga teacher."
             tags={["IIT Delhi", "Amazon & Freecharge", "LLM for legal", "Startup experience", "Certified yoga teacher"]}
-            href="https://linkedin.com/in/nishant-kyal"
+            href="https://www.linkedin.com/in/nishant-kyal"
             linkLabel="View on LinkedIn"
             delay={0.1}
           />
@@ -627,23 +619,6 @@ function FinalCTA() {
   );
 }
 
-function Footer() {
-  return (
-    <footer className="border-t border-border py-10">
-      <div className="container-peak flex flex-col md:flex-row items-center justify-between gap-4">
-        <Wordmark />
-        <div className="text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-clay">© Peak {new Date().getFullYear()} · All rights reserved</p>
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">Built and maintained by <strong className="text-ink">Aryaman Knowledge Services Private Limited</strong></p>
-        </div>
-        <div className="flex gap-6 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">
-          <a href="mailto:contact@peaklife.me" className="hover:text-ink transition-colors">Contact</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
-
 const Index = () => {
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -655,7 +630,7 @@ const Index = () => {
       <Manifesto />
       <Origin />
       <FinalCTA />
-      <Footer />
+      <SiteFooter />
     </main>
   );
 };
