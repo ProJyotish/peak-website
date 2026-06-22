@@ -8,6 +8,8 @@ import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import Terms from "./pages/Terms.tsx";
 import Privacy from "./pages/Privacy.tsx";
+import TermsEmbed from "./pages/TermsEmbed.tsx";
+import PrivacyEmbed from "./pages/PrivacyEmbed.tsx";
 import Contact from "./pages/Contact.tsx";
 
 const queryClient = new QueryClient();
@@ -21,7 +23,9 @@ const App = () => (
         <Routes>
           <Route path={ROUTES.home} element={<Index />} />
           <Route path={ROUTES.terms} element={<Terms />} />
+          <Route path={ROUTES.termsEmbed} element={<TermsEmbed />} />
           <Route path={ROUTES.privacy} element={<Privacy />} />
+          <Route path={ROUTES.privacyEmbed} element={<PrivacyEmbed />} />
           <Route path={ROUTES.contact} element={<Contact />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

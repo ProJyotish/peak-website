@@ -2,6 +2,8 @@
 export const ROUTES = {
   home: "/",
   terms: "/terms",
+  termsEmbed: "/embed/terms",
   privacy: "/privacy",
+  privacyEmbed: "/embed/privacy",
   contact: "/contact",
 } as const;
