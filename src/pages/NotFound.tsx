@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { ROUTES } from "@/lib/routes";
 import { Wordmark } from "@/components/site/Wordmark";
 
 const NotFound = () => {
@@ -17,7 +18,7 @@ const NotFound = () => {
         <h1 className="font-display text-4xl text-ink mb-4">Page not found</h1>
         <p className="mb-8 text-muted-foreground">That route does not exist on peaklife.me.</p>
         <Link
-          to="/"
+          to={ROUTES.home}
           className="font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors"
         >
           Return home

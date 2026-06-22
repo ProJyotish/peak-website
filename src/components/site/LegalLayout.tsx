@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { ROUTES } from "@/lib/routes";
 import { LEGAL_LAST_UPDATED } from "@/lib/site";
 import { SiteFooter } from "./SiteFooter";
 import { Wordmark } from "./Wordmark";
@@ -16,7 +17,7 @@ export function LegalLayout({ title, children }: LegalLayoutProps) {
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />
           <Link
-            to="/"
+            to={ROUTES.home}
             className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-clay hover:text-ink transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

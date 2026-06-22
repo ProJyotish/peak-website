@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import { SITE } from "@/lib/site";
+import { ROUTES } from "@/lib/routes";
 
 const contactSchema = z.object({
   name: z.string().trim().min(2, "Enter your name").max(120),
@@ -56,7 +57,7 @@ const Contact = () => {
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />
           <Link
-            to="/"
+            to={ROUTES.home}
             className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-clay hover:text-ink transition-colors"
           >
             <ArrowLeft className="h-3.5 w-3.5" />

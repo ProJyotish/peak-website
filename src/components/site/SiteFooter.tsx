@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Instagram, Linkedin } from "lucide-react";
+import { ROUTES } from "@/lib/routes";
 import { SITE } from "@/lib/site";
 import { Wordmark } from "./Wordmark";
 
@@ -27,13 +28,13 @@ export function SiteFooter() {
             className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-clay"
             aria-label="Footer"
           >
-            <Link to="/contact" className="hover:text-ink transition-colors">
+            <Link to={ROUTES.contact} className="hover:text-ink transition-colors">
               Contact
             </Link>
-            <Link to="/privacy" className="hover:text-ink transition-colors">
+            <Link to={ROUTES.privacy} className="hover:text-ink transition-colors">
               Privacy
             </Link>
-            <Link to="/terms" className="hover:text-ink transition-colors">
+            <Link to={ROUTES.terms} className="hover:text-ink transition-colors">
               Terms
             </Link>
           </nav>

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { LegalLayout, LegalSection } from "@/components/site/LegalLayout";
 import { PAYMENTS_REFUNDS_FAQS, SITE } from "@/lib/site";
+import { ROUTES } from "@/lib/routes";
 
 const Terms = () => (
   <LegalLayout title="Terms and Conditions">
@@ -138,7 +139,7 @@ const Terms = () => (
       </p>
       <p>
         You may also use our{" "}
-        <Link to="/contact" className="text-ink underline underline-offset-2">
+        <Link to={ROUTES.contact} className="text-ink underline underline-offset-2">
           contact form
         </Link>
         .
