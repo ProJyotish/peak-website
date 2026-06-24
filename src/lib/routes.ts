@@ -5,5 +5,6 @@ export const ROUTES = {
   termsEmbed: "/embed/terms",
   privacy: "/privacy",
   privacyEmbed: "/embed/privacy",
+  accountDeletion: "/account-deletion",
   contact: "/contact",
 } as const;

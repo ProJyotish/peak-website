@@ -1,5 +1,7 @@
+import { Link } from "react-router-dom";
 import { LegalSection, LegalSubsection } from "@/components/site/LegalLayout";
 import { grievanceOfficer, SITE } from "@/lib/site";
+import { ROUTES } from "@/lib/routes";
 
 export function PrivacyContent() {
   return (
@@ -185,7 +187,11 @@ export function PrivacyContent() {
           .
         </p>
         <p>
-          Account deletion requests: email{" "}
+          Account deletion requests: see our{" "}
+          <Link to={ROUTES.accountDeletion} className="text-ink underline underline-offset-2">
+            account deletion page
+          </Link>{" "}
+          or email{" "}
           <a href={SITE.deleteAccountMailto} className="text-ink underline underline-offset-2">
             {SITE.contactEmail}
           </a>{" "}
