@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls",
+      "delegate_permission/common.get_login_creds"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "me.peaklife",
+      "sha256_cert_fingerprints": [
+        "27:9C:47:1F:DD:AB:33:77:64:DA:DD:4B:22:32:07:BE:83:00:06:C4:08:39:F8:74:D1:7B:B7:39:95:90:CF:95"
+      ]
+    }
+  }
+]
