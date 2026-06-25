@@ -4,9 +4,14 @@ import { ROUTES } from "@/lib/routes";
 
 export function Wordmark({ className = "" }: { className?: string }) {
   return (
-    <Link to={ROUTES.home} className={`flex items-center gap-2.5 group ${className}`}>
-      <img src={peakLogo} alt="" className="h-8 w-8 rounded-sm" />
-      <span className="font-display text-xl tracking-tight">Peak</span>
+    <Link to={ROUTES.home} className={`inline-flex items-center group ${className}`}>
+      <img
+        src={peakLogo}
+        alt="Peak"
+        width={192}
+        height={18}
+        className="h-[18px] w-auto shrink-0"
+      />
     </Link>
   );
 }
