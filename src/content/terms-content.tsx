@@ -23,7 +23,6 @@ export function TermsContent() {
           <li>Kundli (birth chart) based insights</li>
           <li>Goal tracking and pattern mapping aligned to your chart</li>
           <li>Astrological consultations via the app and messaging platforms</li>
-          <li>Karmic analysis and guidance</li>
         </ul>
       </LegalSection>
 
