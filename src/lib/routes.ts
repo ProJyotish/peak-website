@@ -3,8 +3,8 @@ export const ROUTES = {
   home: "/",
   terms: "/terms",
   termsEmbed: "/embed/terms",
-  privacy: "/privacy",
+  privacy: "/privacy-policy",
   privacyEmbed: "/embed/privacy",
-  accountDeletion: "/account-deletion",
+  accountDeletion: "/delete-my-account",
   contact: "/contact",
 } as const;
