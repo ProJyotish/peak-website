@@ -6,17 +6,53 @@ const dist = resolve(import.meta.dirname, "..", "dist");
 // Copy index.html to 404.html for client-side routing fallback
 copyFileSync(resolve(dist, "index.html"), resolve(dist, "404.html"));
 
+const SITE = {
+  domain: "peaklife.me",
+  supportEmail: "support@peaklife.me",
+  contactEmail: "support@peaklife.me",
+  legalName: "Aryaman Knowledge Services Private Limited",
+};
+
+const grievanceOfficer = {
+  name: "Abhimanyu Singh Rana",
+  email: "support@peaklife.me",
+};
+
+const PAYMENTS_REFUNDS_FAQS = [
+  {
+    question: "Only Rs 5 were deducted when I made the payment",
+    answer:
+      "As per UPI AutoPay standard procedure, Rs 5 is deducted to verify your payment method. Your chosen plan amount will be deducted automatically later at the selected billing frequency.",
+  },
+  {
+    question: "How can I upgrade to Power User if I am on Premium?",
+    answer:
+      "You can upgrade anytime. Your old subscription will be cancelled, and any unused balance will be refunded.",
+  },
+  {
+    question: "How can I cancel?",
+    answer:
+      "You can cancel your subscription directly from your UPI app or through your credit card provider. Cancellations will be effective from the next billing date and subscription will stay active until the end of the current billing period. You can also contact us at support@peaklife.me for assistance.",
+  },
+  {
+    question: "Refund policy",
+    answer:
+      "We do not offer refunds once payment is made. We provide a free trial of 10 questions and 3 days of personalized reports so you can evaluate our service before subscribing.",
+  },
+];
+
 // Standalone static HTML pages for SEO
 const pages = [
   {
     path: "terms/index.html",
-    title: "Terms of Service - Peak",
+    title: "Terms and Conditions - Peak",
     heading: "Terms and Conditions",
+    lastUpdated: "January 9, 2026",
     content: `
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
         <p class="text-gray-700 dark:text-gray-300">
-          By accessing and using Peak services through our mobile application, website at peaklife.me, 
+          By accessing and using Peak services through our mobile application, website at ${SITE.domain}, 
           WhatsApp, iMessage, or any other platform, you agree to be bound by these Terms and Conditions. 
           If you do not agree to these terms, please do not use our services.
         </p>
@@ -32,7 +68,6 @@ const pages = [
           <li>Kundli (birth chart) based insights</li>
           <li>Goal tracking and pattern mapping aligned to your chart</li>
           <li>Astrological consultations via the app and messaging platforms</li>
-          <li>Karmic analysis and guidance</li>
         </ul>
       </section>
 
@@ -61,128 +96,339 @@ const pages = [
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">5. Refund Policy</h2>
         <p class="text-gray-700 dark:text-gray-300">
-          We offer refunds within 7 days of purchase if you are not satisfied with our services. 
-          To request a refund, contact us at <a href="mailto:hello@peaklife.me" class="text-blue-600 hover:underline">hello@peaklife.me</a>.
+          We offer a 7-day money-back guarantee for new subscribers. Refund requests must be submitted within 7 days 
+          of the initial subscription. Partial refunds for unused portions of subscriptions are not available after 
+          this period.
         </p>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">6. Limitation of Liability</h2>
+        <h2 class="text-2xl font-semibold mb-4">6. Payments and Refunds — FAQs</h2>
+        <div class="space-y-6">
+          ${PAYMENTS_REFUNDS_FAQS.map(
+            (faq) => `
+            <div>
+              <p class="font-semibold text-lg text-gray-900 dark:text-white">${faq.question}</p>
+              <p class="mt-2 text-gray-700 dark:text-gray-300">${faq.answer}</p>
+            </div>
+          `
+          ).join("")}
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">7. Messaging Services (WhatsApp/iMessage)</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-4">By opting in to receive messages from Peak:</p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>You consent to receive service-related messages including daily recommendations</li>
+          <li>Message frequency depends on your subscription tier</li>
+          <li>Standard messaging rates may apply based on your carrier</li>
+          <li>You can opt-out at any time by messaging "STOP"</li>
+          <li>We will not share your phone number with third parties for marketing</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">8. Disclaimer of Warranties</h2>
         <p class="text-gray-700 dark:text-gray-300">
-          Peak provides astrological guidance and should not be considered as professional medical, legal, or financial advice. 
-          Use of our services is at your own risk.
+          Peak services are provided for informational and entertainment purposes only. Astrological guidance should 
+          not be considered as a substitute for professional advice in medical, legal, financial, or other matters. 
+          We make no guarantees about the accuracy of predictions or outcomes.
         </p>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">7. Contact Information</h2>
+        <h2 class="text-2xl font-semibold mb-4">9. Limitation of Liability</h2>
         <p class="text-gray-700 dark:text-gray-300">
-          For questions about these Terms and Conditions, contact us at 
-          <a href="mailto:hello@peaklife.me" class="text-blue-600 hover:underline">hello@peaklife.me</a>.
+          Peak and its founders shall not be liable for any indirect, incidental, special, consequential, or punitive 
+          damages arising from your use of our services. Our total liability shall not exceed the amount paid by you 
+          for the services in the 12 months preceding the claim.
         </p>
       </section>
-    `
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">10. Intellectual Property</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          All content, algorithms, methodologies, and materials provided through Peak are proprietary and protected by 
+          intellectual property laws. You may not reproduce, distribute, or create derivative works without express 
+          written permission.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">11. Termination</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          We reserve the right to suspend or terminate your access to our services at our discretion, including for 
+          violation of these terms. Upon termination, your right to use the services ceases immediately.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">12. Governing Law</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          These terms shall be governed by and construed in accordance with the laws of India. Any disputes shall be 
+          subject to the exclusive jurisdiction of the courts in Bangalore, Karnataka.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">13. Changes to Terms</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          We may update these terms from time to time. Continued use of our services after changes constitutes 
+          acceptance of the modified terms.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">14. Contact Information</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-2">For questions about these Terms and Conditions, please contact us at:</p>
+        <p class="text-gray-700 dark:text-gray-300">
+          Email: <a href="mailto:${SITE.supportEmail}" class="text-blue-600 hover:underline">${SITE.supportEmail}</a>
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          You may also use our <a href="/contact" class="text-blue-600 hover:underline">contact form</a>.
+        </p>
+      </section>
+    `,
   },
   {
     path: "privacy-policy/index.html",
     title: "Privacy Policy - Peak",
     heading: "Privacy Policy",
+    lastUpdated: "January 9, 2026",
     content: `
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">1. Information We Collect</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">We collect the following information:</p>
+        <h2 class="text-2xl font-semibold mb-4">1. Introduction</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          Peak ("we," "our," or "us"), operated by ${SITE.legalName}, is committed to protecting your privacy. 
+          This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use 
+          our AI-powered Vedic astrology services through our mobile application, WhatsApp, iMessage, or our website 
+          at ${SITE.domain}.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">2. Information We Collect</h2>
+        
+        <h3 class="text-xl font-semibold mb-3 mt-6">2.1 Personal Information</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">We collect information you provide directly:</p>
         <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>Birth details (date, time, place) for astrological calculations</li>
-          <li>Contact information (phone number, email)</li>
+          <li>Full name</li>
+          <li>Date, time, and place of birth</li>
+          <li>Phone number (for app authentication and WhatsApp/iMessage services)</li>
+          <li>Email address</li>
+          <li>Payment information (processed securely by third-party payment processors)</li>
+          <li>Questions and messages you send us</li>
+        </ul>
+
+        <h3 class="text-xl font-semibold mb-3 mt-6">2.2 Automatically Collected Information</h3>
+        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>Device information (type, operating system)</li>
+          <li>IP address and approximate location</li>
           <li>Usage data and interaction patterns</li>
-          <li>Payment information (processed securely through payment providers)</li>
+          <li>Cookies and similar tracking technologies</li>
         </ul>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">2. How We Use Your Information</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">Your information is used to:</p>
+        <h2 class="text-2xl font-semibold mb-4">3. How We Use Your Information</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">We use your information to:</p>
         <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>Generate personalized astrological insights and recommendations</li>
-          <li>Provide and improve our services</li>
-          <li>Process payments and subscriptions</li>
-          <li>Communicate with you about services and updates</li>
+          <li>Generate personalised astrological readings and muhurta recommendations</li>
+          <li>Provide daily time slot notifications via the app, WhatsApp, and iMessage</li>
+          <li>Process payments and manage subscriptions</li>
+          <li>Respond to your inquiries and provide customer support</li>
+          <li>Improve our AI models and service quality</li>
+          <li>Send service-related communications</li>
+          <li>Comply with legal obligations</li>
         </ul>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">3. Data Security</h2>
-        <p class="text-gray-700 dark:text-gray-300">
-          We implement industry-standard security measures to protect your personal information. 
-          Your birth chart data and personal details are encrypted and stored securely.
-        </p>
-      </section>
-
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">4. Third-Party Services</h2>
-        <p class="text-gray-700 dark:text-gray-300">
-          We may use third-party services for payment processing, analytics, and communication. 
-          These services have their own privacy policies.
-        </p>
-      </section>
-
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">5. Your Rights</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">You have the right to:</p>
+        <h2 class="text-2xl font-semibold mb-4">4. Data Sharing and Disclosure</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">We do not sell your personal information. We may share your data with:</p>
         <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>Access your personal data</li>
-          <li>Request correction of inaccurate data</li>
-          <li>Request deletion of your data</li>
-          <li>Opt-out of marketing communications</li>
+          <li><strong>Service Providers:</strong> Payment processors, cloud hosting providers, and messaging platforms (WhatsApp, Apple) necessary to deliver our services</li>
+          <li><strong>Legal Requirements:</strong> When required by law, court order, or government request</li>
+          <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+          <li><strong>With Your Consent:</strong> For any other purpose with your explicit permission</li>
         </ul>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">6. Contact Us</h2>
+        <h2 class="text-2xl font-semibold mb-4">5. WhatsApp and iMessage Communications</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">When you use our services via WhatsApp or iMessage:</p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>Your phone number is used solely to deliver our astrological services</li>
+          <li>Message content is processed to provide personalised readings</li>
+          <li>We retain conversation history to improve service quality</li>
+          <li>You can request deletion of your message history at any time</li>
+          <li>We comply with WhatsApp's Business Policy and Apple's guidelines</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">6. Data Security</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">We implement industry-standard security measures including:</p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>Encryption of data in transit and at rest</li>
+          <li>Secure payment processing through PCI-DSS compliant providers</li>
+          <li>Regular security audits and assessments</li>
+          <li>Access controls and authentication measures</li>
+          <li>Employee training on data protection</li>
+        </ul>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">7. Data Retention</h2>
         <p class="text-gray-700 dark:text-gray-300">
-          For privacy-related questions or requests, contact us at 
-          <a href="mailto:hello@peaklife.me" class="text-blue-600 hover:underline">hello@peaklife.me</a>.
+          We retain your personal information for as long as your account is active or as needed to provide services. 
+          After account deletion, we may retain certain data for up to 3 years for legal compliance and legitimate 
+          business purposes.
         </p>
       </section>
-    `
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">8. Your Rights and Choices</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">You have the right to:</p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li><strong>Access:</strong> Request a copy of your personal data</li>
+          <li><strong>Correction:</strong> Update or correct inaccurate information</li>
+          <li><strong>Deletion:</strong> Request deletion of your personal data</li>
+          <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
+          <li><strong>Data Portability:</strong> Receive your data in a structured format</li>
+          <li><strong>Withdraw Consent:</strong> Revoke previously given consent</li>
+        </ul>
+        <p class="text-gray-700 dark:text-gray-300 mt-3">
+          To exercise these rights, contact us at <a href="mailto:${SITE.supportEmail}" class="text-blue-600 hover:underline">${SITE.supportEmail}</a>.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">9. Cookies and Tracking</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Our website uses cookies and similar technologies for:</p>
+        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
+          <li>Essential website functionality</li>
+          <li>Analytics and performance monitoring</li>
+          <li>Remembering your preferences</li>
+        </ul>
+        <p class="text-gray-700 dark:text-gray-300 mt-3">You can manage cookie preferences through your browser settings.</p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">10. Children's Privacy</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          Our services are not intended for individuals under 18 years of age. We do not knowingly collect personal 
+          information from minors. If we become aware of such collection, we will promptly delete the data.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">11. International Data Transfers</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          Your data may be processed in countries other than your own. We ensure appropriate safeguards are in place 
+          to protect your information in compliance with applicable data protection laws.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">12. Third-Party Links</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          Our services may contain links to third-party websites. We are not responsible for the privacy practices of 
+          these external sites. We encourage you to review their privacy policies.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">13. Changes to This Policy</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          We may update this Privacy Policy periodically. We will notify you of material changes via email or through 
+          our services. The "Last updated" date at the top indicates the latest revision.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">14. Contact Us</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-2">
+          Privacy questions: <a href="mailto:${SITE.contactEmail}" class="text-blue-600 hover:underline">${SITE.contactEmail}</a>.
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          Account deletion requests: see our <a href="/delete-my-account" class="text-blue-600 hover:underline">account deletion page</a> 
+          or email <a href="mailto:${SITE.contactEmail}?subject=Account%20deletion%20request" class="text-blue-600 hover:underline">${SITE.contactEmail}</a> 
+          from your registered email address with the phone number linked to your Peak account.
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">15. Grievance Officer</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">
+          In accordance with Information Technology Act 2000 and rules made thereunder, the name and contact details 
+          of the Grievance Officer are provided below:
+        </p>
+        <p class="text-gray-700 dark:text-gray-300"><strong>Name:</strong> ${grievanceOfficer.name}</p>
+        <p class="text-gray-700 dark:text-gray-300">
+          <strong>Email:</strong> <a href="mailto:${grievanceOfficer.email}" class="text-blue-600 hover:underline">${grievanceOfficer.email}</a>
+        </p>
+      </section>
+    `,
   },
   {
     path: "delete-my-account/index.html",
-    title: "Delete Account - Peak",
-    heading: "Delete Your Account",
+    title: "Delete your account - Peak",
+    heading: "Delete your account",
+    lastUpdated: "January 9, 2026",
     content: `
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Account Deletion Request</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">
-          To delete your Peak account, please contact us at 
-          <a href="mailto:hello@peaklife.me" class="text-blue-600 hover:underline">hello@peaklife.me</a> 
-          with the subject line "Account Deletion Request".
+        <h2 class="text-2xl font-semibold mb-4">Request account deletion</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          You can ask us to delete your Peak account and the personal data associated with it. To submit a request, 
+          email us at <a href="mailto:${SITE.supportEmail}?subject=Account%20deletion%20request" class="text-blue-600 hover:underline">${SITE.supportEmail}</a> 
+          from the email address registered on your Peak account.
         </p>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">What Happens When You Delete Your Account</h2>
+        <h2 class="text-2xl font-semibold mb-4">What to include in your email</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Please include the following so we can verify and process your request:</p>
         <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>All your personal data will be permanently deleted</li>
-          <li>Your birth chart and astrological data will be removed</li>
-          <li>Your subscription will be cancelled</li>
-          <li>This action cannot be undone</li>
+          <li>Subject line: "Account deletion request"</li>
+          <li>The phone number linked to your Peak account</li>
+          <li>Your full name as shown in the app (if applicable)</li>
+          <li>A clear statement that you want your account and associated data deleted</li>
         </ul>
       </section>
 
       <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">Processing Time</h2>
+        <h2 class="text-2xl font-semibold mb-4">Processing time</h2>
         <p class="text-gray-700 dark:text-gray-300">
-          Account deletion requests are typically processed within 7 business days. 
-          You will receive a confirmation email once your account has been deleted.
+          We aim to complete verified account deletion requests within <strong>5 working days</strong> of receiving 
+          your email. We may contact you if we need additional information to confirm your identity.
         </p>
       </section>
-    `
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">What happens after deletion</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          Once your request is processed, your account will be deactivated and we will delete or anonymise your 
+          personal data in line with our <a href="/privacy-policy" class="text-blue-600 hover:underline">Privacy Policy</a>. 
+          Some information may be retained where required by law or for legitimate business purposes (for example, 
+          billing records).
+        </p>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Questions</h2>
+        <p class="text-gray-700 dark:text-gray-300">
+          For help with your request, contact <a href="mailto:${SITE.supportEmail}" class="text-blue-600 hover:underline">${SITE.supportEmail}</a>.
+        </p>
+      </section>
+    `,
   },
   {
     path: "contact/index.html",
     title: "Contact Us - Peak",
     heading: "Contact Us",
+    lastUpdated: "January 9, 2026",
     content: `
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Get in Touch</h2>
@@ -194,7 +440,7 @@ const pages = [
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Email</h2>
         <p class="text-gray-700 dark:text-gray-300">
-          <a href="mailto:hello@peaklife.me" class="text-blue-600 hover:underline text-lg">hello@peaklife.me</a>
+          <a href="mailto:${SITE.supportEmail}" class="text-blue-600 hover:underline text-lg">${SITE.supportEmail}</a>
         </p>
       </section>
 
@@ -205,11 +451,21 @@ const pages = [
           We typically respond within 24 hours.
         </p>
       </section>
-    `
-  }
+
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Legal Information</h2>
+        <p class="text-gray-700 dark:text-gray-300 mb-2">
+          <strong>Company:</strong> ${SITE.legalName}
+        </p>
+        <p class="text-gray-700 dark:text-gray-300">
+          <strong>Location:</strong> ${SITE.address}
+        </p>
+      </section>
+    `,
+  },
 ];
 
-const htmlTemplate = (title, heading, content) => `<!DOCTYPE html>
+const htmlTemplate = (title, heading, content, lastUpdated) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -227,7 +483,8 @@ const htmlTemplate = (title, heading, content) => `<!DOCTYPE html>
       <a href="/" class="text-blue-600 hover:underline">&larr; Back to Home</a>
     </div>
     
-    <h1 class="text-4xl font-bold mb-8 text-gray-900 dark:text-white">${heading}</h1>
+    <h1 class="text-4xl font-bold mb-2 text-gray-900 dark:text-white">${heading}</h1>
+    <p class="text-sm text-gray-600 dark:text-gray-400 mb-8">Last updated: ${lastUpdated}</p>
     
     <div class="prose prose-lg max-w-none">
       ${content}
@@ -238,11 +495,6 @@ const htmlTemplate = (title, heading, content) => `<!DOCTYPE html>
         &copy; ${new Date().getFullYear()} Peak. All rights reserved.
       </p>
     </div>
-
-    <!-- Optional: Load React app for navigation -->
-    <noscript>
-      <p class="mt-8 text-sm text-gray-600">This is a static version of the page. Enable JavaScript for the full experience.</p>
-    </noscript>
   </div>
 </body>
 </html>`;
@@ -253,7 +505,7 @@ for (const page of pages) {
   
   mkdirSync(dir, { recursive: true });
   
-  const html = htmlTemplate(page.title, page.heading, page.content);
+  const html = htmlTemplate(page.title, page.heading, page.content, page.lastUpdated);
   writeFileSync(filePath, html);
   console.log(`✓ Generated ${page.path}`);
 }
