@@ -49,144 +49,144 @@ const pages = [
     heading: "Terms and Conditions",
     lastUpdated: "January 9, 2026",
     content: `
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">1. Acceptance of Terms</h2>
+        <p style="color: #525252; line-height: 1.75;">
           By accessing and using Peak services through our mobile application, website at ${SITE.domain}, 
           WhatsApp, iMessage, or any other platform, you agree to be bound by these Terms and Conditions. 
           If you do not agree to these terms, please do not use our services.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">2. Description of Services</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">2. Description of Services</h2>
+        <p style="color: #525252; line-height: 1.75; margin-bottom: 1rem;">
           Peak provides AI-powered Vedic astrology services including but not limited to:
         </p>
-        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>Personalised daily muhurta (auspicious timing) recommendations</li>
-          <li>Kundli (birth chart) based insights</li>
-          <li>Goal tracking and pattern mapping aligned to your chart</li>
-          <li>Astrological consultations via the app and messaging platforms</li>
+        <ul style="list-style-type: disc; padding-left: 1.5rem; color: #525252; line-height: 1.75;">
+          <li style="margin-bottom: 0.5rem;">Personalised daily muhurta (auspicious timing) recommendations</li>
+          <li style="margin-bottom: 0.5rem;">Kundli (birth chart) based insights</li>
+          <li style="margin-bottom: 0.5rem;">Goal tracking and pattern mapping aligned to your chart</li>
+          <li style="margin-bottom: 0.5rem;">Astrological consultations via the app and messaging platforms</li>
         </ul>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">3. User Accounts and Registration</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">3. User Accounts and Registration</h2>
+        <p style="color: #525252; line-height: 1.75;">
           To use our services, you must provide accurate birth details including date, time, and place of birth. 
           You are responsible for maintaining the confidentiality of your account information and for all activities 
           under your account.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">4. Subscription Plans and Payments</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">4. Subscription Plans and Payments</h2>
+        <p style="color: #525252; line-height: 1.75; margin-bottom: 1rem;">
           Peak offers various subscription tiers with different features and pricing. By subscribing to a paid plan:
         </p>
-        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>You authorize us to charge the applicable fees to your chosen payment method</li>
-          <li>Subscriptions auto-renew unless cancelled before the renewal date</li>
-          <li>Refunds are subject to our refund policy as outlined below</li>
-          <li>Prices may change with 30 days prior notice</li>
+        <ul style="list-style-type: disc; padding-left: 1.5rem; color: #525252; line-height: 1.75;">
+          <li style="margin-bottom: 0.5rem;">You authorize us to charge the applicable fees to your chosen payment method</li>
+          <li style="margin-bottom: 0.5rem;">Subscriptions auto-renew unless cancelled before the renewal date</li>
+          <li style="margin-bottom: 0.5rem;">Refunds are subject to our refund policy as outlined below</li>
+          <li style="margin-bottom: 0.5rem;">Prices may change with 30 days prior notice</li>
         </ul>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">5. Refund Policy</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">5. Refund Policy</h2>
+        <p style="color: #525252; line-height: 1.75;">
           We offer a 7-day money-back guarantee for new subscribers. Refund requests must be submitted within 7 days 
           of the initial subscription. Partial refunds for unused portions of subscriptions are not available after 
           this period.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">6. Payments and Refunds — FAQs</h2>
-        <div class="space-y-6">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">6. Payments and Refunds — FAQs</h2>
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
           ${PAYMENTS_REFUNDS_FAQS.map(
             (faq) => `
             <div>
-              <p class="font-semibold text-lg text-gray-900 dark:text-white">${faq.question}</p>
-              <p class="mt-2 text-gray-700 dark:text-gray-300">${faq.answer}</p>
+              <p style="font-size: 1.125rem; font-weight: 600; color: #0a0a0a; margin-bottom: 0.5rem;">${faq.question}</p>
+              <p style="color: #525252; line-height: 1.75;">${faq.answer}</p>
             </div>
           `
           ).join("")}
         </div>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">7. Messaging Services (WhatsApp/iMessage)</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-4">By opting in to receive messages from Peak:</p>
-        <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300">
-          <li>You consent to receive service-related messages including daily recommendations</li>
-          <li>Message frequency depends on your subscription tier</li>
-          <li>Standard messaging rates may apply based on your carrier</li>
-          <li>You can opt-out at any time by messaging "STOP"</li>
-          <li>We will not share your phone number with third parties for marketing</li>
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">7. Messaging Services (WhatsApp/iMessage)</h2>
+        <p style="color: #525252; line-height: 1.75; margin-bottom: 1rem;">By opting in to receive messages from Peak:</p>
+        <ul style="list-style-type: disc; padding-left: 1.5rem; color: #525252; line-height: 1.75;">
+          <li style="margin-bottom: 0.5rem;">You consent to receive service-related messages including daily recommendations</li>
+          <li style="margin-bottom: 0.5rem;">Message frequency depends on your subscription tier</li>
+          <li style="margin-bottom: 0.5rem;">Standard messaging rates may apply based on your carrier</li>
+          <li style="margin-bottom: 0.5rem;">You can opt-out at any time by messaging "STOP"</li>
+          <li style="margin-bottom: 0.5rem;">We will not share your phone number with third parties for marketing</li>
         </ul>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">8. Disclaimer of Warranties</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">8. Disclaimer of Warranties</h2>
+        <p style="color: #525252; line-height: 1.75;">
           Peak services are provided for informational and entertainment purposes only. Astrological guidance should 
           not be considered as a substitute for professional advice in medical, legal, financial, or other matters. 
           We make no guarantees about the accuracy of predictions or outcomes.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">9. Limitation of Liability</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">9. Limitation of Liability</h2>
+        <p style="color: #525252; line-height: 1.75;">
           Peak and its founders shall not be liable for any indirect, incidental, special, consequential, or punitive 
           damages arising from your use of our services. Our total liability shall not exceed the amount paid by you 
           for the services in the 12 months preceding the claim.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">10. Intellectual Property</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">10. Intellectual Property</h2>
+        <p style="color: #525252; line-height: 1.75;">
           All content, algorithms, methodologies, and materials provided through Peak are proprietary and protected by 
           intellectual property laws. You may not reproduce, distribute, or create derivative works without express 
           written permission.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">11. Termination</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">11. Termination</h2>
+        <p style="color: #525252; line-height: 1.75;">
           We reserve the right to suspend or terminate your access to our services at our discretion, including for 
           violation of these terms. Upon termination, your right to use the services ceases immediately.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">12. Governing Law</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">12. Governing Law</h2>
+        <p style="color: #525252; line-height: 1.75;">
           These terms shall be governed by and construed in accordance with the laws of India. Any disputes shall be 
           subject to the exclusive jurisdiction of the courts in Bangalore, Karnataka.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">13. Changes to Terms</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">13. Changes to Terms</h2>
+        <p style="color: #525252; line-height: 1.75;">
           We may update these terms from time to time. Continued use of our services after changes constitutes 
           acceptance of the modified terms.
         </p>
       </section>
 
-      <section class="mb-8">
-        <h2 class="text-2xl font-semibold mb-4">14. Contact Information</h2>
-        <p class="text-gray-700 dark:text-gray-300 mb-2">For questions about these Terms and Conditions, please contact us at:</p>
-        <p class="text-gray-700 dark:text-gray-300">
-          Email: <a href="mailto:${SITE.supportEmail}" class="text-blue-600 hover:underline">${SITE.supportEmail}</a>
+      <section style="margin-bottom: 2.5rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">14. Contact Information</h2>
+        <p style="color: #525252; line-height: 1.75; margin-bottom: 0.5rem;">For questions about these Terms and Conditions, please contact us at:</p>
+        <p style="color: #525252; line-height: 1.75; margin-bottom: 0.5rem;">
+          Email: <a href="mailto:${SITE.supportEmail}" style="color: #2563eb;">${SITE.supportEmail}</a>
         </p>
-        <p class="text-gray-700 dark:text-gray-300">
-          You may also use our <a href="/contact" class="text-blue-600 hover:underline">contact form</a>.
+        <p style="color: #525252; line-height: 1.75;">
+          You may also use our <a href="/contact" style="color: #2563eb;">contact form</a>.
         </p>
       </section>
     `,
@@ -474,27 +474,74 @@ const htmlTemplate = (title, heading, content, lastUpdated) => `<!DOCTYPE html>
   <meta name="description" content="${title.split(' - ')[0]} for Peak - AI-powered Vedic astrology">
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      color: #1a1a1a;
+    }
+    
+    h1, h2, h3 {
+      font-weight: 600;
+      color: #0a0a0a;
+    }
+    
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    strong {
+      font-weight: 600;
+      color: #0a0a0a;
+    }
+    
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #0a0a0a;
+        color: #e5e5e5;
+      }
+      
+      h1, h2, h3, strong {
+        color: #ffffff;
+      }
+      
+      a {
+        color: #60a5fa;
+      }
+    }
   </style>
 </head>
-<body class="bg-white dark:bg-gray-900 min-h-screen">
-  <div class="container mx-auto px-4 py-12 max-w-4xl">
-    <div class="mb-8">
-      <a href="/" class="text-blue-600 hover:underline">&larr; Back to Home</a>
+<body style="min-height: 100vh; background-color: #ffffff;">
+  <div style="max-width: 48rem; margin: 0 auto; padding: 3rem 1rem;">
+    <div style="margin-bottom: 2rem;">
+      <a href="/" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #2563eb; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">
+        ← Back to Home
+      </a>
     </div>
     
-    <h1 class="text-4xl font-bold mb-2 text-gray-900 dark:text-white">${heading}</h1>
-    <p class="text-sm text-gray-600 dark:text-gray-400 mb-8">Last updated: ${lastUpdated}</p>
-    
-    <div class="prose prose-lg max-w-none">
-      ${content}
-    </div>
-
-    <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-      <p class="text-sm text-gray-600 dark:text-gray-400">
-        &copy; ${new Date().getFullYear()} Peak. All rights reserved.
+    <header style="border-bottom: 1px solid #e5e5e5; padding-bottom: 2rem; margin-bottom: 3rem;">
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #737373; margin-bottom: 1rem;">Legal</p>
+      <h1 style="font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; margin-bottom: 1rem;">${heading}</h1>
+      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #737373;">
+        Last updated · ${lastUpdated}
       </p>
-    </div>
+    </header>
+    
+    <article style="line-height: 1.75; color: #525252;">
+      ${content}
+    </article>
+
+    <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e5e5e5;">
+      <p style="font-size: 0.875rem; color: #737373;">
+        © ${new Date().getFullYear()} Peak. All rights reserved.
+      </p>
+    </footer>
   </div>
 </body>
 </html>`;
