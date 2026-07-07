@@ -12,6 +12,7 @@ import AccountDeletion from "./pages/AccountDeletion.tsx";
 import TermsEmbed from "./pages/TermsEmbed.tsx";
 import PrivacyEmbed from "./pages/PrivacyEmbed.tsx";
 import Contact from "./pages/Contact.tsx";
+import Checkout from "./pages/Checkout.tsx";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path={ROUTES.accountDeletion} element={<AccountDeletion />} />
           <Route path={ROUTES.privacyEmbed} element={<PrivacyEmbed />} />
           <Route path={ROUTES.contact} element={<Contact />} />
+          <Route path={ROUTES.checkout} element={<Checkout />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -7,4 +7,5 @@ export const ROUTES = {
   privacyEmbed: "/embed/privacy",
   accountDeletion: "/delete-my-account",
   contact: "/contact",
+  checkout: "/checkout",
 } as const;
