@@ -11,11 +11,20 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   star: Star,
 };
 
-const normalizePhone = (phone: string) => phone.replace(/[^\d+]/g, "").slice(0, 12);
-
-const isIndianPhoneNumber = (phone: string | null) => {
-  if (!phone) return false;
-  return normalizePhone(phone).replace(/\D/g, "").startsWith("91");
+// The server appends a region digit to the user id in the payment link
+// (0 = India, 1 = international), resolved from the account's phone so the
+// client can't pick its own currency. Strip it before using the id anywhere.
+const parseUserIdParam = (
+  raw: string
+): { userId: string; region: "india" | "international" } => {
+  const suffix = raw.slice(-1);
+  if (suffix === "0" || suffix === "1") {
+    return {
+      userId: raw.slice(0, -1),
+      region: suffix === "0" ? "india" : "international",
+    };
+  }
+  return { userId: raw, region: "international" };
 };
 
 type RazorpayOptions = {
@@ -187,23 +196,21 @@ const Checkout = () => {
   const [isQuarterly, setIsQuarterly] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const userId = searchParams.get("userid") ??
+  const rawUserId = searchParams.get("userid") ??
     searchParams.get("userId") ??
     "";
 
-  const normalizedUserId = useMemo(() => userId.replace(/\D/g, ""), [userId]);
-
-  // Identify user in PostHog when userid is present
-  useEffect(() => {
-    if (normalizedUserId && window.posthog) {
-      window.posthog.identify(normalizedUserId);
-    }
-  }, [normalizedUserId]);
-
-  const region: "india" | "international" = useMemo(
-    () => (isIndianPhoneNumber(userId) ? "india" : "international"),
-    [userId]
+  const { userId, region } = useMemo(
+    () => parseUserIdParam(rawUserId),
+    [rawUserId]
   );
+
+  // Identify user in PostHog when userid is present (region digit stripped).
+  useEffect(() => {
+    if (userId && window.posthog) {
+      window.posthog.identify(userId);
+    }
+  }, [userId]);
 
   const plans = pricingData[region];
   const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
@@ -239,12 +246,12 @@ const Checkout = () => {
         amount: parsePriceStringToMinorUnits(price, currency),
         totalCount: 12,
         customerNotify: 1,
-        phoneNumber: normalizedUserId,
+        phoneNumber: userId,
         metadata: {
           region: regionKey,
           plan: planNameKey,
           term: billingTerm,
-          user_id: normalizedUserId || undefined,
+          user_id: userId || undefined,
         },
       }),
     });
@@ -269,7 +276,7 @@ const Checkout = () => {
       name: "PeakLife",
       description: `${plan.name} ${billingTermLabel} Subscription`,
       subscription_id: subscriptionId,
-      prefill: normalizedUserId ? { contact: normalizedUserId } : undefined,
+      prefill: userId ? { contact: userId } : undefined,
       theme: { color: "#F59E0B" },
       handler: () => {
         window.location.href = `/`;
