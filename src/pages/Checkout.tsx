@@ -17,6 +17,21 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 const parseUserIdParam = (
   raw: string
 ): { userId: string; region: "india" | "international" } => {
+  if (raw.includes("-")) {
+    const parts = raw.split("-");
+    if (parts.length >= 2) {
+      const secondPart = parts[1];
+      const suffix = secondPart.slice(0, 1);
+      if (suffix === "0" || suffix === "1") {
+        parts[1] = secondPart.slice(1);
+        return {
+          userId: parts.join("-"),
+          region: suffix === "0" ? "india" : "international",
+        };
+      }
+    }
+  }
+
   const suffix = raw.slice(-1);
   if (suffix === "0" || suffix === "1") {
     return {
@@ -196,7 +211,8 @@ const Checkout = () => {
   const [isQuarterly, setIsQuarterly] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const rawUserId = searchParams.get("userid") ??
+  const rawUserId = searchParams.get("pid") ??
+    searchParams.get("userid") ??
     searchParams.get("userId") ??
     "";
 
@@ -246,7 +262,7 @@ const Checkout = () => {
         amount: parsePriceStringToMinorUnits(price, currency),
         totalCount: 12,
         customerNotify: 1,
-        phoneNumber: userId,
+        userId: userId,
         metadata: {
           region: regionKey,
           plan: planNameKey,
