@@ -4,27 +4,12 @@ import { motion } from "framer-motion";
 import { Check, Crown, Sparkles, Star, Users, Quote, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/peak-logo.png";
+import { decodePaymentLinkUserId } from "@/lib/paymentLinkUserId";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   crown: Crown,
   users: Users,
   star: Star,
-};
-
-// The server appends a region digit to the user id in the payment link
-// (0 = India, 1 = international), resolved from the account's phone so the
-// client can't pick its own currency. Strip it before using the id anywhere.
-const parseUserIdParam = (
-  raw: string
-): { userId: string; region: "india" | "international" } => {
-  const suffix = raw.slice(-1);
-  if (suffix === "0" || suffix === "1") {
-    return {
-      userId: raw.slice(0, -1),
-      region: suffix === "0" ? "india" : "international",
-    };
-  }
-  return { userId: raw, region: "international" };
 };
 
 type RazorpayOptions = {
@@ -196,16 +181,14 @@ const Checkout = () => {
   const [isQuarterly, setIsQuarterly] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const rawUserId = searchParams.get("userid") ??
-    searchParams.get("userId") ??
-    "";
+  const rawUserId = searchParams.get("pid");
 
   const { userId, region } = useMemo(
-    () => parseUserIdParam(rawUserId),
+    () => decodePaymentLinkUserId(rawUserId),
     [rawUserId]
   );
 
-  // Identify user in PostHog when userid is present (region digit stripped).
+  // Identify user in PostHog when pid/user id is present (region digit stripped).
   useEffect(() => {
     if (userId && window.posthog) {
       window.posthog.identify(userId);
@@ -246,7 +229,7 @@ const Checkout = () => {
         amount: parsePriceStringToMinorUnits(price, currency),
         totalCount: 12,
         customerNotify: 1,
-        phoneNumber: userId,
+        userId: userId,
         metadata: {
           region: regionKey,
           plan: planNameKey,
