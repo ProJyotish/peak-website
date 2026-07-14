@@ -1,18 +1,10 @@
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { z } from "zod";
-import { toast } from "sonner";
-import { ArrowRight, Check } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { ArrowRight, MessageCircle, Sparkles, Quote } from "lucide-react";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
-
-const phoneSchema = z
-  .string()
-  .trim()
-  .min(7, "Enter a valid phone number")
-  .max(20, "Phone number is too long")
-  .regex(/^\+?[0-9 ()-]{7,20}$/, "Enter a valid phone number");
+import logo from "@/assets/peak-logo.png";
+import { useEffect, useState } from "react";
+import { resolveSourceGreeting, buildWhatsAppPrefillUrl, FALLBACK_GREETING_WORD } from "@/lib/sourceGreeting";
 
 const fade = {
   initial: { opacity: 0, y: 12 },
@@ -21,109 +13,45 @@ const fade = {
   transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
 };
 
+function useSourceGreeting() {
+  const [greeting, setGreeting] = useState<string>(FALLBACK_GREETING_WORD);
+  const [whatsappUrl, setWhatsappUrl] = useState("");
+
+  useEffect(() => {
+    const sourceGreeting = resolveSourceGreeting({
+      referrer: document.referrer,
+      search: window.location.search,
+    });
+    setGreeting(sourceGreeting.word);
+    
+    const phoneNumber = import.meta.env.VITE_WHATSAPP_NUMBER || "919560057789";
+    const url = buildWhatsAppPrefillUrl(phoneNumber, sourceGreeting.word);
+    setWhatsappUrl(url);
+  }, []);
+
+  return { greeting, whatsappUrl: whatsappUrl || `https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || "919560057789"}?text=${FALLBACK_GREETING_WORD}` };
+}
+
 function Nav() {
+  const { whatsappUrl } = useSourceGreeting();
+  
   return (
     <header className="absolute top-0 left-0 right-0 z-30">
       <div className="container-peak flex items-center justify-between py-6">
         <Wordmark />
         <nav className="flex items-center gap-8">
-          <a href="#what" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">What it does</a>
-          <a href="#waitlist" className="font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors">
-            Join waitlist
+          <a href="#how" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">How it works</a>
+          <a 
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors"
+          >
+            Start Free Trial
           </a>
         </nav>
       </div>
     </header>
-  );
-}
-
-function WaitlistForm({ source = "landing", size = "lg", variant = "default" }: { source?: string; size?: "lg" | "sm"; variant?: "default" | "solid" }) {
-  const [phone, setPhone] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [done, setDone] = useState(false);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const parsed = phoneSchema.safeParse(phone);
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
-      return;
-    }
-    setLoading(true);
-    const { error } = await supabase.from("waitlist").insert({ phone: parsed.data, source });
-    setLoading(false);
-    if (error) {
-      if (error.code === "23505") {
-        setDone(true);
-        toast.success("You're already on the list.");
-        return;
-      }
-      toast.error("Could not request access. Please try again.");
-      return;
-    }
-    setDone(true);
-    toast.success("You're on the list. We'll be in touch.");
-  };
-
-  if (done) {
-    return (
-      <div className={`flex items-center gap-3 ${size === "lg" ? "py-4" : "py-2"}`}>
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/15 text-gold">
-          <Check className="h-4 w-4" />
-        </div>
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-ink">Request received</p>
-      </div>
-    );
-  }
-
-  if (variant === "solid") {
-    return (
-      <form onSubmit={submit} className="flex w-full max-w-md flex-col sm:flex-row items-stretch gap-3">
-        <input
-          type="tel"
-          required
-          inputMode="tel"
-          autoComplete="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="+91 98765 43210"
-          className={`flex-1 rounded-sm border border-ink/20 bg-parchment px-4 outline-none placeholder:text-clay/60 text-ink focus:border-gold transition-colors ${size === "lg" ? "py-4 text-base" : "py-3 text-sm"}`}
-          disabled={loading}
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className={`group inline-flex items-center justify-center gap-2 rounded-sm bg-ink px-6 font-mono text-xs uppercase tracking-[0.2em] text-parchment shadow-[0_10px_30px_-12px_hsl(24_15%_9%_/_0.5)] hover:bg-gold hover:text-ink disabled:opacity-50 transition-colors ${size === "lg" ? "py-4" : "py-3"}`}
-        >
-          {loading ? "Sending" : "Request access"}
-          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-        </button>
-      </form>
-    );
-  }
-
-  return (
-    <form onSubmit={submit} className={`flex w-full max-w-md items-stretch border-b ${loading ? "border-gold" : "border-ink/40"} focus-within:border-gold transition-colors`}>
-      <input
-        type="tel"
-        required
-        inputMode="tel"
-        autoComplete="tel"
-        value={phone}
-        onChange={(e) => setPhone(e.target.value)}
-        placeholder="+91 98765 43210"
-        className={`flex-1 bg-transparent outline-none placeholder:text-clay/60 text-ink ${size === "lg" ? "py-4 text-base" : "py-3 text-sm"}`}
-        disabled={loading}
-      />
-      <button
-        type="submit"
-        disabled={loading}
-        className="ml-3 flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-ink hover:text-gold disabled:opacity-50 transition-colors"
-      >
-        {loading ? "Sending" : "Request access"}
-        <ArrowRight className="h-3.5 w-3.5" />
-      </button>
-    </form>
   );
 }
 
@@ -172,44 +100,70 @@ function PeakMark() {
 }
 
 function Hero() {
+  const { whatsappUrl } = useSourceGreeting();
+  
   return (
     <section className="relative pt-32 pb-24 md:pt-40 md:pb-32 overflow-hidden">
-      <div className="container-peak grid gap-16 md:grid-cols-12 items-center">
-        <div className="md:col-span-7">
-          <motion.p {...fade} className="eyebrow mb-6">Jyotisha, made practical</motion.p>
-          <motion.h1
-            {...fade}
-            transition={{ duration: 0.8, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-5xl md:text-7xl leading-[1.02] text-ink"
-          >
-            Realise your <em className="not-italic text-gold">Peak</em> Potential.
-          </motion.h1>
-          <motion.p
-            {...fade}
-            transition={{ duration: 0.8, delay: 0.15 }}
-            className="mt-8 max-w-xl text-lg leading-relaxed text-muted-foreground"
-          >
-            Hour-by-hour guidance. Long-term pattern mapping. Goal-bound coaching, grounded in astrological timing — not mysticism. For people who live by calendars.
-          </motion.p>
-          <motion.div {...fade} transition={{ duration: 0.8, delay: 0.25 }} className="mt-10" id="waitlist">
-            <WaitlistForm source="hero" variant="solid" />
-            <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-clay">Early access · iOS &amp; Android · Coming soon</p>
-          </motion.div>
-        </div>
+      <div className="container-peak max-w-5xl text-center">
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="md:col-span-5"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8 flex justify-center"
         >
-          <div className="border-l border-gold/40 pl-6">
-            <PeakMark />
-            <div className="mt-4 grid grid-cols-3 gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-clay">
-              <span>06:00</span>
-              <span className="text-center">today</span>
-              <span className="text-right">22:00</span>
-            </div>
+          <img
+            src={logo}
+            alt="Peak Logo"
+            className="w-32 h-32 md:w-40 md:h-40 mx-auto"
+          />
+        </motion.div>
+        
+        <motion.h1
+          {...fade}
+          transition={{ duration: 0.8, delay: 0.1 }}
+          className="font-display text-4xl md:text-6xl lg:text-7xl leading-[1.02] text-ink mb-6"
+        >
+          Ancient Wisdom, <span className="text-gold">Instant Answers</span>
+        </motion.h1>
+        
+        <motion.p
+          {...fade}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="mt-6 text-lg md:text-xl leading-relaxed text-clay max-w-3xl mx-auto"
+        >
+          AI-powered Vedic Astrology on WhatsApp. Get personalized guidance for life's big decisions - career, relationships, timing, and more. Trained on thousands of real cases.
+        </motion.p>
+
+        <motion.div {...fade} transition={{ duration: 0.8, delay: 0.3 }} className="mt-10 flex flex-col items-center gap-4">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-ink text-parchment font-mono text-sm uppercase tracking-[0.2em] shadow-[0_10px_30px_-12px_hsl(24_15%_9%_/_0.5)] hover:bg-gold hover:text-ink transition-all duration-300 hover:-translate-y-1"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Start on WhatsApp  -  Free
+          </a>
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">
+            First 10 questions free · No credit card · Instant answers
+          </p>
+        </motion.div>
+
+        <motion.div
+          {...fade}
+          transition={{ duration: 0.6, delay: 0.4 }}
+          className="mt-12 pt-8 border-t border-border/50"
+        >
+          <div className="flex justify-center gap-6 items-center text-clay">
+            <span className="text-sm">WhatsApp</span>
+            <span className="text-border">•</span>
+            <span className="text-sm">24/7 Available</span>
+            <span className="text-border">•</span>
+            <span className="text-sm">Personalized for You</span>
           </div>
+          <p className="mt-4 text-xs text-clay/60 italic">
+            Android & iOS apps coming soon
+          </p>
         </motion.div>
       </div>
     </section>
@@ -368,7 +322,7 @@ function PhoneAdvisor() {
           Should I push for the raise this month?
         </div>
         <div className="self-start max-w-[85%] bg-secondary text-ink px-3 py-2 rounded-lg rounded-bl-sm">
-          Yes — but wait until the 14th. Jupiter transits your 10th. Frame around impact, not tenure.
+          Yes  -  but wait until the 14th. Jupiter transits your 10th. Frame around impact, not tenure.
         </div>
         <div className="self-end max-w-[80%] bg-ink text-parchment px-3 py-2 rounded-lg rounded-br-sm">
           Fair. Anything else I should be holding?
@@ -418,47 +372,186 @@ function FeatureBlock({
 
 function What() {
   return (
-    <section id="what" className="py-28 md:py-40">
+    <section id="how" className="py-28 md:py-40">
       <div className="container-peak">
-        <motion.div {...fade} className="max-w-2xl mb-20">
-          <p className="eyebrow mb-4">What Peak does</p>
-          <h2 className="font-display text-4xl md:text-5xl leading-[1.05] text-ink">
-            Clear signal, on time.<br />
-            <span className="text-clay">From your chart to your calendar.</span>
+        <motion.div {...fade} className="max-w-3xl mx-auto text-center mb-20">
+          <p className="eyebrow mb-4">How it works</p>
+          <h2 className="font-display text-3xl md:text-5xl leading-tight text-ink">
+            Vedic Astrology, <span className="text-gold">Simplified</span>
           </h2>
+          <p className="mt-6 text-lg leading-relaxed text-clay">
+            Chat with our AI astrologer on WhatsApp. Ask anything - timing for interviews, compatibility checks, career moves, health concerns. Get instant, personalized answers based on your birth chart.
+          </p>
         </motion.div>
 
-        <div className="space-y-32">
-          <FeatureBlock
-            index="01"
-            eyebrow="Today's windows"
-            title="The right hour, not the right zodiac."
-            body="Each morning, Peak reads your chart against today's transits and returns the exact windows to act — and the ones to avoid. No symbols to interpret. Just a window, a reason, and a time."
-            phone={<PhoneToday />}
-          />
-          <FeatureBlock
-            index="02"
-            eyebrow="Goals"
-            title="Goals that move with the sky."
-            body="Set what matters, or let the AI advisor surface goals from your conversations. Peak then maps the calendar — the right week to push, the right hour to pitch — until the goal is met."
-            phone={<PhoneGoals />}
-            reverse
-          />
-          <FeatureBlock
-            index="03"
-            eyebrow="Patterns"
-            title="See the cycle before it sees you."
-            body="Long-term mapping of the dasha and transits shaping the next 6, 18, and 60 months. Recurring themes, peaks, and troughs — laid against the calendar you already use."
-            phone={<PhonePatterns />}
-          />
-          <FeatureBlock
-            index="04"
-            eyebrow="Advisor"
-            title="An advisor that has read your chart."
-            body="Chat with an AI grounded in your jyotisha — not a generic chatbot. It remembers what you're working on, suggests goals from your patterns, and answers in plain English."
-            phone={<PhoneAdvisor />}
-            reverse
-          />
+        <div className="space-y-24">
+          <motion.div {...fade} className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="eyebrow mb-4">01 · Simple Start</p>
+              <h3 className="font-display text-3xl md:text-4xl leading-tight text-ink">
+                Just send your birth details
+              </h3>
+              <p className="mt-5 text-base leading-relaxed text-clay">
+                Date, time, and place. That's all we need. Your complete birth chart is generated instantly, and every answer is customized to your planetary positions.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-64 h-[500px] rounded-3xl bg-parchment border-4 border-ink shadow-2xl overflow-hidden">
+                {/* WhatsApp Header */}
+                <div className="bg-[#075E54] text-white p-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm">Peak Astrology</p>
+                    <p className="text-xs opacity-80">Online</p>
+                  </div>
+                </div>
+                {/* Chat Messages */}
+                <div className="bg-[#ECE5DD] p-3 h-full overflow-hidden">
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-end">
+                      <div className="bg-[#DCF8C6] rounded-lg rounded-br-sm p-2 max-w-[80%]">
+                        <p>Hi! I want to know my chart</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-start">
+                      <div className="bg-white rounded-lg rounded-bl-sm p-2 max-w-[85%]">
+                        <p>Welcome! 🙏 I'll generate your personalized birth chart.</p>
+                        <p className="mt-2">Please share:</p>
+                        <p>1. Date of birth</p>
+                        <p>2. Time of birth</p>
+                        <p>3. Place of birth</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <div className="bg-[#DCF8C6] rounded-lg rounded-br-sm p-2 max-w-[80%]">
+                        <p>15 March 1990</p>
+                        <p>7:30 AM</p>
+                        <p>Mumbai, India</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-start">
+                      <div className="bg-white rounded-lg rounded-bl-sm p-2 max-w-[85%]">
+                        <p>✓ Chart generated!</p>
+                        <p className="mt-2">Ask me anything about your career, relationships, health, or timing for important decisions.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div {...fade} className="grid md:grid-cols-2 gap-12 items-center md:[&>*:first-child]:order-2">
+            <div>
+              <p className="eyebrow mb-4">02 · Ask Anything</p>
+              <h3 className="font-display text-3xl md:text-4xl leading-tight text-ink">
+                Real questions, instant answers
+              </h3>
+              <p className="mt-5 text-base leading-relaxed text-clay">
+                "Should I take this job?" "When's the best time to travel?" "Is this relationship compatible?" Get clear, actionable guidance - not vague predictions.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-64 h-[500px] rounded-3xl bg-parchment border-4 border-ink shadow-2xl overflow-hidden">
+                {/* WhatsApp Header */}
+                <div className="bg-[#075E54] text-white p-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm">Peak Astrology</p>
+                    <p className="text-xs opacity-80">Online</p>
+                  </div>
+                </div>
+                {/* Chat Messages */}
+                <div className="bg-[#ECE5DD] p-3 h-full overflow-hidden">
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-end">
+                      <div className="bg-[#DCF8C6] rounded-lg rounded-br-sm p-2 max-w-[80%]">
+                        <p>Should I switch jobs this month?</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-start">
+                      <div className="bg-white rounded-lg rounded-bl-sm p-2 max-w-[85%]">
+                        <p>Based on your chart:</p>
+                        <p className="mt-2">✓ Jupiter in 10th house - favorable for career change</p>
+                        <p className="mt-1">⚠ Mercury retrograde until 22nd - wait for contracts</p>
+                        <p className="mt-2 font-semibold text-gold">Best timing: Last week of this month</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <div className="bg-[#DCF8C6] rounded-lg rounded-br-sm p-2 max-w-[80%]">
+                        <p>Thanks! What about my relationship?</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-start">
+                      <div className="bg-white rounded-lg rounded-bl-sm p-2 max-w-[85%]">
+                        <p>Venus in 7th house shows strong partnership energy...</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div {...fade} className="grid md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="eyebrow mb-4">03 · No Fluff</p>
+              <h3 className="font-display text-3xl md:text-4xl leading-tight text-ink">
+                Trained on real cases
+              </h3>
+              <p className="mt-5 text-base leading-relaxed text-clay">
+                Our AI is trained on thousands of actual readings. No generic horoscopes. Every answer considers your chart, current planetary periods (dashas), and transits.
+              </p>
+            </div>
+            <div className="flex justify-center">
+              <div className="w-64 h-[500px] rounded-3xl bg-parchment border-4 border-ink shadow-2xl overflow-hidden">
+                {/* WhatsApp Header */}
+                <div className="bg-[#075E54] text-white p-3 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-full bg-[#25D366] flex items-center justify-center">
+                    <svg viewBox="0 0 24 24" className="w-5 h-5 fill-white">
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm">Peak Astrology</p>
+                    <p className="text-xs opacity-80">Online</p>
+                  </div>
+                </div>
+                {/* Chat Messages */}
+                <div className="bg-[#ECE5DD] p-3 h-full overflow-hidden">
+                  <div className="space-y-2 text-xs">
+                    <div className="flex justify-end">
+                      <div className="bg-[#DCF8C6] rounded-lg rounded-br-sm p-2 max-w-[80%]">
+                        <p>When should I start my business?</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-start">
+                      <div className="bg-white rounded-lg rounded-bl-sm p-2 max-w-[85%]">
+                        <p>Your 10th lord is strong. Current dasha:</p>
+                        <p className="mt-2">• Moon-Jupiter period (favorable)</p>
+                        <p>• Rahu transit in 2nd (finances)</p>
+                        <p className="mt-2 font-semibold">Muhurta: March 15, 10:30-11:45 AM</p>
+                        <p className="mt-2 text-gold">This combines your personal strength with auspicious timing.</p>
+                      </div>
+                    </div>
+                    <div className="flex justify-end">
+                      <div className="bg-[#DCF8C6] rounded-lg rounded-br-sm p-2 max-w-[80%]">
+                        <p>Wow, that's specific! 🙏</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -517,6 +610,69 @@ function FounderProfile({
   );
 }
 
+function Testimonials() {
+  const testimonials = [
+    {
+      quote: "It told me that I will have a medical procedure. And I had one the very next week! Freaky!",
+      name: "",
+      location: "",
+    },
+    {
+      quote: "My billionaire boss used to set her crucial meeting time astrologically. Now I do it too.",
+      name: "",
+      location: "",
+    },
+    {
+      quote: "It told me about my break-up last year. Also told me how to avoid a repeat. Very useful inputs",
+      name: "",
+      location: "",
+    },
+  ];
+
+  return (
+    <section className="py-24 bg-parchment-deep/30">
+      <div className="container-peak">
+        <motion.div {...fade} className="text-center mb-16">
+          <h2 className="font-display text-3xl md:text-5xl font-bold text-ink mb-4">
+            What people say
+          </h2>
+          <p className="text-lg text-clay max-w-2xl mx-auto">
+            Real experiences from real people
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="bg-parchment rounded-2xl p-6 shadow-md border border-border relative flex flex-col"
+            >
+              <Quote className="w-8 h-8 text-gold/30 absolute top-4 right-4" />
+              <p className="text-ink leading-relaxed italic flex-1 mb-6">
+                &ldquo;{testimonial.quote}&rdquo;
+              </p>
+              <div className="flex items-center gap-3 border-t border-border/50 pt-4">
+                <div className="w-10 h-10 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+                  <span className="font-display text-sm font-semibold text-gold/40">★</span>
+                </div>
+                <div>
+                  <p className="text-xs text-clay italic">
+                    Verified user
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function Founder() {
   return (
     <section id="founder" className="py-28 md:py-36 bg-parchment-deep/50 border-y border-border">
@@ -527,14 +683,14 @@ function Founder() {
             First principles meet modern life.
           </h2>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-            Peak is co-built by IIT Delhi batchmates — a practicing jyotishi and a production AI engineer — bringing scriptural depth and large-scale engineering to the same product.
+            Peak is co-built by IIT Delhi batchmates  -  a practicing jyotishi and a production AI engineer  -  bringing scriptural depth and large-scale engineering to the same product.
           </p>
         </motion.div>
         <div className="grid gap-6 sm:gap-8 md:grid-cols-2 md:gap-8 lg:gap-10">
           <FounderProfile
             name="Abhimanyu Singh Rana"
             bio="An IIT Delhi graduate and practicing jyotishi who has run businesses, built SaaS products, raised venture capital, and worked on the Prime Minister's team."
-            detail="His edge is the rare overlap: scriptural jyotisha studied as a science, applied through years of consulting clients across the world on professional and personal decisions. That operator's lens is why Peak is goal-oriented — not predictive theatre."
+            detail="His edge is the rare overlap: scriptural jyotisha studied as a science, applied through years of consulting clients across the world on professional and personal decisions. That operator's lens is why Peak is goal-oriented  -  not predictive theatre."
             tags={["IIT Delhi", "Practicing jyotishi", "Global clientele", "Operator background"]}
             href="https://www.pinpointjyotish.com/my-jyotisha-journey"
             linkLabel="Read his journey into jyotisha"
@@ -542,7 +698,7 @@ function Founder() {
           <FounderProfile
             name="Nishant Kyal"
             bio="An IIT Delhi graduate who has led technology at Amazon and Freecharge, co-founded startups, and built LLM solutions for a leading Indian law firm."
-            detail="Two decades of shipping large-scale products — the same rigor behind legal research for hundreds of lawyers, now applied to making jyotisha practical, personal, and trustworthy at scale. He is also a certified yoga teacher."
+            detail="Two decades of shipping large-scale products  -  the same rigor behind legal research for hundreds of lawyers, now applied to making jyotisha practical, personal, and trustworthy at scale. He is also a certified yoga teacher."
             tags={["IIT Delhi", "Amazon & Freecharge", "LLM for legal", "Startup experience", "Certified yoga teacher"]}
             href="https://www.linkedin.com/in/nishant-kyal"
             linkLabel="View on LinkedIn"
@@ -603,19 +759,47 @@ function Origin() {
 }
 
 function FinalCTA() {
+  const { whatsappUrl } = useSourceGreeting();
+  
   return (
     <section className="py-32 md:py-40">
       <div className="container-peak max-w-3xl text-center">
-        <motion.p {...fade} className="eyebrow mb-6">Early access</motion.p>
+        <motion.p {...fade} className="eyebrow mb-6">Try it free</motion.p>
         <motion.h2 {...fade} transition={{ duration: 0.8, delay: 0.05 }} className="font-display text-4xl md:text-6xl leading-[1.05] text-ink">
-          Find your <em className="not-italic text-gold">peak</em>.<br />Live by it.
+          Start asking questions on <span className="text-gold">WhatsApp</span>
         </motion.h2>
+        <motion.p {...fade} transition={{ duration: 0.8, delay: 0.1 }} className="mt-6 text-lg text-clay max-w-2xl mx-auto">
+          Your first 10 questions are completely free. No credit card. No strings attached. Just real guidance, instantly.
+        </motion.p>
         <motion.div {...fade} transition={{ duration: 0.8, delay: 0.15 }} className="mt-12 flex justify-center">
-          <WaitlistForm source="footer" variant="solid" />
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-ink text-parchment font-mono text-sm uppercase tracking-[0.2em] shadow-[0_10px_30px_-12px_hsl(24_15%_9%_/_0.5)] hover:bg-gold hover:text-ink transition-all duration-300 hover:-translate-y-1"
+          >
+            <MessageCircle className="w-5 h-5" />
+            Start Free on WhatsApp
+          </a>
         </motion.div>
-        <p className="mt-10 font-mono text-[11px] uppercase tracking-[0.22em] text-clay">Built in India · For the world</p>
+        <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.22em] text-clay">10 questions free · No signup · Instant answers</p>
       </div>
     </section>
+  );
+}
+
+function FloatingWhatsAppCta() {
+  const { whatsappUrl } = useSourceGreeting();
+  return (
+    <a
+      href={whatsappUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="fixed bottom-6 right-6 z-50 flex items-center gap-2 px-5 py-3 bg-gold text-ink font-medium rounded-full shadow-lg hover:bg-gold/90 transition-colors md:hidden"
+    >
+      <MessageCircle className="w-5 h-5" />
+      <span className="text-sm">Try Free</span>
+    </a>
   );
 }
 
@@ -626,11 +810,13 @@ const Index = () => {
       <Hero />
       <SignalStrip />
       <What />
+      <Testimonials />
       <Founder />
       <Manifesto />
       <Origin />
       <FinalCTA />
       <SiteFooter />
+      <FloatingWhatsAppCta />
     </main>
   );
 };

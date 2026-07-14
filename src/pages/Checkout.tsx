@@ -1,8 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Check, Crown, Sparkles, Star, Users } from "lucide-react";
+import { Check, Crown, Sparkles, Star, Users, Quote, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import logo from "@/assets/peak-logo.png";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   crown: Crown,
@@ -10,11 +11,20 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   star: Star,
 };
 
-const normalizePhone = (phone: string) => phone.replace(/[^\d+]/g, "").slice(0, 12);
-
-const isIndianPhoneNumber = (phone: string | null) => {
-  if (!phone) return false;
-  return normalizePhone(phone).replace(/\D/g, "").startsWith("91");
+// The server appends a region digit to the user id in the payment link
+// (0 = India, 1 = international), resolved from the account's phone so the
+// client can't pick its own currency. Strip it before using the id anywhere.
+const parseUserIdParam = (
+  raw: string
+): { userId: string; region: "india" | "international" } => {
+  const suffix = raw.slice(-1);
+  if (suffix === "0" || suffix === "1") {
+    return {
+      userId: raw.slice(0, -1),
+      region: suffix === "0" ? "india" : "international",
+    };
+  }
+  return { userId: raw, region: "international" };
 };
 
 type RazorpayOptions = {
@@ -51,10 +61,13 @@ const loadRazorpayScript = async () => {
   });
 };
 
-const parsePriceStringToMinorUnits = (price: string) => {
+const parsePriceStringToMinorUnits = (price: string, currency: "INR" | "USD") => {
+  // Example: "₹499" / "$19.99"
   const cleaned = price.replace(/,/g, "").replace(/[^\d.]/g, "");
   const value = Number.parseFloat(cleaned);
   if (Number.isNaN(value) || value <= 0) return 0;
+
+  // Razorpay expects minor units (paisa/cents).
   return value;
 };
 
@@ -65,97 +78,105 @@ const getLaunchReferencePrice = (displayPrice: string) => {
   const value = Number.parseFloat(cleaned);
   if (Number.isNaN(value) || value <= 0) return displayPrice;
 
+  // Launch reference price = current price +30%.
+  // INR prices are rounded to nearest 100 as requested.
   const bumped = value * 1.3;
   const rounded = symbol === "₹" ? Math.round(bumped / 100) * 100 : Math.round(bumped);
   return `${symbol}${rounded.toLocaleString("en-IN")}`;
 };
 
-// Pricing data
+// Pricing data (from ProJyotish)
 const pricingData = {
-  description: "Choose the plan that fits your wellness journey",
+  description: "Your astrology companion for everything in life - accurate guidance developed by IITians.",
   india: [
-    {
-      name: "Essential",
-      iconType: "users",
-      popular: false,
-      badge: "",
-      monthlyPrice: "₹99",
-      quarterlyPrice: "₹249",
-      monthlyTotal: "₹99",
-      quarterlyTotal: "₹249",
-      effectiveMonthlyPrice: "₹83/mo",
-      quarterlySavings: "Save ₹48",
-      features: [
-        "Basic wellness insights",
-        "Daily health tips",
-        "Community access",
-        "Email support",
-      ],
-    },
     {
       name: "Premium",
       iconType: "crown",
+      popular: false,
+      badge: "",
+      monthlyPrice: "₹499",
+      quarterlyPrice: "₹1,099",
+      monthlyTotal: "₹499",
+      quarterlyTotal: "₹1,099",
+      effectiveMonthlyPrice: "₹366/mo",
+      quarterlySavings: "Save 27%",
+      features: [
+        "Unlimited Questions",
+        "Daily Favourable Time Reports",
+        "Customised for Your Kundli",
+        "Personalised for Your Life",
+      ],
+    },
+    {
+      name: "Power User",
+      iconType: "users",
       popular: true,
       badge: "Most Popular",
-      monthlyPrice: "₹199",
-      quarterlyPrice: "₹499",
-      monthlyTotal: "₹199",
-      quarterlyTotal: "₹499",
-      effectiveMonthlyPrice: "₹166/mo",
-      quarterlySavings: "Save ₹98",
+      monthlyPrice: "₹599",
+      quarterlyPrice: "₹1,339",
+      monthlyTotal: "₹599",
+      quarterlyTotal: "₹1,339",
+      effectiveMonthlyPrice: "₹446/mo",
+      quarterlySavings: "Save 25%",
       features: [
-        "All Essential features",
-        "Personalized wellness plans",
-        "Priority support",
-        "Advanced analytics",
-        "Exclusive content",
+        "Everything in Premium",
+        "Support for multiple profiles",
       ],
     },
   ],
   international: [
     {
-      name: "Essential",
-      iconType: "users",
+      name: "Premium",
+      iconType: "crown",
       popular: false,
       badge: "",
-      monthlyPrice: "$5",
-      quarterlyPrice: "$12",
-      monthlyTotal: "$5",
-      quarterlyTotal: "$12",
-      effectiveMonthlyPrice: "$4/mo",
-      quarterlySavings: "Save $3",
+      monthlyPrice: "$19.99",
+      quarterlyPrice: "$47.99",
+      monthlyTotal: "$19.99",
+      quarterlyTotal: "$47.99",
+      effectiveMonthlyPrice: "$16/mo",
+      quarterlySavings: "Save 20%",
       features: [
-        "Basic wellness insights",
-        "Daily health tips",
-        "Community access",
-        "Email support",
+        "Unlimited Questions",
+        "Daily Favourable Time Reports",
+        "Customised for Your Kundli",
+        "Personalised for Your Life",
       ],
     },
     {
-      name: "Premium",
-      iconType: "crown",
+      name: "Power User",
+      iconType: "users",
       popular: true,
       badge: "Most Popular",
-      monthlyPrice: "$10",
-      quarterlyPrice: "$25",
-      monthlyTotal: "$10",
-      quarterlyTotal: "$25",
-      effectiveMonthlyPrice: "$8/mo",
-      quarterlySavings: "Save $5",
+      monthlyPrice: "$24.99",
+      quarterlyPrice: "$59.99",
+      monthlyTotal: "$24.99",
+      quarterlyTotal: "$59.99",
+      effectiveMonthlyPrice: "$20/mo",
+      quarterlySavings: "Save 20%",
       features: [
-        "All Essential features",
-        "Personalized wellness plans",
-        "Priority support",
-        "Advanced analytics",
-        "Exclusive content",
+        "Everything in Premium",
+        "Support for multiple profiles",
       ],
     },
   ],
 };
 
+const checkoutTestimonials = [
+  {
+    quote: "It told me that I will have a medical procedure. And I had one the very next week! Freaky!",
+  },
+  {
+    quote: "My billionaire boss used to set her crucial meeting time astrologically. Now I do it too.",
+  },
+  {
+    quote: "It told me about my break-up last year. Also told me how to avoid a repeat. Very useful inputs",
+  },
+];
+
 const checkoutFaqs = [
   {
-    question: "How can I upgrade to Premium if I am on Essential?",
+    question: "How can I upgrade to Power User if I am on Premium?",
     answer:
       "You can upgrade anytime. Your old subscription will be cancelled, and any unused balance will be refunded.",
   },
@@ -167,7 +188,7 @@ const checkoutFaqs = [
   {
     question: "Refund policy",
     answer:
-      "We do not offer refunds once payment is made. We provide a free trial so you can evaluate our service before subscribing.",
+      "We do not offer refunds once payment is made. We provide a free trial of 10 questions and 3 days of personalized reports so you can evaluate our service before subscribing.",
   },
 ];
 
@@ -175,18 +196,21 @@ const Checkout = () => {
   const [isQuarterly, setIsQuarterly] = useState(false);
   const [searchParams] = useSearchParams();
 
-  const userId =
-    searchParams.get("phone") ??
-    searchParams.get("phoneNumber") ??
-    searchParams.get("mobile") ??
+  const rawUserId = searchParams.get("userid") ??
+    searchParams.get("userId") ??
     "";
 
-  const normalizedUserId = useMemo(() => userId.replace(/\D/g, ""), [userId]);
-
-  const region: "india" | "international" = useMemo(
-    () => (isIndianPhoneNumber(userId) ? "india" : "international"),
-    [userId]
+  const { userId, region } = useMemo(
+    () => parseUserIdParam(rawUserId),
+    [rawUserId]
   );
+
+  // Identify user in PostHog when userid is present (region digit stripped).
+  useEffect(() => {
+    if (userId && window.posthog) {
+      window.posthog.identify(userId);
+    }
+  }, [userId]);
 
   const plans = pricingData[region];
   const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
@@ -219,15 +243,15 @@ const Checkout = () => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        amount: parsePriceStringToMinorUnits(price),
+        amount: parsePriceStringToMinorUnits(price, currency),
         totalCount: 12,
         customerNotify: 1,
-        phoneNumber: normalizedUserId,
+        phoneNumber: userId,
         metadata: {
           region: regionKey,
           plan: planNameKey,
           term: billingTerm,
-          user_id: normalizedUserId || undefined,
+          user_id: userId || undefined,
         },
       }),
     });
@@ -252,7 +276,7 @@ const Checkout = () => {
       name: "PeakLife",
       description: `${plan.name} ${billingTermLabel} Subscription`,
       subscription_id: subscriptionId,
-      prefill: normalizedUserId ? { contact: normalizedUserId } : undefined,
+      prefill: userId ? { contact: userId } : undefined,
       theme: { color: "#F59E0B" },
       handler: () => {
         window.location.href = `/`;
@@ -285,13 +309,12 @@ const Checkout = () => {
               transition={{ duration: 0.6 }}
               className="text-center mb-16"
             >
-              <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="absolute inset-0 -z-10 rounded-xl bg-gold/20 blur-xl" />
-                  <div className="w-20 h-20 md:w-28 md:h-28 mx-auto rounded-2xl shadow-lg bg-gold/10 flex items-center justify-center">
-                    <span className="text-4xl md:text-5xl">🏔️</span>
-                  </div>
-                </div>
+              <div className="flex justify-center mb-3">
+                <img
+                  src={logo}
+                  alt="Peak Logo"
+                  className="w-20 h-20 md:w-28 md:h-28 mx-auto"
+                />
               </div>
               <h1 className="font-serif text-3xl md:text-5xl font-bold text-ink mb-4">
                 Checkout
@@ -316,8 +339,8 @@ const Checkout = () => {
                 }`}
               >
                 <span
-                  className={`pointer-events-none block h-5 w-5 rounded-full bg-cream shadow-lg ring-0 transition-transform ${
-                    isQuarterly ? "translate-x-7" : "translate-x-1"
+                  className={`pointer-events-none block h-5 w-5 rounded-full shadow-lg ring-0 transition-transform ${
+                    isQuarterly ? "bg-ink translate-x-7" : "bg-gold translate-x-1"
                   }`}
                 />
               </button>
@@ -340,6 +363,7 @@ const Checkout = () => {
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {plans.map((plan, index) => {
                 const price = isQuarterly ? plan.quarterlyPrice : plan.monthlyPrice;
+                const total = isQuarterly ? plan.quarterlyTotal : plan.monthlyTotal;
                 const launchReferencePrice = getLaunchReferencePrice(price);
                 const savings = isQuarterly ? plan.quarterlySavings : "";
                 const Icon = iconMap[plan.iconType] || Crown;
@@ -478,6 +502,87 @@ const Checkout = () => {
                 );
               })}
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mt-16 max-w-3xl mx-auto"
+            >
+              <div className="rounded-2xl bg-gradient-to-br from-gold/10 via-gold/5 to-transparent border-2 border-gold/30 p-8 md:p-10 shadow-lg relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gold/5 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-gold/5 rounded-full blur-2xl" />
+                
+                <div className="relative flex flex-col items-center text-center">
+                  <div className="w-16 h-16 rounded-xl bg-gold/20 flex items-center justify-center mb-4">
+                    <GraduationCap className="w-9 h-9 text-gold" />
+                  </div>
+                  <h3 className="font-display text-2xl md:text-3xl font-bold text-ink mb-3">
+                    Built by IIT Delhi Alumni
+                  </h3>
+                  <p className="text-base md:text-lg text-clay leading-relaxed max-w-xl">
+                    Co-founded by IIT Delhi batchmates - a practicing jyotishi and a production AI engineer - combining scriptural depth with modern engineering rigor.
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-2 justify-center">
+                    <span className="font-mono text-xs uppercase tracking-wider text-ink/80 border border-gold/40 px-4 py-2 rounded-full bg-parchment/50">
+                      IIT Delhi
+                    </span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-ink/80 border border-gold/40 px-4 py-2 rounded-full bg-parchment/50">
+                      Practicing Jyotishi
+                    </span>
+                    <span className="font-mono text-xs uppercase tracking-wider text-ink/80 border border-gold/40 px-4 py-2 rounded-full bg-parchment/50">
+                      AI Engineer
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="mt-16 max-w-4xl mx-auto"
+            >
+              <div className="text-center mb-10">
+                <h2 className="font-display text-2xl md:text-3xl font-bold text-ink mb-3">
+                  Trusted by People Like You
+                </h2>
+                <p className="text-base text-clay">
+                  Real experiences from verified users
+                </p>
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {checkoutTestimonials.map((testimonial, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
+                    className="bg-cream rounded-xl p-6 shadow-md border border-clay/20 relative flex flex-col hover:shadow-lg transition-shadow"
+                  >
+                    <Quote className="w-7 h-7 text-gold/30 absolute top-4 right-4" />
+                    <p className="text-sm md:text-base text-ink leading-relaxed italic flex-1 mb-5">
+                      &ldquo;{testimonial.quote}&rdquo;
+                    </p>
+                    <div className="flex items-center gap-3 border-t border-clay/20 pt-4">
+                      <div className="w-9 h-9 rounded-full bg-gold/20 flex items-center justify-center shrink-0">
+                        <Star className="w-4 h-4 text-gold fill-gold" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-clay font-medium">
+                          Verified user
+                        </p>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.section>
 
             <motion.section
               initial={{ opacity: 0, y: 16 }}
