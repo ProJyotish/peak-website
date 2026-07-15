@@ -15,7 +15,6 @@ function XIcon({ className }: { className?: string }) {
 const socialLinks = [
   { label: "LinkedIn", href: SITE.social.linkedin, icon: Linkedin },
   { label: "Instagram", href: SITE.social.instagram, icon: Instagram },
-  { label: "X", href: SITE.social.x, icon: XIcon },
 ] as const;
 
 export function SiteFooter() {
