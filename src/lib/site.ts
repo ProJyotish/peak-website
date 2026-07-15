@@ -8,9 +8,8 @@ export const SITE = {
     "mailto:support@peaklife.me?subject=Account%20deletion%20request",
   address: "India",
   social: {
-    linkedin: "https://www.linkedin.com/in/nishant-kyal",
-    instagram: "https://www.instagram.com/peaklife.me",
-    x: "https://x.com/peaklife_me",
+    linkedin: "https://www.linkedin.com/company/peaklife-me",
+    instagram: "https://www.instagram.com/peaklife_me/"
   },
 } as const;
 

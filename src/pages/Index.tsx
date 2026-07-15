@@ -715,7 +715,6 @@ function Manifesto() {
     ["Predictions", "Windows of action"],
     ["Vague timing", "The exact hour"],
     ["Daily horoscope for a sign", "Today, for your chart"],
-    ["Rituals required", "No rituals required"],
     ["Belief", "Signal"],
   ];
   return (
