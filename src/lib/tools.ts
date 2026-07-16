@@ -27,16 +27,16 @@ export const TOOLS: ToolDefinition[] = [
     shortTitle: "Astrocartography",
     tagline: "Where your chart favors place, travel, and relocation",
     description:
-      "See how planetary lines cross the globe from your birth chart — Sun for vitality, Venus for ease, Jupiter for growth, Saturn for structure — so you can choose cities with intention.",
+      "See how planetary lines cross the globe from your birth chart - Sun for vitality, Venus for ease, Jupiter for growth, Saturn for structure - so you can choose cities with intention.",
     welcome:
-      "Ask where to travel or live — compare cities, states, countries, or continents, then explore the map and line meanings if you want depth.",
+      "Ask where to travel or live - compare cities, states, countries, or continents, then explore the map and line meanings if you want depth.",
     icon: Globe,
     focusAreas: ["Planetary lines", "Relocation themes", "Travel timing", "City fit"],
     aboutTitle: "How astrocartography works",
     aboutSections: [
       {
         title: "Planetary lines",
-        body: "Each planet casts angular lines across the Earth from your birth moment. Living or traveling near a line amplifies that planet's themes — opportunity, love, ambition, or challenge.",
+        body: "Each planet casts angular lines across the Earth from your birth moment. Living or traveling near a line amplifies that planet's themes - opportunity, love, ambition, or challenge.",
       },
       {
         title: "Reading the map",
@@ -51,7 +51,7 @@ export const TOOLS: ToolDefinition[] = [
       {
         question: "What is astrocartography?",
         answer:
-          "It maps where planetary energies from your birth chart are strongest on Earth — helping you choose cities for work, love, study, or healing.",
+          "It maps where planetary energies from your birth chart are strongest on Earth - helping you choose cities for work, love, study, or healing.",
       },
       {
         question: "Do I need an exact birth time?",
@@ -66,7 +66,7 @@ export const TOOLS: ToolDefinition[] = [
       {
         question: "Can Peak pick the perfect city for me?",
         answer:
-          "Charts show tendencies. Lifestyle, visa, career, and personal preference still matter — use the map as one informed input among many.",
+          "Charts show tendencies. Lifestyle, visa, career, and personal preference still matter - use the map as one informed input among many.",
       },
     ],
   },

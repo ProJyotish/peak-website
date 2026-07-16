@@ -126,7 +126,7 @@ function titleCase(s: string): string {
     .join(" ");
 }
 
-/** Clean display label — avoids "France, France" when geocoder repeats the country. */
+/** Clean display label - avoids "France, France" when geocoder repeats the country. */
 export function formatPlaceLabel(
   query: string,
   kind: PlaceKind,

@@ -78,7 +78,7 @@ const ToolDetailPage = () => {
         <div>
           <p className="font-display text-xl text-ink">Want a full reading now?</p>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            Peak on WhatsApp answers personalized questions from your chart — try the free trial.
+            Peak on WhatsApp answers personalized questions from your chart - try the free trial.
           </p>
         </div>
         <Button asChild className="mt-4 md:mt-0 shrink-0 bg-gold text-ink hover:bg-gold/90">

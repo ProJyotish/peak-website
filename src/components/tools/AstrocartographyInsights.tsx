@@ -80,7 +80,7 @@ export function PlaceComparison({ purpose, places, lines, userName }: PlaceCompa
         </h2>
         <p className="mt-4 max-w-2xl text-base text-muted-foreground leading-relaxed">
           {userName?.trim() ? `${userName.trim()}, h` : "H"}ere’s how your selections stack for{" "}
-          <span className="text-ink">{purposeLabel}</span> — ranked by planetary-line fit. Switch
+          <span className="text-ink">{purposeLabel}</span> - ranked by planetary-line fit. Switch
           purpose above to re-weight the same places.
         </p>
       </div>
@@ -145,7 +145,7 @@ export function PlaceComparison({ purpose, places, lines, userName }: PlaceCompa
 
             {place.kind !== "city" && place.cityPicks.length === 0 && (
               <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
-                No curated cities mapped inside this {place.kind} yet — use the score as a
+                No curated cities mapped inside this {place.kind} yet - use the score as a
                 directional read, then check specific cities.
               </p>
             )}
@@ -259,7 +259,7 @@ export function LineMeanings({ purpose }: LineMeaningsProps) {
               <span className="text-ink font-medium">{planet}</span>
               <span className="text-muted-foreground">
                 {" "}
-                — {p.gift}. Watch: {p.caution.toLowerCase()}.
+                - {p.gift}. Watch: {p.caution.toLowerCase()}.
               </span>
             </li>
           ))}

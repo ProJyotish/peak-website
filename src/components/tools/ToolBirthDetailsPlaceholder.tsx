@@ -40,7 +40,7 @@ export function ToolBirthDetailsPlaceholder({ toolName }: ToolBirthDetailsPlaceh
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.18em] text-gold mb-2">Birth details</p>
         <p className="text-sm text-muted-foreground">
-          Dummy form — results are not calculated yet. We&apos;ll use this layout when the tool goes live.
+          Dummy form - results are not calculated yet. We&apos;ll use this layout when the tool goes live.
         </p>
       </div>
       <div className="grid gap-4 sm:grid-cols-2">

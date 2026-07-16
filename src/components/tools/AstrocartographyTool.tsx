@@ -195,7 +195,7 @@ export function AstrocartographyTool() {
             Where should I {purpose === "travel" ? "travel" : "live"}?
           </h2>
           <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-            Add one or more places — cities, states, countries, or continents — and we rank them
+            Add one or more places - cities, states, countries, or continents - and we rank them
             for your purpose.
           </p>
         </div>

@@ -13,7 +13,7 @@ export interface SourceGreeting {
   word: string;
 }
 
-/** Distinct respectful openers per channel — cultural / polite, no religious invocations (short, WhatsApp-friendly) */
+/** Distinct respectful openers per channel - cultural / polite, no religious invocations (short, WhatsApp-friendly) */
 const GREETINGS = {
   reddit: "Namaskaram",
   meta: "Pranam",

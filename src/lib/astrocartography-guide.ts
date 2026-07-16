@@ -27,10 +27,10 @@ export function orbKmForKind(kind: PlaceKind): number {
 export function placeKindNote(kind: PlaceKind): string {
   if (kind === "city") return "Scored at the city centre.";
   if (kind === "state")
-    return "States/regions are scored at a representative point — treat as a directional read, not a street-level verdict.";
+    return "States/regions are scored at a representative point - treat as a directional read, not a street-level verdict.";
   if (kind === "country")
-    return "Countries are scored at a representative point — compare countries directionally, then refine with cities.";
-  return "Continents use a broad representative point — useful for shortlisting continents, not for picking a neighbourhood.";
+    return "Countries are scored at a representative point - compare countries directionally, then refine with cities.";
+  return "Continents use a broad representative point - useful for shortlisting continents, not for picking a neighbourhood.";
 }
 
 export const ANGLE_MEANINGS: Record<
@@ -38,7 +38,7 @@ export const ANGLE_MEANINGS: Record<
   { title: string; summary: string; travel: string; live: string }
 > = {
   MC: {
-    title: "MC — Midheaven (career & public life)",
+    title: "MC - Midheaven (career & public life)",
     summary:
       "Where a planet culminates overhead. Themes of reputation, vocation, authority, and how the world sees you.",
     travel:
@@ -46,28 +46,28 @@ export const ANGLE_MEANINGS: Record<
     live: "Shapes long-term career climate. Settling near a benefic MC can support status; a hard MC asks for discipline.",
   },
   IC: {
-    title: "IC — Nadir (home & roots)",
+    title: "IC - Nadir (home & roots)",
     summary:
-      "The private base of the chart — belonging, family, rest, and emotional foundations.",
+      "The private base of the chart - belonging, family, rest, and emotional foundations.",
     travel:
       "Useful for retreats, family visits, or trips that restore rather than perform. Less ideal for high-visibility work trips.",
     live: "Central for relocation. A supportive IC can feel like home; a tense IC may need intentional nesting and boundaries.",
   },
   ASC: {
-    title: "ASC — Ascendant (identity & vitality)",
+    title: "ASC - Ascendant (identity & vitality)",
     summary:
-      "Where a planet rises. Colors how you show up — energy, body, first impressions, and personal style.",
+      "Where a planet rises. Colors how you show up - energy, body, first impressions, and personal style.",
     travel:
       "Great for immersive trips, language learning, and reinventing how you present yourself abroad.",
     live: "Daily life feels “more you” (or more challenged) here. Affects health habits, social ease, and how locals meet you.",
   },
   DSC: {
-    title: "DSC — Descendant (relationships)",
+    title: "DSC - Descendant (relationships)",
     summary:
       "Where a planet sets. Themes of partnership, clients, contracts, and who you attract.",
     travel:
       "Favors couple trips, networking, client meetings, and collaborative projects on the road.",
-    live: "Relationship weather of a place — dating, marriage, business partners. Choose with care if relocating for love or co-founding.",
+    live: "Relationship weather of a place - dating, marriage, business partners. Choose with care if relocating for love or co-founding.",
   },
 };
 
@@ -108,7 +108,7 @@ export const PLANET_MEANINGS: Record<
   Saturn: {
     theme: "Structure, duty, time",
     gift: "Mastery, maturity, lasting foundations",
-    caution: "Delays, loneliness, heavy responsibility — especially for long stays",
+    caution: "Delays, loneliness, heavy responsibility - especially for long stays",
   },
 };
 
@@ -147,7 +147,7 @@ export function lineBlurb(planet: string, angle: AcAngle, purpose: TravelPurpose
 
 export function purposeIntro(purpose: TravelPurpose): string {
   return purpose === "travel"
-    ? "For travel we favor places that boost visibility, learning, and short-window opportunity — Mars heat can be useful; Saturn weighs less than for relocation."
+    ? "For travel we favor places that boost visibility, learning, and short-window opportunity - Mars heat can be useful; Saturn weighs less than for relocation."
     : "For living we favor emotional roots (Moon IC), ease (Venus), and long-game growth (Jupiter), while treating Saturn and sharp Mars lines with more caution.";
 }
 
@@ -195,7 +195,7 @@ export function buildLocationNarrative(
 
   const summary =
     supportive.length === 0 && demanding.length === 0
-      ? `No major planetary lines fall within a tight orb of ${cityLabel}. Influence is milder — lifestyle fit, visas, and timing still matter more than the map alone.`
+      ? `No major planetary lines fall within a tight orb of ${cityLabel}. Influence is milder - lifestyle fit, visas, and timing still matter more than the map alone.`
       : `Closest activations: ${interpreted
           .slice(0, 3)
           .map((h) => `${h.planet} ${h.angle} (~${Math.round(h.distanceKm)} km)`)
@@ -208,23 +208,23 @@ export function buildLocationNarrative(
     if (supportive.some((h) => h.planet === "Venus"))
       recommendations.push("Lean into art, food, and relationship-centered itineraries.");
     if (supportive.some((h) => h.planet === "Sun" && h.angle === "MC"))
-      recommendations.push("Book visible moments — talks, portfolio reviews, or content shoots.");
+      recommendations.push("Book visible moments - talks, portfolio reviews, or content shoots.");
     if (supportive.some((h) => h.planet === "Mars"))
-      recommendations.push("Channel Mars with adventure, workouts, or decisive errands — pace yourself.");
+      recommendations.push("Channel Mars with adventure, workouts, or decisive errands - pace yourself.");
   } else {
     if (supportive.some((h) => h.planet === "Moon" && (h.angle === "IC" || h.angle === "ASC")))
       recommendations.push("Prioritize neighborhood feel, routines, and a calming home base.");
     if (supportive.some((h) => h.planet === "Jupiter"))
-      recommendations.push("Look for growth paths — study, mentoring, or expansive work.");
+      recommendations.push("Look for growth paths - study, mentoring, or expansive work.");
     if (supportive.some((h) => h.planet === "Venus"))
       recommendations.push("Choose beauty and social ease: green space, culture, and kind community.");
     if (supportive.some((h) => h.angle === "MC"))
-      recommendations.push("Align career goals with this city’s industries — the MC amplifies public results.");
+      recommendations.push("Align career goals with this city’s industries - the MC amplifies public results.");
   }
   if (recommendations.length === 0) {
     recommendations.push(
       purpose === "travel"
-        ? "Treat this as a neutral base — design the trip around people and purpose, not planetary promise."
+        ? "Treat this as a neutral base - design the trip around people and purpose, not planetary promise."
         : "If you settle here, build support systems deliberately; the chart is not loudly steering the place.",
     );
   }
@@ -234,11 +234,11 @@ export function buildLocationNarrative(
     if (h.planet === "Saturn")
       cautions.push(
         purpose === "live"
-          ? "Saturn nearby: expect slower results and more duty — excellent for mastery, hard for quick comfort."
+          ? "Saturn nearby: expect slower results and more duty - excellent for mastery, hard for quick comfort."
           : "Saturn nearby: keep the trip structured; avoid overloading the schedule.",
       );
     if (h.planet === "Mars")
-      cautions.push("Mars nearby: watch irritability, traffic, and rushing — schedule recovery time.");
+      cautions.push("Mars nearby: watch irritability, traffic, and rushing - schedule recovery time.");
   }
   if (cautions.length === 0 && totalScore < 0) {
     cautions.push("Stay honest about stress capacity; pair the place with grounding practices.");

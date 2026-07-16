@@ -30,7 +30,7 @@ const Contact = () => {
           <p className="eyebrow mb-4">Contact</p>
           <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink">Get in touch</h1>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-            Questions about Peak, partnerships, press, or support — reach out through email or WhatsApp.
+            Questions about Peak, partnerships, press, or support - reach out through email or WhatsApp.
           </p>
 
           <div className="mt-12 space-y-6">
