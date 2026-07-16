@@ -8,4 +8,6 @@ export const ROUTES = {
   accountDeletion: "/delete-my-account",
   contact: "/contact",
   checkout: "/checkout",
+  tools: "/tools",
+  toolDetail: (slug: string) => `/tools/${slug}`,
 } as const;

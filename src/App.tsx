@@ -13,6 +13,8 @@ import TermsEmbed from "./pages/TermsEmbed.tsx";
 import PrivacyEmbed from "./pages/PrivacyEmbed.tsx";
 import Contact from "./pages/Contact.tsx";
 import Checkout from "./pages/Checkout.tsx";
+import Tools from "./pages/Tools.tsx";
+import ToolDetailPage from "./pages/tools/ToolDetailPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,8 @@ const App = () => (
           <Route path={ROUTES.privacyEmbed} element={<PrivacyEmbed />} />
           <Route path={ROUTES.contact} element={<Contact />} />
           <Route path={ROUTES.checkout} element={<Checkout />} />
+          <Route path={ROUTES.tools} element={<Tools />} />
+          <Route path={`${ROUTES.tools}/:slug`} element={<ToolDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
