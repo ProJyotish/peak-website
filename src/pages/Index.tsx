@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { ArrowRight, MessageCircle, Sparkles, Quote } from "lucide-react";
+import { ArrowRight, MessageCircle, Quote } from "lucide-react";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import logo from "@/assets/peak-logo.png";
@@ -40,6 +40,7 @@ function Nav() {
       <div className="container-peak flex items-center justify-between py-6">
         <Wordmark />
         <nav className="flex items-center gap-8">
+          <a href="#ask" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">Ask about</a>
           <a href="#how" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">How it works</a>
           <a 
             href={whatsappUrl}
@@ -123,7 +124,7 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="font-display text-4xl md:text-6xl lg:text-7xl leading-[1.02] text-ink mb-6"
         >
-          Ancient Wisdom, <span className="text-gold">Instant Answers</span>
+          Astrology made <span className="text-gold">practical</span>
         </motion.h1>
         
         <motion.p
@@ -131,7 +132,7 @@ function Hero() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="mt-6 text-lg md:text-xl leading-relaxed text-clay max-w-3xl mx-auto"
         >
-          AI-powered Vedic Astrology on WhatsApp. Get personalized guidance for life's big decisions - career, relationships, timing, and more. Trained on thousands of real cases.
+          Your Vedic astrologer on WhatsApp. Get clarity on why a situation is unfolding, and a concrete path ahead toward your peak potential. Health, wealth, relationships, finance. Real questions, useful answers.
         </motion.p>
 
         <motion.div {...fade} transition={{ duration: 0.8, delay: 0.3 }} className="mt-10 flex flex-col items-center gap-4">
@@ -142,10 +143,13 @@ function Hero() {
             className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-ink text-parchment font-mono text-sm uppercase tracking-[0.2em] shadow-[0_10px_30px_-12px_hsl(24_15%_9%_/_0.5)] hover:bg-gold hover:text-ink transition-all duration-300 hover:-translate-y-1"
           >
             <MessageCircle className="w-5 h-5" />
-            Start on WhatsApp  -  Free
+            Start on WhatsApp · Free
           </a>
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay">
             First 10 questions free · No credit card · Instant answers
+          </p>
+          <p className="mt-3 text-sm text-clay/80 max-w-md mx-auto">
+            Bank-grade security and confidentiality for what matters most.
           </p>
         </motion.div>
 
@@ -154,12 +158,12 @@ function Hero() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="mt-12 pt-8 border-t border-border/50"
         >
-          <div className="flex justify-center gap-6 items-center text-clay">
-            <span className="text-sm">WhatsApp</span>
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 items-center text-clay">
+            <span className="text-sm">Chart-personal</span>
             <span className="text-border">•</span>
-            <span className="text-sm">24/7 Available</span>
+            <span className="text-sm">Built for real decisions</span>
             <span className="text-border">•</span>
-            <span className="text-sm">Personalized for You</span>
+            <span className="text-sm">Available 24/7</span>
           </div>
           <p className="mt-4 text-xs text-clay/60 italic">
             Android & iOS apps coming soon
@@ -171,10 +175,10 @@ function Hero() {
 }
 
 function SignalStrip() {
-  const items = ["Hour-by-hour", "Pattern-aware", "Goal-bound"];
+  const items = ["Health · Wealth · Relationship · Finance", "Reason + path ahead", "Astrology made practical"];
   return (
     <section className="border-y border-border bg-parchment-deep/60">
-      <div className="container-peak grid grid-cols-3 divide-x divide-border">
+      <div className="container-peak grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border">
         {items.map((it, i) => (
           <motion.div
             key={it}
@@ -370,17 +374,219 @@ function FeatureBlock({
   );
 }
 
+function PrivacyNote() {
+  return (
+    <section id="privacy" className="py-16 md:py-20 border-t border-border bg-parchment-deep/30">
+      <div className="container-peak max-w-2xl">
+        <motion.div {...fade}>
+          <p className="eyebrow mb-3">Also worth knowing</p>
+          <h2 className="font-display text-2xl md:text-3xl leading-tight text-ink">
+            Private and confidential
+          </h2>
+          <p className="mt-4 text-base leading-relaxed text-clay">
+            Peak uses bank-grade security and confidentiality for the things that matter most to you. Your chart, your questions, and your guidance stay protected so you can ask clearly and move with confidence.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+type TopicId = "health" | "wealth" | "relationship" | "finance";
+
+const TOPICS: {
+  id: TopicId;
+  label: string;
+  blurb: string;
+  questions: { who: string; q: string }[];
+}[] = [
+  {
+    id: "health",
+    label: "Health",
+    blurb: "Energy, recovery, fertility, aging, and when to push or pause.",
+    questions: [
+      { who: "28 · early career", q: "I crash every afternoon. Is this a short transit or something I should treat seriously?" },
+      { who: "34 · new mother", q: "When is my body likely to feel strong enough again for real training?" },
+      { who: "Caregiver · parent 67", q: "Dad has a surgery decision next month. What does timing look like for recovery?" },
+      { who: "Relocating adult", q: "Anxiety spiked after I changed cities. Is my chart showing a window I should plan around?" },
+      { who: "45 · marathon training", q: "Which months favor stamina, and which raise injury risk?" },
+      { who: "Couple trying to conceive", q: "What windows look supportive for health and fertility this year?" },
+    ],
+  },
+  {
+    id: "wealth",
+    label: "Wealth",
+    blurb: "Career moves, visibility, offers, and growth toward what you want to build.",
+    questions: [
+      { who: "24 · first job choice", q: "Stable PSU role or a startup offer. Which path fits my chart better right now?" },
+      { who: "Woman founder · seed", q: "When should I pitch investors this quarter?" },
+      { who: "40 · mid-management", q: "Am I favored for a leadership move, or should I deepen expertise instead?" },
+      { who: "Pre-retiree", q: "I retire in two years. How do I sequence consulting versus a full exit?" },
+      { who: "Side hustle paying", q: "When can I quit my job without overreaching?" },
+      { who: "Return after career break", q: "Which months favor interviews and offers?" },
+    ],
+  },
+  {
+    id: "relationship",
+    label: "Relationship",
+    blurb: "Partnership, family, hard conversations, and timing that supports connection.",
+    questions: [
+      { who: "Young couple · 1 year", q: "Is this a good window to move in together?" },
+      { who: "31 · dating apps fatigue", q: "When does my chart open for meeting someone serious?" },
+      { who: "Parents of young kids", q: "Our marriage feels distant. When do honest talks land better than waiting?" },
+      { who: "Considering divorce", q: "What does the next six months ask of me before I decide?" },
+      { who: "Long-distance partners", q: "Which travel windows support us instead of straining us?" },
+      { who: "Parent of a teen", q: "How do I time hard talks with my daughter so they actually land?" },
+    ],
+  },
+  {
+    id: "finance",
+    label: "Finance",
+    blurb: "Debt, savings, property, uneven income, and money decisions with real stakes.",
+    questions: [
+      { who: "27 · credit-card debt", q: "When should I aggressively pay down versus invest?" },
+      { who: "New homeowners", q: "Is refinancing favored in the next year?" },
+      { who: "Freelancer · uneven income", q: "Which months look better for big invoices and savings?" },
+      { who: "NRI · dual currency", q: "When should we move savings or buy property?" },
+      { who: "35 · starting SIPs", q: "Does my chart support a long accumulation phase now?" },
+      { who: "Sandwich generation", q: "How do I balance supporting my parents with my own goals this year?" },
+    ],
+  },
+];
+
+function AskAbout() {
+  const [active, setActive] = useState<TopicId>("health");
+  const topic = TOPICS.find((p) => p.id === active) ?? TOPICS[0];
+  const { whatsappUrl } = useSourceGreeting();
+
+  return (
+    <section id="ask" className="py-28 md:py-36 bg-parchment-deep/40 border-b border-border">
+      <div className="container-peak">
+        <motion.div {...fade} className="max-w-3xl mb-12 md:mb-16">
+          <p className="eyebrow mb-4">What people ask</p>
+          <h2 className="font-display text-3xl md:text-5xl leading-tight text-ink">
+            Practical astrology for every kind of life issue
+          </h2>
+          <p className="mt-6 text-lg leading-relaxed text-clay">
+            Health. Wealth. Relationship. Finance. See the kinds of questions people actually ask. Different ages, genders, money situations, and ambitions. Then ask your own.
+          </p>
+        </motion.div>
+
+        <div className="flex flex-wrap gap-2 mb-10">
+          {TOPICS.map((p) => {
+            const on = p.id === active;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setActive(p.id)}
+                className={`font-mono text-[11px] uppercase tracking-[0.18em] px-4 py-2.5 border transition-colors ${
+                  on
+                    ? "bg-ink text-parchment border-ink"
+                    : "bg-transparent text-ink border-ink/20 hover:border-gold hover:text-gold"
+                }`}
+              >
+                {p.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <motion.div
+          key={topic.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35 }}
+          className="border border-border bg-parchment"
+        >
+          <div className="px-6 py-5 md:px-8 border-b border-border">
+            <h3 className="font-display text-2xl md:text-3xl text-ink">{topic.label}</h3>
+            <p className="mt-2 text-base text-clay">{topic.blurb}</p>
+          </div>
+          <ul className="divide-y divide-border">
+            {topic.questions.map((item) => (
+              <li key={item.q} className="px-6 py-5 md:px-8 md:py-6">
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-gold mb-2">
+                  {item.who}
+                </p>
+                <p className="text-base md:text-lg leading-snug text-ink">
+                  &ldquo;{item.q}&rdquo;
+                </p>
+              </li>
+            ))}
+          </ul>
+          <div className="px-6 py-5 md:px-8 border-t border-border bg-parchment-deep/50">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors"
+            >
+              Ask your version on WhatsApp
+              <ArrowRight className="h-3.5 w-3.5" />
+            </a>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function ClarityPath() {
+  return (
+    <section id="clarity" className="py-28 md:py-36">
+      <div className="container-peak">
+        <motion.div {...fade} className="max-w-3xl mb-14">
+          <p className="eyebrow mb-4">Why it happened · What to do next</p>
+          <h2 className="font-display text-3xl md:text-5xl leading-tight text-ink">
+            Clarity on the reason. A path toward your peak.
+          </h2>
+          <p className="mt-6 text-lg leading-relaxed text-clay">
+            Peak is not fortune-cookie astrology. You get a grounded read on why a situation is showing up in your chart now, and what to do with the windows ahead so you can move toward your peak potential.
+          </p>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-px bg-border border border-border">
+          {[
+            {
+              title: "The reason",
+              body: "See which periods, transits, and chart patterns are active. Understand the pressure or opening you are in, not just a yes or no.",
+            },
+            {
+              title: "The path ahead",
+              body: "Leave with timing, trade-offs, and a next step you can take. Aimed at progress in health, wealth, love, and money, not vague hope.",
+            },
+          ].map((col, i) => (
+            <motion.div
+              key={col.title}
+              {...fade}
+              transition={{ duration: 0.6, delay: i * 0.08 }}
+              className="bg-background px-6 py-10 md:px-10 md:py-14"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold mb-4">
+                0{i + 1}
+              </p>
+              <h3 className="font-display text-2xl md:text-3xl text-ink">{col.title}</h3>
+              <p className="mt-4 text-base leading-relaxed text-clay">{col.body}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function What() {
   return (
-    <section id="how" className="py-28 md:py-40">
+    <section id="how" className="py-28 md:py-40 border-t border-border">
       <div className="container-peak">
         <motion.div {...fade} className="max-w-3xl mx-auto text-center mb-20">
           <p className="eyebrow mb-4">How it works</p>
           <h2 className="font-display text-3xl md:text-5xl leading-tight text-ink">
-            Vedic Astrology, <span className="text-gold">Simplified</span>
+            Vedic astrology, <span className="text-gold">made usable</span>
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-clay">
-            Chat with our AI astrologer on WhatsApp. Ask anything - timing for interviews, compatibility checks, career moves, health concerns. Get instant, personalized answers based on your birth chart.
+            Chat with your AI astrologer on WhatsApp. Ask about health, wealth, relationships, finance, and timing. Instant answers grounded in your birth chart, aimed at decisions you can act on.
           </p>
         </motion.div>
 
@@ -768,7 +974,7 @@ function FinalCTA() {
           Start asking questions on <span className="text-gold">WhatsApp</span>
         </motion.h2>
         <motion.p {...fade} transition={{ duration: 0.8, delay: 0.1 }} className="mt-6 text-lg text-clay max-w-2xl mx-auto">
-          Your first 10 questions are completely free. No credit card. No strings attached. Just real guidance, instantly.
+          Your first 10 questions are free. No credit card. Real guidance on why things are unfolding and what to do next.
         </motion.p>
         <motion.div {...fade} transition={{ duration: 0.8, delay: 0.15 }} className="mt-12 flex justify-center">
           <a
@@ -808,7 +1014,10 @@ const Index = () => {
       <Nav />
       <Hero />
       <SignalStrip />
+      <AskAbout />
+      <ClarityPath />
       <What />
+      <PrivacyNote />
       <Testimonials />
       <Founder />
       <Manifesto />
