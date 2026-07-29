@@ -103,7 +103,7 @@ const pages = [
       </section>
 
       <section style="margin-bottom: 2.5rem;">
-        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">6. Payments and Refunds — FAQs</h2>
+        <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">6. Payments and Refunds - FAQs</h2>
         <div style="display: flex; flex-direction: column; gap: 1.5rem;">
           ${PAYMENTS_REFUNDS_FAQS.map(
             (faq) => `
