@@ -1,7 +1,11 @@
-import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { copyFileSync, mkdirSync, writeFileSync, readdirSync, readFileSync } from "node:fs";
+import { resolve, dirname, join } from "node:path";
+import matter from "gray-matter";
+import { marked } from "marked";
 
-const dist = resolve(import.meta.dirname, "..", "dist");
+const root = resolve(import.meta.dirname, "..");
+const dist = resolve(root, "dist");
+const postsDir = resolve(root, "posts");
 
 // Copy index.html to 404.html for client-side routing fallback
 copyFileSync(resolve(dist, "index.html"), resolve(dist, "404.html"));
@@ -11,6 +15,7 @@ const SITE = {
   supportEmail: "support@peaklife.me",
   contactEmail: "support@peaklife.me",
   legalName: "Aryaman Knowledge Services Private Limited",
+  address: "India",
 };
 
 const grievanceOfficer = {
@@ -47,7 +52,11 @@ const pages = [
     path: "terms/index.html",
     title: "Terms and Conditions - Peak",
     heading: "Terms and Conditions",
+    eyebrow: "Legal",
+    backHref: "/",
+    backLabel: "Home",
     lastUpdated: "January 9, 2026",
+    description: "Terms and Conditions for Peak - AI-powered Vedic astrology",
     content: `
       <section style="margin-bottom: 2.5rem;">
         <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">1. Acceptance of Terms</h2>
@@ -195,7 +204,11 @@ const pages = [
     path: "privacy-policy/index.html",
     title: "Privacy Policy - Peak",
     heading: "Privacy Policy",
+    eyebrow: "Legal",
+    backHref: "/",
+    backLabel: "Home",
     lastUpdated: "January 9, 2026",
+    description: "Privacy Policy for Peak - AI-powered Vedic astrology",
     content: `
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">1. Introduction</h2>
@@ -376,7 +389,11 @@ const pages = [
     path: "delete-my-account/index.html",
     title: "Delete your account - Peak",
     heading: "Delete your account",
+    eyebrow: "Account",
+    backHref: "/",
+    backLabel: "Home",
     lastUpdated: "January 9, 2026",
+    description: "How to delete your Peak account",
     content: `
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Request account deletion</h2>
@@ -428,7 +445,11 @@ const pages = [
     path: "contact/index.html",
     title: "Contact Us - Peak",
     heading: "Contact Us",
+    eyebrow: "Contact",
+    backHref: "/",
+    backLabel: "Home",
     lastUpdated: "January 9, 2026",
+    description: "Contact Peak - AI-powered Vedic astrology",
     content: `
       <section class="mb-8">
         <h2 class="text-2xl font-semibold mb-4">Get in Touch</h2>
@@ -465,96 +486,346 @@ const pages = [
   },
 ];
 
-const htmlTemplate = (title, heading, content, lastUpdated) => `<!DOCTYPE html>
+function escapeHtml(text) {
+  return String(text ?? "")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function formatPostDate(date) {
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return String(date ?? "");
+  return parsed.toLocaleDateString("en-IN", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+/**
+ * Peak parchment + gold static shell (zero JS).
+ * @param {{
+ *   title: string;
+ *   description?: string;
+ *   eyebrow: string;
+ *   heading: string;
+ *   metaLine?: string;
+ *   backHref?: string;
+ *   backLabel?: string;
+ *   content: string;
+ * }} opts
+ */
+function htmlTemplate({
+  title,
+  description,
+  eyebrow,
+  heading,
+  metaLine,
+  backHref = "/",
+  backLabel = "Home",
+  content,
+}) {
+  const desc = escapeHtml(
+    description || `${String(title).split(" - ")[0]} for Peak - AI-powered Vedic astrology`,
+  );
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
-  <meta name="description" content="${title.split(' - ')[0]} for Peak - AI-powered Vedic astrology">
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>${escapeHtml(title)}</title>
+  <meta name="description" content="${desc}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    
+    :root {
+      --parchment: #F4EFE5;
+      --ink: #1A1614;
+      --clay: #8A7360;
+      --gold: #C28D2A;
+      --border: #D9CDB8;
+      --muted: #6B5B4F;
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      color: #1a1a1a;
+      margin: 0;
+      min-height: 100vh;
+      background: var(--parchment);
+      color: var(--ink);
+      font-family: Inter, system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
-    
-    h1, h2, h3 {
+    .wrap {
+      max-width: 48rem;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--clay);
+      text-decoration: none;
+      margin-bottom: 2.5rem;
+    }
+    .back:hover { color: var(--ink); }
+    .eyebrow {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--clay);
+      margin: 0 0 1rem;
+    }
+    h1 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
       font-weight: 600;
-      color: #0a0a0a;
+      margin: 0 0 1rem;
+      color: var(--ink);
     }
-    
-    a {
-      color: #2563eb;
+    .meta {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--clay);
+      margin: 0;
+    }
+    header.page-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 2rem;
+      margin-bottom: 2.5rem;
+    }
+    article {
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+    article h2, article h3 {
+      font-family: Fraunces, Georgia, serif;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      margin: 2.25rem 0 0.75rem;
+    }
+    article h2 { font-size: 1.5rem; }
+    article h3 { font-size: 1.25rem; }
+    article p { margin: 0 0 1rem; }
+    article ul, article ol {
+      margin: 0 0 1.25rem;
+      padding-left: 1.25rem;
+    }
+    article li { margin-bottom: 0.4rem; }
+    article strong { color: var(--ink); font-weight: 600; }
+    article a { color: var(--gold); }
+    article a:hover { color: var(--ink); }
+    article hr {
+      border: 0;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+    article em { color: var(--clay); }
+    .post-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.35);
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 1rem;
+      transition: border-color 0.15s ease;
+    }
+    .post-card:hover { border-color: var(--gold); }
+    .post-card h2 {
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.5rem;
+      color: var(--ink);
+      margin: 0.5rem 0 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    .post-card:hover h2 { color: var(--gold); }
+    .post-card p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .post-card .read {
+      margin-top: 1rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--clay);
+    }
+    .chip {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+    }
+    .row-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      margin-bottom: 0.25rem;
+    }
+    footer.site-footer {
+      margin-top: 3.5rem;
+      padding-top: 1.75rem;
+      border-top: 1px solid var(--border);
+    }
+    footer.site-footer p {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--clay);
+      margin: 0;
+    }
+    footer.site-footer nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+    footer.site-footer a {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--clay);
       text-decoration: none;
     }
-    
-    a:hover {
-      text-decoration: underline;
-    }
-    
-    strong {
-      font-weight: 600;
-      color: #0a0a0a;
-    }
-    
-    /* Dark mode */
-    @media (prefers-color-scheme: dark) {
-      body {
-        background-color: #0a0a0a;
-        color: #e5e5e5;
-      }
-      
-      h1, h2, h3, strong {
-        color: #ffffff;
-      }
-      
-      a {
-        color: #60a5fa;
-      }
-    }
+    footer.site-footer a:hover { color: var(--ink); }
   </style>
 </head>
-<body style="min-height: 100vh; background-color: #ffffff;">
-  <div style="max-width: 48rem; margin: 0 auto; padding: 3rem 1rem;">
-    <div style="margin-bottom: 2rem;">
-      <a href="/" style="display: inline-flex; align-items: center; gap: 0.5rem; color: #2563eb; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em;">
-        ← Back to Home
-      </a>
-    </div>
-    
-    <header style="border-bottom: 1px solid #e5e5e5; padding-bottom: 2rem; margin-bottom: 3rem;">
-      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #737373; margin-bottom: 1rem;">Legal</p>
-      <h1 style="font-size: 2.25rem; line-height: 2.5rem; font-weight: 700; margin-bottom: 1rem;">${heading}</h1>
-      <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #737373;">
-        Last updated · ${lastUpdated}
-      </p>
+<body>
+  <div class="wrap">
+    <a class="back" href="${escapeHtml(backHref)}">← ${escapeHtml(backLabel)}</a>
+
+    <header class="page-header">
+      <p class="eyebrow">${escapeHtml(eyebrow)}</p>
+      <h1>${escapeHtml(heading)}</h1>
+      ${metaLine ? `<p class="meta">${metaLine}</p>` : ""}
     </header>
-    
-    <article style="line-height: 1.75; color: #525252;">
+
+    <article>
       ${content}
     </article>
 
-    <footer style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid #e5e5e5;">
-      <p style="font-size: 0.875rem; color: #737373;">
-        © ${new Date().getFullYear()} Peak. All rights reserved.
-      </p>
+    <footer class="site-footer">
+      <nav aria-label="Footer">
+        <a href="/">Home</a>
+        <a href="/blog/">Blog</a>
+        <a href="/contact/">Contact</a>
+        <a href="/privacy-policy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+      </nav>
+      <p>© ${new Date().getFullYear()} Peak · All rights reserved</p>
     </footer>
   </div>
 </body>
 </html>`;
+}
 
-for (const page of pages) {
+function writePage(page) {
   const filePath = resolve(dist, page.path);
-  const dir = dirname(filePath);
-  
-  mkdirSync(dir, { recursive: true });
-  
-  const html = htmlTemplate(page.title, page.heading, page.content, page.lastUpdated);
+  mkdirSync(dirname(filePath), { recursive: true });
+  const html = htmlTemplate({
+    title: page.title,
+    description: page.description,
+    eyebrow: page.eyebrow ?? "Legal",
+    heading: page.heading,
+    metaLine: page.lastUpdated
+      ? `Last updated · ${escapeHtml(page.lastUpdated)}`
+      : page.metaLine,
+    backHref: page.backHref ?? "/",
+    backLabel: page.backLabel ?? "Home",
+    content: page.content,
+  });
   writeFileSync(filePath, html);
   console.log(`✓ Generated ${page.path}`);
+}
+
+function loadBlogPosts() {
+  const fileNames = readdirSync(postsDir).filter((f) => f.endsWith(".md"));
+  return fileNames
+    .map((fileName) => {
+      const slug = fileName.replace(/\.md$/, "");
+      const raw = readFileSync(join(postsDir, fileName), "utf8");
+      const { data, content } = matter(raw);
+      return {
+        slug,
+        title: String(data.title ?? slug),
+        date: String(data.date ?? ""),
+        category: String(data.category ?? ""),
+        excerpt: String(data.excerpt ?? ""),
+        content,
+        html: marked.parse(content.trim(), { async: false }),
+      };
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+for (const page of pages) {
+  writePage(page);
+}
+
+const blogPosts = loadBlogPosts();
+
+const blogListingContent = blogPosts.length
+  ? blogPosts
+      .map(
+        (post) => `
+      <a class="post-card" href="/blog/${escapeHtml(post.slug)}/">
+        <div class="row-meta">
+          ${post.category ? `<span class="chip">${escapeHtml(post.category)}</span>` : ""}
+          <span class="meta">${escapeHtml(formatPostDate(post.date))}</span>
+        </div>
+        <h2>${escapeHtml(post.title)}</h2>
+        <p>${escapeHtml(post.excerpt)}</p>
+        <p class="read">Read →</p>
+      </a>`,
+      )
+      .join("\n")
+  : `<p>No posts yet.</p>`;
+
+writePage({
+  path: "blog/index.html",
+  title: "Blog - Peak",
+  description: "Vedic insights from Peak — planetary wisdom and timing for real decisions.",
+  eyebrow: "Blog",
+  heading: "Vedic Insights",
+  metaLine: "Explore planetary wisdom",
+  backHref: "/",
+  backLabel: "Home",
+  content: `
+    <p style="margin-bottom: 2rem;">Explore planetary wisdom, timing, and how Peak reads the chart for real decisions.</p>
+    ${blogListingContent}
+  `,
+});
+
+for (const post of blogPosts) {
+  const categoryMeta = post.category
+    ? `${escapeHtml(post.category)} · ${escapeHtml(formatPostDate(post.date))}`
+    : escapeHtml(formatPostDate(post.date));
+  writePage({
+    path: `blog/${post.slug}/index.html`,
+    title: `${post.title} - Peak`,
+    description: post.excerpt || post.title,
+    eyebrow: "Blog",
+    heading: post.title,
+    metaLine: categoryMeta,
+    backHref: "/blog/",
+    backLabel: "Blog",
+    content: post.html,
+  });
 }
 
 console.log("\n✓ Static HTML pages generated successfully!");

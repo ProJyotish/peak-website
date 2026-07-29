@@ -27,6 +27,9 @@ export function SiteFooter() {
             className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-clay"
             aria-label="Footer"
           >
+            <Link to={ROUTES.blog} className="hover:text-ink transition-colors">
+              Blog
+            </Link>
             <Link to={ROUTES.contact} className="hover:text-ink transition-colors">
               Contact
             </Link>

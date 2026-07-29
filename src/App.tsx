@@ -13,6 +13,8 @@ import TermsEmbed from "./pages/TermsEmbed.tsx";
 import PrivacyEmbed from "./pages/PrivacyEmbed.tsx";
 import Contact from "./pages/Contact.tsx";
 import Checkout from "./pages/Checkout.tsx";
+import Blog from "./pages/Blog.tsx";
+import BlogPost from "./pages/BlogPost.tsx";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +26,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path={ROUTES.home} element={<Index />} />
+          <Route path={ROUTES.blog} element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           <Route path={ROUTES.terms} element={<Terms />} />
           <Route path={ROUTES.termsEmbed} element={<TermsEmbed />} />
           <Route path={ROUTES.privacy} element={<Privacy />} />
