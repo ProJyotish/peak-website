@@ -1,27 +1,43 @@
-name: Deploy to GitHub Pages
+name: Deploy to S3 / CloudFront
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+# One deploy at a time; newer pushes cancel older in-progress runs (batch to latest)
+concurrency:
+  group: peak-website-deploy
+  cancel-in-progress: true
 
+# Self-hosted Ubuntu — no GitHub-hosted minutes
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-      - run: npm ci
-      - run: npm run build
-      - uses: actions/configure-pages@v4
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-      - uses: actions/deploy-pages@v4
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Sync to S3
+        env:
+          AWS_PROFILE: Peak
+          AWS_DEFAULT_REGION: ap-south-1
+        run: |
+          set -euo pipefail
+          aws s3 sync dist/ s3://peaklife-website-ap-south-1/ --delete --region ap-south-1 --profile Peak
+          aws cloudfront create-invalidation \
+            --distribution-id E3JRZB3NUFKIKH \
+            --paths "/*" \
+            --profile Peak

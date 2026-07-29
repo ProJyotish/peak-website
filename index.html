@@ -7,8 +7,8 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
-      gtag('config', 'G-0E72R2MF9P');
+      // SPA: pageviews sent by React GoogleAnalytics on every route
+      gtag('config', 'G-0E72R2MF9P', { send_page_view: false });
     </script>
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
