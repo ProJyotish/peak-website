@@ -97,4 +97,43 @@
   .container-peak {
     @apply mx-auto w-full max-w-6xl px-6 md:px-10;
   }
+
+  .blog-prose {
+    @apply text-base leading-relaxed text-muted-foreground space-y-4;
+  }
+  .blog-prose h1,
+  .blog-prose h2,
+  .blog-prose h3 {
+    @apply font-display text-ink mt-10 mb-3;
+  }
+  .blog-prose h1 {
+    @apply text-3xl;
+  }
+  .blog-prose h2 {
+    @apply text-2xl;
+  }
+  .blog-prose h3 {
+    @apply text-xl;
+  }
+  .blog-prose p {
+    @apply leading-relaxed;
+  }
+  .blog-prose ul {
+    @apply list-disc pl-5 space-y-2;
+  }
+  .blog-prose ol {
+    @apply list-decimal pl-5 space-y-2;
+  }
+  .blog-prose strong {
+    @apply text-ink font-medium;
+  }
+  .blog-prose a {
+    @apply text-gold underline underline-offset-4 hover:text-ink;
+  }
+  .blog-prose hr {
+    @apply border-border my-8;
+  }
+  .blog-prose em {
+    @apply text-clay;
+  }
 }
