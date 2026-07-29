@@ -55,7 +55,7 @@ export function TermsContent() {
         </p>
       </LegalSection>
 
-      <LegalSection title="6. Payments and Refunds - FAQs">
+      <LegalSection title="6. Payments and Refunds — FAQs">
         <div className="space-y-6">
           {PAYMENTS_REFUNDS_FAQS.map((faq) => (
             <div key={faq.question}>

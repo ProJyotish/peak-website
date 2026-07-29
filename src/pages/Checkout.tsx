@@ -278,7 +278,7 @@ const Checkout = () => {
         <div className="container mx-auto flex items-center justify-center gap-2 px-4 py-2.5 sm:py-3">
           <Sparkles className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
           <p className="font-mono text-center text-xs font-semibold uppercase tracking-wide sm:text-sm">
-            Introductory launch pricing - limited time
+            Introductory launch pricing — limited time
           </p>
         </div>
       </div>
