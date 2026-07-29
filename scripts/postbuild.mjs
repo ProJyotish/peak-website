@@ -722,7 +722,6 @@ function htmlTemplate({
     <footer class="site-footer">
       <nav aria-label="Footer">
         <a href="/">Home</a>
-        <a href="/blog/">Blog</a>
         <a href="/contact/">Contact</a>
         <a href="/privacy-policy/">Privacy</a>
         <a href="/terms/">Terms</a>

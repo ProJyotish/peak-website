@@ -1,11 +1,9 @@
 import { motion } from "framer-motion";
 import { ArrowRight, MessageCircle, Quote } from "lucide-react";
-import { Link } from "react-router-dom";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import logo from "@/assets/peak-logo.png";
 import { useEffect, useState } from "react";
-import { ROUTES } from "@/lib/routes";
 import { resolveSourceGreeting, buildWhatsAppPrefillUrl, FALLBACK_GREETING_WORD } from "@/lib/sourceGreeting";
 
 const fade = {
@@ -44,7 +42,6 @@ function Nav() {
         <nav className="flex items-center gap-8">
           <a href="#ask" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">Ask about</a>
           <a href="#how" className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">How it works</a>
-          <Link to={ROUTES.blog} className="hidden md:inline text-sm text-clay hover:text-ink transition-colors">Blog</Link>
           <a 
             href={whatsappUrl}
             target="_blank"
