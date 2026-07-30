@@ -25,10 +25,10 @@ jobs:
       #    cache: npm
 
       - name: Install
-        run: pnpm install
+        run: npm ci
 
       - name: Build
-        run: pnpm run build
+        run: npm run build
 
       - name: Sync to S3
         env:
