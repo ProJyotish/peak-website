@@ -505,7 +505,7 @@ const Checkout = () => {
                     Built by IIT Delhi Alumni
                   </h3>
                   <p className="text-base md:text-lg text-clay leading-relaxed max-w-xl">
-                    Co-founded by IIT Delhi batchmates - a practicing jyotishi and a production AI engineer - combining scriptural depth with modern engineering rigor.
+                    Co-founded by IIT Delhi batchmates - a practicing jyotishi and a AI technology leader - combining scriptural depth with modern engineering rigor.
                   </p>
                   <div className="mt-6 flex flex-wrap gap-2 justify-center">
                     <span className="font-mono text-xs uppercase tracking-wider text-ink/80 border border-gold/40 px-4 py-2 rounded-full bg-parchment/50">

@@ -889,7 +889,7 @@ function Founder() {
             First principles meet modern life.
           </h2>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-            Peak is co-built by IIT Delhi batchmates  -  a practicing jyotishi and a production AI engineer  -  bringing scriptural depth and large-scale engineering to the same product.
+            Peak is co-built by IIT Delhi batchmates  -  a practicing jyotishi and a AI technology leader  -  bringing scriptural depth and large-scale engineering to the same product.
           </p>
         </motion.div>
         <div className="grid gap-6 sm:gap-8 md:grid-cols-2 md:gap-8 lg:gap-10">
