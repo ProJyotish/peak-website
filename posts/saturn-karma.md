@@ -13,7 +13,7 @@ Saturn gets a bad reputation. In practice, Saturn is the part of the chart that 
 * Rewards consistency over intensity
 * Exposes shortcuts that looked clever in the short term
 
-When Saturn is active for career, health, or responsibility themes, progress often feels heavier — and more durable.
+When Saturn is active for career, health, or responsibility themes, progress often feels heavier - and more durable.
 
 ## Karma, without the mystique
 
