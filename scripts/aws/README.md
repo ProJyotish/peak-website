@@ -33,3 +33,17 @@ CloudFront custom certs must be in **us-east-1** (AWS requirement), even when th
 1. Request ACM cert in `us-east-1` for `peaklife.me` (+ `www`)
 2. Add alternate domain + cert on distribution `E3JRZB3NUFKIKH`
 3. Point DNS (Route 53 or registrar) CNAME/ALIAS → `dsdjkb0guxr1r.cloudfront.net`
+
+## Directory URLs (`/blog/` → static HTML)
+
+S3 + OAC does **not** map `/blog/` to `blog/index.html`. Without a rewrite, CloudFront’s
+403/404 → `/index.html` SPA fallback runs — you see an empty `<div id="root">`.
+
+`/blog/index.html` works; `/blog/` does not, until the CloudFront Function is attached:
+
+```bash
+chmod +x scripts/aws/attach-url-rewrite.sh
+AWS_PROFILE=Peak ./scripts/aws/attach-url-rewrite.sh
+```
+
+Function source: `scripts/aws/cloudfront-url-rewrite.js` (viewer-request).

@@ -28,7 +28,16 @@
       }
     },
     "Compress": true,
-    "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    "CachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+    "FunctionAssociations": {
+      "Quantity": 1,
+      "Items": [
+        {
+          "FunctionARN": "REPLACE_AFTER_CREATE_peaklife-url-rewrite",
+          "EventType": "viewer-request"
+        }
+      ]
+    }
   },
   "CustomErrorResponses": {
     "Quantity": 2,
