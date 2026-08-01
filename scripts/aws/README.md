@@ -4,12 +4,37 @@
 |----------|-------|
 | AWS profile | `Peak` |
 | Region (S3) | `ap-south-1` |
-| Bucket | `peaklife-website-ap-south-1` |
+| Bucket (prod) | `peaklife-website-ap-south-1` |
 | OAC | `E168T203TXSSPJ` |
 | CloudFront ID | `E3JRZB3NUFKIKH` |
-| URL | https://dsdjkb0guxr1r.cloudfront.net |
+| URL (prod) | https://dsdjkb0guxr1r.cloudfront.net |
+| Bucket (drafts) | `peaklife-website-drafts-ap-south-1` |
+| URL (drafts) | http://peaklife-website-drafts-ap-south-1.s3-website.ap-south-1.amazonaws.com |
 
 ## Deploy
+
+| Branch | Pipeline | Target |
+|--------|----------|--------|
+| `main` | `.github/workflows/deploy.yml` | S3 + CloudFront (prod) |
+| `drafts` | `.github/workflows/deploy-drafts.yml` | S3 **website** only (preview, no CloudFront) |
+
+CMS (peakcms) commits content to **`drafts`**. Promote to `main` for production.
+
+### One-time drafts bucket setup
+
+```bash
+chmod +x scripts/aws/setup-drafts-bucket.sh
+AWS_PROFILE=Peak ./scripts/aws/setup-drafts-bucket.sh
+```
+
+### Manual drafts deploy
+
+```bash
+chmod +x scripts/aws/deploy-drafts.sh
+AWS_PROFILE=Peak ./scripts/aws/deploy-drafts.sh
+```
+
+### Manual prod deploy
 
 GitHub Actions (self-hosted): push to `main` → `.github/workflows/deploy.yml`
 
