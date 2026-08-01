@@ -136,4 +136,20 @@
   .blog-prose em {
     @apply text-clay;
   }
+  .blog-prose .blog-figure {
+    @apply my-8 space-y-2;
+  }
+  .blog-prose .blog-figure img {
+    @apply w-full rounded-lg border border-border;
+  }
+  .blog-prose .blog-figure figcaption {
+    @apply font-mono text-[10px] uppercase tracking-[0.14em] text-clay;
+  }
+  .blog-prose .blog-embed {
+    @apply relative my-8 w-full overflow-hidden rounded-lg border border-border;
+    aspect-ratio: 16 / 9;
+  }
+  .blog-prose .blog-embed iframe {
+    @apply absolute inset-0 h-full w-full border-0;
+  }
 }

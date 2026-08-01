@@ -27,6 +27,26 @@ When Saturn is active for career, health, or responsibility themes, progress oft
 
 Peak helps you see *when* Saturn is pressing on a specific life area — and when a lighter planet's window is better for speed.
 
+## Media examples
+
+### Image (Tina media / static file)
+
+Upload via Peak CMS into `blog-images/`, or drop a file under `public/`:
+
+![Peak mark — swap for a Saturn chart or photo](/placeholder.svg)
+
+CMS path example after upload:
+
+`![Saturn](/blog-images/saturn.jpg)`
+
+### YouTube (paste the URL alone on its own line)
+
+Bare `youtube.com` / `youtu.be` links auto-embed. Linked text stays a normal link.
+
+https://www.youtube.com/watch?v=QXGSVFYdJAw
+
+Linked (not embedded): [this Saturn overview](https://www.youtube.com/watch?v=QXGSVFYdJAw).
+
 ***
 
 *Peak · Timing for the long game*
