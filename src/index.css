@@ -103,7 +103,8 @@
   }
   .blog-prose h1,
   .blog-prose h2,
-  .blog-prose h3 {
+  .blog-prose h3,
+  .blog-prose h4 {
     @apply font-display text-ink mt-10 mb-3;
   }
   .blog-prose h1 {
@@ -115,6 +116,9 @@
   .blog-prose h3 {
     @apply text-xl;
   }
+  .blog-prose h4 {
+    @apply text-lg;
+  }
   .blog-prose p {
     @apply leading-relaxed;
   }
@@ -123,6 +127,15 @@
   }
   .blog-prose ol {
     @apply list-decimal pl-5 space-y-2;
+  }
+  .blog-prose ul ul,
+  .blog-prose ol ol,
+  .blog-prose ul ol,
+  .blog-prose ol ul {
+    @apply mt-2;
+  }
+  .blog-prose li > input[type="checkbox"] {
+    @apply mr-2 align-middle;
   }
   .blog-prose strong {
     @apply text-ink font-medium;
@@ -135,6 +148,52 @@
   }
   .blog-prose em {
     @apply text-clay;
+  }
+  .blog-prose del {
+    @apply text-clay/70;
+  }
+  .blog-prose blockquote {
+    @apply border-l-2 border-gold pl-4 my-6 text-clay italic;
+  }
+  .blog-prose code {
+    @apply font-mono text-[0.9em] text-ink bg-white/40 border border-border px-1.5 py-0.5 rounded;
+  }
+  .blog-prose pre {
+    @apply my-6 overflow-x-auto rounded-lg border border-border bg-white/40 p-4;
+  }
+  .blog-prose pre code {
+    @apply border-0 bg-transparent p-0 rounded-none;
+  }
+  .blog-prose table {
+    @apply my-6 w-full text-left text-sm border-collapse;
+  }
+  .blog-prose thead th {
+    @apply font-mono text-[10px] uppercase tracking-[0.14em] text-clay border-b border-border pb-2 pr-4;
+  }
+  .blog-prose tbody td {
+    @apply border-b border-border/70 py-2.5 pr-4 align-top;
+  }
+  .blog-prose details {
+    @apply my-4 border border-border rounded-lg bg-white/30 overflow-hidden;
+  }
+  .blog-prose details + details {
+    @apply mt-2;
+  }
+  .blog-prose summary {
+    @apply cursor-pointer list-none px-4 py-3 font-medium text-ink select-none;
+  }
+  .blog-prose summary::-webkit-details-marker {
+    display: none;
+  }
+  .blog-prose summary::after {
+    content: "+";
+    @apply float-right font-mono text-clay;
+  }
+  .blog-prose details[open] > summary::after {
+    content: "−";
+  }
+  .blog-prose details > :not(summary) {
+    @apply px-4 pb-4;
   }
   .blog-prose .blog-figure {
     @apply my-8 space-y-2;

@@ -62,4 +62,18 @@ describe("BlogPostView", () => {
     );
     expect(container.querySelector("p figure")).toBeNull();
   });
+
+  it("renders HTML accordion details/summary", () => {
+    const accordion = [
+      "<details>",
+      "<summary>What is Saturn?</summary>",
+      "",
+      "Structure and delay.",
+      "",
+      "</details>",
+    ].join("\n");
+    const { container } = renderPost(accordion);
+    expect(container.querySelector("details summary")?.textContent).toBe("What is Saturn?");
+    expect(container.textContent).toContain("Structure and delay.");
+  });
 });

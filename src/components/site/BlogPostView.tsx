@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { formatPostDate } from "@/lib/blog";
 
@@ -131,7 +132,11 @@ export function BlogPostView({ title, content, category, date }: BlogPostViewPro
         </p>
       </header>
       <div className="blog-prose">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          rehypePlugins={[rehypeRaw]}
+          components={markdownComponents}
+        >
           {content}
         </ReactMarkdown>
       </div>

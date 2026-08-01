@@ -630,18 +630,23 @@ function htmlTemplate({
       line-height: 1.75;
       font-size: 1rem;
     }
-    article h2, article h3 {
+    article h1, article h2, article h3, article h4 {
       font-family: Fraunces, Georgia, serif;
       color: var(--ink);
       letter-spacing: -0.02em;
       margin: 2.25rem 0 0.75rem;
     }
+    article h1 { font-size: 1.875rem; }
     article h2 { font-size: 1.5rem; }
     article h3 { font-size: 1.25rem; }
+    article h4 { font-size: 1.125rem; }
     article p { margin: 0 0 1rem; }
     article ul, article ol {
       margin: 0 0 1.25rem;
       padding-left: 1.25rem;
+    }
+    article ul ul, article ol ol, article ul ol, article ol ul {
+      margin: 0.5rem 0 0;
     }
     article li { margin-bottom: 0.4rem; }
     article strong { color: var(--ink); font-weight: 600; }
@@ -653,6 +658,84 @@ function htmlTemplate({
       margin: 2rem 0;
     }
     article em { color: var(--clay); }
+    article del { color: rgba(107, 91, 79, 0.7); }
+    article blockquote {
+      margin: 1.5rem 0;
+      padding-left: 1rem;
+      border-left: 2px solid var(--gold);
+      color: var(--clay);
+      font-style: italic;
+    }
+    article code {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.9em;
+      color: var(--ink);
+      background: rgba(255,255,255,0.4);
+      border: 1px solid var(--border);
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.25rem;
+    }
+    article pre {
+      margin: 1.5rem 0;
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.4);
+      padding: 1rem;
+    }
+    article pre code {
+      border: 0;
+      background: transparent;
+      padding: 0;
+    }
+    article table {
+      width: 100%;
+      margin: 1.5rem 0;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    article thead th {
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--clay);
+      border-bottom: 1px solid var(--border);
+      padding: 0 1rem 0.5rem 0;
+    }
+    article tbody td {
+      border-bottom: 1px solid rgba(217, 205, 184, 0.7);
+      padding: 0.65rem 1rem 0.65rem 0;
+      vertical-align: top;
+    }
+    article details {
+      margin: 1rem 0;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+      background: rgba(255,255,255,0.3);
+      overflow: hidden;
+    }
+    article details + details { margin-top: 0.5rem; }
+    article summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 0.75rem 1rem;
+      font-weight: 500;
+      color: var(--ink);
+      user-select: none;
+    }
+    article summary::-webkit-details-marker { display: none; }
+    article summary::after {
+      content: "+";
+      float: right;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      color: var(--clay);
+    }
+    article details[open] > summary::after { content: "−"; }
+    article details > :not(summary) {
+      padding: 0 1rem 1rem;
+    }
     article .blog-figure {
       margin: 2rem 0;
     }
