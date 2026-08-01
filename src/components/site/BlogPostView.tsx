@@ -1,6 +1,7 @@
-import { Children, isValidElement, type ReactNode } from "react";
+import type { ReactNode } from "react";
 import type { Components } from "react-markdown";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { formatPostDate } from "@/lib/blog";
 
 type BlogPostViewProps = {
@@ -63,10 +64,36 @@ function BlogFigure({ src, alt }: { src: string; alt: string }) {
   );
 }
 
-function isBlockChild(node: ReactNode): boolean {
-  return (
-    isValidElement(node) && (node.type === YouTubeEmbed || node.type === BlogFigure)
+type HastChild = {
+  type: string;
+  value?: string;
+  tagName?: string;
+  properties?: Record<string, unknown>;
+  children?: HastChild[];
+};
+
+function textOf(node: HastChild): string {
+  if (node.type === "text") return node.value ?? "";
+  return (node.children ?? []).map(textOf).join("");
+}
+
+/**
+ * A paragraph holding nothing but an image or a bare YouTube link renders as a
+ * block-level figure/embed, so the <p> wrapper has to be dropped.
+ */
+function isMediaOnlyParagraph(node: HastChild | undefined): boolean {
+  const children = (node?.children ?? []).filter(
+    (child) => child.type !== "text" || (child.value ?? "").trim() !== "",
   );
+  if (children.length !== 1) return false;
+  const [child] = children;
+  if (child.type !== "element") return false;
+  if (child.tagName === "img") return true;
+  if (child.tagName === "a") {
+    const href = String(child.properties?.href ?? "");
+    return Boolean(youtubeIdFromUrl(href)) && isBareMediaLink(href, textOf(child));
+  }
+  return false;
 }
 
 const markdownComponents: Components = {
@@ -81,10 +108,9 @@ const markdownComponents: Components = {
       </a>
     );
   },
-  p({ children }) {
-    const only = Children.toArray(children);
-    if (only.length === 1 && isBlockChild(only[0])) {
-      return only[0];
+  p({ node, children }) {
+    if (isMediaOnlyParagraph(node as HastChild)) {
+      return <>{children}</>;
     }
     return <p>{children}</p>;
   },
@@ -105,7 +131,9 @@ export function BlogPostView({ title, content, category, date }: BlogPostViewPro
         </p>
       </header>
       <div className="blog-prose">
-        <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+          {content}
+        </ReactMarkdown>
       </div>
     </article>
   );

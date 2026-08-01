@@ -1,7 +1,7 @@
 import { copyFileSync, mkdirSync, writeFileSync, readdirSync, readFileSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import matter from "gray-matter";
-import { marked } from "marked";
+import { renderPostHtml } from "./markdown.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
@@ -653,6 +653,40 @@ function htmlTemplate({
       margin: 2rem 0;
     }
     article em { color: var(--clay); }
+    article .blog-figure {
+      margin: 2rem 0;
+    }
+    article .blog-figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+    }
+    article .blog-figure figcaption {
+      margin-top: 0.5rem;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.625rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--clay);
+    }
+    article .blog-embed {
+      position: relative;
+      margin: 2rem 0;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 0.5rem;
+    }
+    article .blog-embed iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
     .post-card {
       display: block;
       text-decoration: none;
@@ -789,7 +823,7 @@ function loadBlogPosts() {
         category: String(data.category ?? ""),
         excerpt: String(data.excerpt ?? ""),
         content,
-        html: marked.parse(content.trim(), { async: false }),
+        html: renderPostHtml(content),
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
