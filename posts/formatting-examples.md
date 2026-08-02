@@ -2,7 +2,7 @@
 title: Blog formatting examples
 date: 2026-08-02T00:00:00.000Z
 category: Guide
-excerpt: A single reference post covering every markdown format Peak blog posts support — headings, lists, media, embeds, accordions, and more.
+excerpt: 'A single reference post covering every markdown format Peak blog posts support — headings, lists, media, embeds, accordions, and more.'
 ---
 
 This post is the formatting crib sheet. Copy any section into a real article; the title above is the page `<h1>`, so body copy usually starts at `##`.
@@ -31,20 +31,20 @@ You can mix **bold**, *italic*, ***bold italic***, ~~strikethrough~~, and `inlin
 
 ## Links
 
-- Internal: [Peak home](/)
-- External: [peaklife.me](https://peaklife.me)
-- Autolink (GFM): https://peaklife.me
-- YouTube as a normal link (not embedded): [this video](https://www.youtube.com/watch?v=QXGSVFYdJAw)
+* Internal: [Peak home](/)
+* External: [peaklife.me](https://peaklife.me)
+* Autolink (GFM): [https://peaklife.me](https://peaklife.me)
+* YouTube as a normal link (not embedded): [this video](https://www.youtube.com/watch?v=QXGSVFYdJAw)
 
 ## Bullets and lists
 
 Unordered:
 
-- Timing over intensity
-- Structure before speed
-- Review windows before launches
-  - Nested item under the parent
-  - Another nested item
+* Timing over intensity
+* Structure before speed
+* Review windows before launches
+  * Nested item under the parent
+  * Another nested item
 
 Ordered:
 
@@ -56,9 +56,9 @@ Ordered:
 
 Task list (GFM):
 
-- [x] Supported checklist item
-- [ ] Open checklist item
-- [ ] Another open item
+* Supported checklist item
+* Open checklist item
+* Another open item
 
 ## Blockquote
 
@@ -85,21 +85,21 @@ pnpm dev
 
 ## Table
 
-| Format | Supported | Notes |
-| --- | --- | --- |
-| Headings H1–H4 | Yes | Page title is separate H1 |
-| Bullets / ordered lists | Yes | Nesting works |
-| Task lists | Yes | GFM checkboxes |
-| Images | Yes | Tina media or `/public` path |
-| YouTube embed | Yes | Bare URL alone on its own line |
-| Accordion | Yes | HTML `<details>` / `<summary>` |
-| Generic video file | No | Use YouTube or a linked file |
+| Format                  | Supported | Notes                          |
+| ----------------------- | --------- | ------------------------------ |
+| Headings H1–H4          | Yes       | Page title is separate H1      |
+| Bullets / ordered lists | Yes       | Nesting works                  |
+| Task lists              | Yes       | GFM checkboxes                 |
+| Images                  | Yes       | Tina media or `/public` path   |
+| YouTube embed           | Yes       | Bare URL alone on its own line |
+| Accordion               | Yes       | HTML `<details>` / `<summary>` |
+| Generic video file      | No        | Use YouTube or a linked file   |
 
 ## Image
 
 Upload via Peak CMS into `blog-images/`, or drop a file under `public/`:
 
-![Peak mark — swap for a chart or photo](/placeholder.svg)
+![](https://peaklife-cms-media-ap-south-1.s3.ap-south-1.amazonaws.com/blog-media/gDBFM.jpg)
 
 CMS path example after upload:
 
@@ -109,13 +109,13 @@ CMS path example after upload:
 
 Paste a bare `youtube.com` / `youtu.be` URL alone on its own line. It becomes an embed.
 
-https://www.youtube.com/watch?v=QXGSVFYdJAw
+[https://www.youtube.com/watch?v=2rydmWSVN9c](https://www.youtube.com/watch?v=2rydmWSVN9c)
 
 Linked text stays a normal link (see Links above) — it does **not** embed.
 
 Shorts and `youtu.be` short links work the same way when alone on a line:
 
-https://youtu.be/QXGSVFYdJAw
+[https://youtu.be/2rydmWSVN9c](https://youtu.be/2rydmWSVN9c)
 
 ## Accordion
 
@@ -126,8 +126,8 @@ Use HTML `<details>` / `<summary>`. Stack several for a FAQ-style block.
 
 Short answers, FAQs, and optional detail that should stay collapsed by default. Markdown inside works: **bold**, [links](/), and lists.
 
-- First supporting point
-- Second supporting point
+* First supporting point
+* Second supporting point
 
 </details>
 
@@ -147,9 +147,9 @@ No — blog posts are markdown. Use `<details>` / `<summary>` as shown here.
 
 ## What is not supported
 
-- Generic MP4 / Vimeo / Loom embeds (YouTube only for in-page video)
-- Custom React components inside markdown
-- Fancy card grids, pill clusters, or marketing widgets
+* Generic MP4 / Vimeo / Loom embeds (YouTube only for in-page video)
+* Custom React components inside markdown
+* Fancy card grids, pill clusters, or marketing widgets
 
 ***
 
