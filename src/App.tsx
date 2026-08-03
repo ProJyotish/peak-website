@@ -13,6 +13,7 @@ import AccountDeletion from "./pages/AccountDeletion.tsx";
 import TermsEmbed from "./pages/TermsEmbed.tsx";
 import PrivacyEmbed from "./pages/PrivacyEmbed.tsx";
 import Contact from "./pages/Contact.tsx";
+import ContactEmbed from "./pages/ContactEmbed.tsx";
 import Checkout from "./pages/Checkout.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
@@ -36,6 +37,7 @@ const App = () => (
           <Route path={ROUTES.accountDeletion} element={<AccountDeletion />} />
           <Route path={ROUTES.privacyEmbed} element={<PrivacyEmbed />} />
           <Route path={ROUTES.contact} element={<Contact />} />
+          <Route path={ROUTES.contactEmbed} element={<ContactEmbed />} />
           <Route path={ROUTES.checkout} element={<Checkout />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
