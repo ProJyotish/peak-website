@@ -16,6 +16,7 @@ import Contact from "./pages/Contact.tsx";
 import Checkout from "./pages/Checkout.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
+import Astrocartography from "./pages/Astrocartography.tsx";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
           <Route path={ROUTES.privacyEmbed} element={<PrivacyEmbed />} />
           <Route path={ROUTES.contact} element={<Contact />} />
           <Route path={ROUTES.checkout} element={<Checkout />} />
+          <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

@@ -10,4 +10,5 @@ export const ROUTES = {
   accountDeletion: "/delete-my-account",
   contact: "/contact",
   checkout: "/checkout",
+  astrocartography: "/tools/astrocartography",
 } as const;

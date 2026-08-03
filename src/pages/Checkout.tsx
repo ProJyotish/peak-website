@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Check, Crown, Sparkles, Star, Users, Quote, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/peak-logo.png";
+import { SUBSCRIPTION_API_URL } from "@/lib/api";
 import { decodePaymentLinkUserId } from "@/lib/paymentLinkUserId";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -197,7 +198,6 @@ const Checkout = () => {
 
   const plans = pricingData[region];
   const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
-  const subscriptionApiUrl = import.meta.env.VITE_SUBSCRIPTION_API_URL;
   const currency: "INR" | "USD" = region === "india" ? "INR" : "USD";
 
   const handleRazorpayPayNow = async (plan: (typeof plans)[number]) => {
@@ -205,8 +205,8 @@ const Checkout = () => {
       window.alert("Payment is temporarily unavailable. Razorpay key is missing.");
       return;
     }
-    if (!subscriptionApiUrl) {
-      window.alert("Payment is temporarily unavailable. Subscription API URL is missing.");
+    if (!SUBSCRIPTION_API_URL) {
+      window.alert("Payment is temporarily unavailable. API base URL is missing.");
       return;
     }
 
@@ -222,7 +222,7 @@ const Checkout = () => {
     }
 
     const billingTermLabel = isQuarterly ? "Quarterly" : "Monthly";
-    const subscriptionRes = await fetch(subscriptionApiUrl, {
+    const subscriptionRes = await fetch(SUBSCRIPTION_API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

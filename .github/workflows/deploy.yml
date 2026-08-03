@@ -13,6 +13,7 @@ concurrency:
 jobs:
   deploy:
     runs-on: self-hosted
+    environment: prod
     defaults:
       run:
         shell: bash
@@ -28,14 +29,27 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_GTM_ID: ${{ vars.VITE_GTM_ID }}
+          VITE_GA4_ID: ${{ vars.VITE_GA4_ID }}
+          VITE_META_PIXEL_ID: ${{ vars.VITE_META_PIXEL_ID }}
+          VITE_CLARITY_ID: ${{ vars.VITE_CLARITY_ID }}
+          VITE_POSTHOG_KEY: ${{ vars.VITE_POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.VITE_POSTHOG_HOST }}
+          VITE_REDDIT_PIXEL_ID: ${{ vars.VITE_REDDIT_PIXEL_ID }}
+          VITE_RAZORPAY_KEY_ID: ${{ vars.VITE_RAZORPAY_KEY_ID }}
+          VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
+          VITE_WHATSAPP_URL: ${{ vars.VITE_WHATSAPP_URL }}
         run: npm run build
 
       - name: Sync to S3
         env:
           AWS_DEFAULT_REGION: ap-south-1
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
         run: |
           set -euo pipefail
-          aws s3 sync dist/ s3://peaklife-website-ap-south-1/ --delete --region ap-south-1
+          aws s3 sync dist/ "s3://${S3_BUCKET}/" --delete --region ap-south-1
           aws cloudfront create-invalidation \
             --distribution-id E3JRZB3NUFKIKH \
-            --paths "/*" \
+            --paths "/*"
