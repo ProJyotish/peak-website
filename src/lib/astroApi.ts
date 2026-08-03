@@ -64,6 +64,26 @@ export type CityInfluenceData = {
   all: CityInfluenceHit[];
 };
 
+export type TravelTimingLevel = "favorable" | "neutral" | "unfavorable";
+
+export type TravelTimingWindow = {
+  start_date: string;
+  end_date: string;
+  score: number;
+  level: TravelTimingLevel;
+  dasha: { maha: string; antar: string };
+  summary: string;
+};
+
+export type TravelTimingData = {
+  birthUtc: string;
+  birthPlace: ResolvedPlace;
+  purpose: string;
+  horizon: { start: string; end: string };
+  windows: TravelTimingWindow[];
+  best: TravelTimingWindow[];
+};
+
 type ApiEnvelope<T> = { success: boolean; data?: T; error?: string };
 
 async function postAstro<T>(path: string, body: unknown): Promise<T> {
@@ -101,5 +121,21 @@ export function fetchCityInfluence(
     ...birth,
     ...target,
     orbKm,
+  });
+}
+
+export function fetchTravelTiming(
+  birth: BirthPayload,
+  range: {
+    travelStartMonth: number;
+    travelStartYear: number;
+    travelEndMonth: number;
+    travelEndYear: number;
+    purpose?: string;
+  },
+) {
+  return postAstro<TravelTimingData>("/travel-timing", {
+    ...birth,
+    ...range,
   });
 }

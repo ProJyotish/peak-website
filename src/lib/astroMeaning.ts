@@ -13,18 +13,18 @@ export type TravelPurpose =
 export const PURPOSES: Array<{ id: TravelPurpose; label: string; blurb: string }> = [
   {
     id: "travel_leisure",
-    label: "Travel · leisure",
-    blurb: "Ease, pleasure, restoration. Venus and Jupiter angles lead.",
+    label: "Holiday / leisure",
+    blurb: "Best for rest, fun, and easy getaways.",
   },
   {
     id: "travel_business",
-    label: "Travel · business",
-    blurb: "Visibility and drive. Sun, Mercury, and Mars on the MC.",
+    label: "Business travel",
+    blurb: "Best for meetings, networking, and work trips.",
   },
   {
     id: "settlement",
-    label: "Settlement",
-    blurb: "Roots and belonging. Moon, Venus, and Jupiter on the IC.",
+    label: "Moving / settling",
+    blurb: "Best for longer stays or considering a new base.",
   },
 ];
 
@@ -67,29 +67,29 @@ const PURPOSE_WEIGHTS: Record<TravelPurpose, Partial<Record<WeightKey, number>>>
 };
 
 const LINE_BLURBS: Partial<Record<WeightKey, string>> = {
-  "Sun:MC": "Career visibility and authority peak here.",
-  "Sun:ASC": "Identity feels brighter; you show up more fully.",
-  "Moon:IC": "Emotional home and belonging run deep.",
-  "Moon:ASC": "Mood and instincts sit close to the surface.",
-  "Mercury:MC": "Ideas, deals, and writing find an audience.",
-  "Venus:ASC": "Pleasure, art, and ease of relating.",
-  "Venus:DSC": "Partnerships and romance draw close.",
-  "Venus:IC": "Home life softens; beauty in the everyday.",
-  "Mars:MC": "Drive and ambition get sharp edge.",
-  "Mars:ASC": "Energy is high: channel it deliberately.",
-  "Jupiter:ASC": "Expansion, luck, and open doors.",
-  "Jupiter:MC": "Professional growth and recognition.",
-  "Jupiter:IC": "A place that can hold a larger life.",
-  "Jupiter:DSC": "Beneficial alliances find you.",
-  "Saturn:MC": "Serious work, structure, and long games.",
-  "Saturn:ASC": "Discipline that rewards if you meet it.",
-  "Saturn:IC": "Building foundations that last.",
+  "Sun:MC": "Often a good place to be seen and lead.",
+  "Sun:ASC": "Many people feel more confident and present here.",
+  "Moon:IC": "Can feel emotionally at home.",
+  "Moon:ASC": "Moods and gut feelings tend to be stronger.",
+  "Mercury:MC": "Useful for talks, deals, and ideas catching on.",
+  "Venus:ASC": "Often easier for pleasure, beauty, and warmth.",
+  "Venus:DSC": "Partnerships and romance may feel closer.",
+  "Venus:IC": "Home life may feel softer and more enjoyable.",
+  "Mars:MC": "Strong drive for ambition and pushing goals.",
+  "Mars:ASC": "Energy runs high; pace yourself.",
+  "Jupiter:ASC": "A classic \"open doors\" vibe for growth.",
+  "Jupiter:MC": "Often supportive for career growth and recognition.",
+  "Jupiter:IC": "Can feel spacious enough for a bigger life chapter.",
+  "Jupiter:DSC": "Helpful connections may show up more easily.",
+  "Saturn:MC": "Serious work and long-term plans tend to matter here.",
+  "Saturn:ASC": "Discipline pays off if you stay the course.",
+  "Saturn:IC": "Better for building steady foundations than quick wins.",
 };
 
 export function describeLine(planet: string, angle: AcAngle): string {
   return (
     LINE_BLURBS[`${planet}:${angle}`] ??
-    `${planet} on the ${angle}: a notable angular emphasis in this place.`
+    `${planet} (${angle}) is notable in this area - worth keeping in mind, not a guarantee.`
   );
 }
 
@@ -163,7 +163,7 @@ export function analyzePreferredPlace(
   else if (score <= -0.25) tone = "challenging";
   else tone = "mixed";
 
-  const purposeLabel = PURPOSES.find((p) => p.id === purpose)?.label.toLowerCase() ?? "your purpose";
+  const purposeLabel = PURPOSES.find((p) => p.id === purpose)?.label.toLowerCase() ?? "this purpose";
   const placeName =
     influence.targetPlace.cityName ||
     [influence.targetPlace.cityName, influence.targetPlace.country].filter(Boolean).join(", ") ||
@@ -171,13 +171,13 @@ export function analyzePreferredPlace(
 
   let summary: string;
   if (tone === "quiet") {
-    summary = `${placeName} sits away from strong lines for ${purposeLabel}. Expect a quieter field with less planetary charge than places on an angle.`;
+    summary = `For ${purposeLabel}, ${placeName} looks quieter on the map - fewer strong planetary lines nearby. That can still work well; it simply means less of a clear “yes” or “no” from astrology alone.`;
   } else if (tone === "supportive") {
-    summary = `${placeName} leans supportive for ${purposeLabel}. The closest weighted lines favor ease or visibility for that intent.`;
+    summary = `For ${purposeLabel}, ${placeName} looks relatively supportive on the chart. Nearby lines lean toward ease or visibility - a helpful sign, not a promise.`;
   } else if (tone === "challenging") {
-    summary = `${placeName} carries more friction for ${purposeLabel}. Nearby hard lines suggest structure and effort more than flow.`;
+    summary = `For ${purposeLabel}, ${placeName} may ask for more effort. Nearby lines suggest structure and patience more than smooth sailing - still usable with the right plans and timing.`;
   } else {
-    summary = `${placeName} is mixed for ${purposeLabel}: helpful and harder lines land nearby, so timing and how you use the stay matter.`;
+    summary = `For ${purposeLabel}, ${placeName} is mixed: some helpful lines and some tougher ones sit nearby. Timing and how the trip is used matter more than the place name alone.`;
   }
 
   return {

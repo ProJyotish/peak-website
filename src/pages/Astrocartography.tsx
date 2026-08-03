@@ -1,16 +1,22 @@
 import { FormEvent, useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { ArrowLeft, CalendarIcon, Loader2 } from "lucide-react";
 import { AstroWorldMap, MapLegend } from "@/components/astrocartography/AstroWorldMap";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   fetchAstrocartography,
   fetchCityInfluence,
+  fetchTravelTiming,
   type AcLine,
   type BirthPayload,
   type CityInfluenceData,
   type ResolvedPlace,
+  type TravelTimingData,
+  type TravelTimingWindow,
 } from "@/lib/astroApi";
 import {
   PURPOSES,
@@ -22,34 +28,100 @@ import {
   type TravelPurpose,
 } from "@/lib/astroMeaning";
 import { ROUTES } from "@/lib/routes";
+import { cn } from "@/lib/utils";
+
+const BIRTH_FROM_YEAR = 1900;
+const BIRTH_TO_YEAR = new Date().getFullYear();
+
+const MONTHS = [
+  { value: "1", label: "Jan" },
+  { value: "2", label: "Feb" },
+  { value: "3", label: "Mar" },
+  { value: "4", label: "Apr" },
+  { value: "5", label: "May" },
+  { value: "6", label: "Jun" },
+  { value: "7", label: "Jul" },
+  { value: "8", label: "Aug" },
+  { value: "9", label: "Sep" },
+  { value: "10", label: "Oct" },
+  { value: "11", label: "Nov" },
+  { value: "12", label: "Dec" },
+];
+
+function defaultTravelRange() {
+  const now = new Date();
+  const startMonth = now.getMonth() + 1;
+  const startYear = now.getFullYear();
+  const end = new Date(now.getFullYear(), now.getMonth() + 5, 1);
+  return {
+    travelStartMonth: String(startMonth),
+    travelStartYear: String(startYear),
+    travelEndMonth: String(end.getMonth() + 1),
+    travelEndYear: String(end.getFullYear()),
+  };
+}
 
 type FormState = {
-  day: string;
-  month: string;
-  year: string;
-  hour: string;
-  min: string;
+  /** Local calendar date as YYYY-MM-DD */
+  birthDate: string;
+  /** 24h clock as HH:mm */
+  birthTime: string;
   birthCity: string;
   currentCity: string;
   preferredCity: string;
   preferredState: string;
   preferredCountry: string;
   purpose: TravelPurpose;
+  travelStartMonth: string;
+  travelStartYear: string;
+  travelEndMonth: string;
+  travelEndYear: string;
 };
 
 const initialForm: FormState = {
-  day: "",
-  month: "",
-  year: "",
-  hour: "12",
-  min: "0",
+  birthDate: "",
+  birthTime: "12:00",
   birthCity: "",
   currentCity: "",
   preferredCity: "",
   preferredState: "",
   preferredCountry: "",
   purpose: "travel_leisure",
+  ...defaultTravelRange(),
 };
+
+function parseLocalDate(iso: string): Date | undefined {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+  if (!m) return undefined;
+  const year = Number(m[1]);
+  const month = Number(m[2]);
+  const day = Number(m[3]);
+  const d = new Date(year, month - 1, day);
+  if (
+    d.getFullYear() !== year ||
+    d.getMonth() !== month - 1 ||
+    d.getDate() !== day
+  ) {
+    return undefined;
+  }
+  return d;
+}
+
+function toLocalDateIso(d: Date): string {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+function parseBirthTime(value: string): { hour: number; min: number } | null {
+  const m = /^(\d{1,2}):(\d{2})$/.exec(value.trim());
+  if (!m) return null;
+  const hour = Number(m[1]);
+  const min = Number(m[2]);
+  if (hour < 0 || hour > 23 || min < 0 || min > 59) return null;
+  return { hour, min };
+}
 
 type ResultState = {
   lines: AcLine[];
@@ -59,18 +131,25 @@ type ResultState = {
   suggestions: ScoredSuggestion[];
   preferences: PlaceAnalysis[];
   preferenceErrors: string[];
+  timing: TravelTimingData | null;
+  timingError: string | null;
   zodiacNote: string;
   purpose: TravelPurpose;
   birthUtc: string;
 };
 
 function toBirthPayload(form: FormState): BirthPayload {
+  const date = parseLocalDate(form.birthDate);
+  const time = parseBirthTime(form.birthTime);
+  if (!date || !time) {
+    throw new Error("Please choose a valid birth date and time.");
+  }
   return {
-    day: Number(form.day),
-    month: Number(form.month),
-    year: Number(form.year),
-    hour: Number(form.hour),
-    min: Number(form.min),
+    day: date.getDate(),
+    month: date.getMonth() + 1,
+    year: date.getFullYear(),
+    hour: time.hour,
+    min: time.min,
     cityName: form.birthCity.trim(),
   };
 }
@@ -87,6 +166,28 @@ async function influenceOrNull(
       ok: false,
       error: err instanceof Error ? err.message : "Could not resolve place.",
     };
+  }
+}
+
+function formatMonthDay(iso: string): string {
+  const d = new Date(`${iso}T12:00:00Z`);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+function levelLabel(level: TravelTimingWindow["level"]): string {
+  switch (level) {
+    case "favorable":
+      return "Better stretch";
+    case "neutral":
+      return "Okay stretch";
+    default:
+      return "More cautious";
   }
 }
 
@@ -112,22 +213,37 @@ export default function Astrocartography() {
     setResult(null);
 
     try {
+      if (!form.birthDate || !form.birthTime || !form.birthCity.trim() || !form.currentCity.trim()) {
+        throw new Error("Please enter birth date, time, city of birth, and where they live now.");
+      }
       const birth = toBirthPayload(form);
-      if (
-        !birth.day ||
-        !birth.month ||
-        !birth.year ||
-        birth.hour == null ||
-        Number.isNaN(birth.hour) ||
-        !form.birthCity.trim() ||
-        !form.currentCity.trim()
-      ) {
-        throw new Error("Please fill birth date, time, birth city, and current city.");
+
+      const startMonth = Number(form.travelStartMonth);
+      const startYear = Number(form.travelStartYear);
+      const endMonth = Number(form.travelEndMonth);
+      const endYear = Number(form.travelEndYear);
+      if (!startMonth || !startYear || !endMonth || !endYear) {
+        throw new Error("Please choose a travel month range.");
+      }
+      if (endYear < startYear || (endYear === startYear && endMonth < startMonth)) {
+        throw new Error("Travel end month should be on or after the start month.");
       }
 
-      const [mapData, influence] = await Promise.all([
+      const [mapData, influence, timingOutcome] = await Promise.all([
         fetchAstrocartography(birth),
         fetchCityInfluence(birth, { targetCityName: form.currentCity.trim() }, 800),
+        fetchTravelTiming(birth, {
+          travelStartMonth: startMonth,
+          travelStartYear: startYear,
+          travelEndMonth: endMonth,
+          travelEndYear: endYear,
+          purpose: form.purpose,
+        })
+          .then((data) => ({ ok: true as const, data }))
+          .catch((err: unknown) => ({
+            ok: false as const,
+            error: err instanceof Error ? err.message : "Could not load travel timing.",
+          })),
       ]);
 
       const preferenceSpecs: Array<{
@@ -174,6 +290,8 @@ export default function Astrocartography() {
         suggestions,
         preferences,
         preferenceErrors,
+        timing: timingOutcome.ok ? timingOutcome.data : null,
+        timingError: timingOutcome.ok ? null : timingOutcome.error,
         zodiacNote: mapData.zodiacNote,
         purpose: form.purpose,
         birthUtc: mapData.birthUtc,
@@ -188,6 +306,8 @@ export default function Astrocartography() {
       setLoading(false);
     }
   };
+
+  const sectionOffset = result && result.preferences.length > 0 ? 1 : 0;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -206,80 +326,52 @@ export default function Astrocartography() {
 
       <main className="flex-1 py-14 md:py-20">
         <div className="container-peak max-w-5xl">
-          <p className="eyebrow mb-4">Free tool</p>
+          <p className="eyebrow mb-4">Free planning tool</p>
           <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink">
-            Astrocartography
+            Where in the world fits best?
           </h1>
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground">
-            See where your planetary lines fall across the world, how your current
-            city sits among them, and readings for the places you already have in mind.
+            Enter a traveller&apos;s birth details, trip goal, and a tentative month range.
+            You get place ideas from astrology map lines, nearby well-known spots, and
+            better stretches of time from their dasha cycle - for conversation, not a
+            ready-made itinerary.
           </p>
+          <aside className="mt-6 max-w-2xl border border-border bg-card/50 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-clay mb-2">
+              Important note
+            </p>
+            <p>
+              These are astrology-based suggestions and recommendations only. They do
+              not guarantee outcomes for travel, business, health, money, relationships,
+              or relocating. We do not provide day-by-day travel plans. Always use your
+              own judgment, practical research, and professional advice where needed.
+            </p>
+          </aside>
 
           <form onSubmit={onSubmit} className="mt-12 space-y-10">
             <section>
               <p className="eyebrow mb-4">1 · Birth details</p>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-                <Field label="Day">
+              <p className="mb-4 text-sm text-muted-foreground">
+                Use the best birth time you have. Even a rough time still produces a usable map.
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <BirthDateField
+                  value={form.birthDate}
+                  onChange={(value) => onChange("birthDate", value)}
+                />
+                <Field label="Birth time">
                   <input
-                    type="number"
-                    min={1}
-                    max={31}
+                    type="time"
                     required
-                    value={form.day}
-                    onChange={(e) => onChange("day", e.target.value)}
-                    className="acg-input"
-                    placeholder="15"
-                  />
-                </Field>
-                <Field label="Month">
-                  <input
-                    type="number"
-                    min={1}
-                    max={12}
-                    required
-                    value={form.month}
-                    onChange={(e) => onChange("month", e.target.value)}
-                    className="acg-input"
-                    placeholder="8"
-                  />
-                </Field>
-                <Field label="Year">
-                  <input
-                    type="number"
-                    min={1900}
-                    max={2100}
-                    required
-                    value={form.year}
-                    onChange={(e) => onChange("year", e.target.value)}
-                    className="acg-input"
-                    placeholder="1992"
-                  />
-                </Field>
-                <Field label="Hour (0-23)">
-                  <input
-                    type="number"
-                    min={0}
-                    max={23}
-                    required
-                    value={form.hour}
-                    onChange={(e) => onChange("hour", e.target.value)}
-                    className="acg-input"
-                  />
-                </Field>
-                <Field label="Minute">
-                  <input
-                    type="number"
-                    min={0}
-                    max={59}
-                    required
-                    value={form.min}
-                    onChange={(e) => onChange("min", e.target.value)}
+                    step={60}
+                    value={form.birthTime}
+                    onChange={(e) => onChange("birthTime", e.target.value)}
                     className="acg-input"
                   />
                 </Field>
               </div>
               <div className="mt-4 grid gap-4 sm:grid-cols-2">
-                <Field label="Birth city">
+                <Field label="City of birth">
                   <input
                     type="text"
                     required
@@ -289,7 +381,7 @@ export default function Astrocartography() {
                     placeholder="Mumbai, India"
                   />
                 </Field>
-                <Field label="Current city">
+                <Field label="Where they live now">
                   <input
                     type="text"
                     required
@@ -303,7 +395,7 @@ export default function Astrocartography() {
             </section>
 
             <section>
-              <p className="eyebrow mb-4">2 · Purpose</p>
+              <p className="eyebrow mb-4">2 · What is this trip for?</p>
               <div className="flex flex-wrap gap-2">
                 {PURPOSES.map((p) => {
                   const active = form.purpose === p.id;
@@ -327,13 +419,73 @@ export default function Astrocartography() {
             </section>
 
             <section>
-              <p className="eyebrow mb-4">3 · Preferences (optional)</p>
+              <p className="eyebrow mb-4">3 · Tentative travel months</p>
               <p className="mb-4 text-sm text-muted-foreground">
-                Add any places you are already considering. We score each against your
-                lines for the purpose above.
+                Pick the months you are considering. We look at their Vimshottari dasha
+                (planetary time periods) and highlight better stretches inside that range.
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+                <Field label="From month">
+                  <select
+                    required
+                    value={form.travelStartMonth}
+                    onChange={(e) => onChange("travelStartMonth", e.target.value)}
+                    className="acg-input"
+                  >
+                    {MONTHS.map((m) => (
+                      <option key={m.value} value={m.value}>
+                        {m.label}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="From year">
+                  <input
+                    type="number"
+                    min={2020}
+                    max={2100}
+                    required
+                    value={form.travelStartYear}
+                    onChange={(e) => onChange("travelStartYear", e.target.value)}
+                    className="acg-input"
+                  />
+                </Field>
+                <Field label="To month">
+                  <select
+                    required
+                    value={form.travelEndMonth}
+                    onChange={(e) => onChange("travelEndMonth", e.target.value)}
+                    className="acg-input"
+                  >
+                    {MONTHS.map((m) => (
+                      <option key={m.value} value={m.value}>
+                        {m.label}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="To year">
+                  <input
+                    type="number"
+                    min={2020}
+                    max={2100}
+                    required
+                    value={form.travelEndYear}
+                    onChange={(e) => onChange("travelEndYear", e.target.value)}
+                    className="acg-input"
+                  />
+                </Field>
+              </div>
+            </section>
+
+            <section>
+              <p className="eyebrow mb-4">4 · Places already in mind (optional)</p>
+              <p className="mb-4 text-sm text-muted-foreground">
+                If the client already likes a city, region, or country, add it here. We
+                check how each one looks for the goal you picked above.
               </p>
               <div className="grid gap-4 sm:grid-cols-3">
-                <Field label="Preferred city">
+                <Field label="City they are considering">
                   <input
                     type="text"
                     value={form.preferredCity}
@@ -342,7 +494,7 @@ export default function Astrocartography() {
                     placeholder="Lisbon"
                   />
                 </Field>
-                <Field label="Preferred state / region">
+                <Field label="State or region">
                   <input
                     type="text"
                     value={form.preferredState}
@@ -351,7 +503,7 @@ export default function Astrocartography() {
                     placeholder="Goa, India"
                   />
                 </Field>
-                <Field label="Preferred country">
+                <Field label="Country">
                   <input
                     type="text"
                     value={form.preferredCountry}
@@ -377,25 +529,31 @@ export default function Astrocartography() {
               {loading ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Mapping…
+                  Preparing map…
                 </>
               ) : (
-                "Draw my map"
+                "Show map & suggestions"
               )}
             </button>
           </form>
 
           {result ? (
             <div id="acg-results" className="mt-16 space-y-14 scroll-mt-8">
+              <aside className="border border-border bg-card/50 px-5 py-4 text-sm leading-relaxed text-muted-foreground">
+                Reminder: places and dates below are astrology-based recommendations for
+                conversation. They are not a travel itinerary and do not guarantee how a
+                trip, move, or business visit will turn out.
+              </aside>
+
               <section>
-                <p className="eyebrow mb-4">4 · World map</p>
+                <p className="eyebrow mb-4">5 · World map</p>
                 <p className="mb-4 text-sm text-muted-foreground">
-                  Solid lines are MC / ASC; dashed are IC / DSC. Gold marks your
-                  current location
+                  Colored lines show where different planetary themes are emphasized
+                  around the world. The gold marker is where they live now
                   {result.currentPlace.cityName
                     ? ` (${result.currentPlace.cityName})`
                     : ""}
-                  .
+                  . Solid and dashed styles are just different line types on the chart.
                 </p>
                 <AstroWorldMap
                   lines={result.lines}
@@ -417,11 +575,55 @@ export default function Astrocartography() {
                 <MapLegend planets={result.lines.map((l) => l.planet)} />
               </section>
 
+              <section>
+                <p className="eyebrow mb-4">6 · Better times to travel</p>
+                <h2 className="font-display text-2xl text-ink mb-4">
+                  Within your tentative months
+                </h2>
+                <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
+                  Based on Vimshottari dasha (the traditional planetary time periods in
+                  their chart). Use these as timing hints when shortlisting dates - not as
+                  a booking schedule.
+                </p>
+                {result.timingError ? (
+                  <p className="border border-destructive/40 bg-destructive/5 px-4 py-3 text-sm text-destructive">
+                    Timing could not be loaded: {result.timingError}
+                  </p>
+                ) : result.timing && result.timing.best.length > 0 ? (
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {result.timing.best.map((w) => (
+                      <article
+                        key={`${w.start_date}-${w.end_date}-${w.dasha.antar}`}
+                        className="border border-border bg-card/40 p-6"
+                      >
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold mb-2">
+                          {levelLabel(w.level)}
+                        </p>
+                        <h3 className="font-display text-xl text-ink">
+                          {formatMonthDay(w.start_date)} – {formatMonthDay(w.end_date)}
+                        </h3>
+                        <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-clay">
+                          {w.dasha.maha} – {w.dasha.antar} dasha
+                        </p>
+                        <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                          {w.summary}
+                        </p>
+                      </article>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">
+                    No clear standout stretches in that month range. The whole window looks
+                    fairly even - practical factors may matter more than chart timing here.
+                  </p>
+                )}
+              </section>
+
               {(result.preferences.length > 0 || result.preferenceErrors.length > 0) && (
                 <section>
-                  <p className="eyebrow mb-4">5 · Your preferences</p>
+                  <p className="eyebrow mb-4">7 · Places they already like</p>
                   <h2 className="font-display text-2xl text-ink mb-6">
-                    Analysis for places you named
+                    How their preferred places look
                   </h2>
                   {result.preferenceErrors.length > 0 ? (
                     <ul className="mb-4 space-y-1 text-sm text-destructive">
@@ -440,11 +642,17 @@ export default function Astrocartography() {
 
               <section>
                 <p className="eyebrow mb-4">
-                  {result.preferences.length > 0 ? "6" : "5"} · Three suggestions
+                  {7 + sectionOffset} · Three place ideas
                 </p>
                 <h2 className="font-display text-2xl text-ink mb-6">
-                  Best fits for {PURPOSES.find((p) => p.id === result.purpose)?.label.toLowerCase()}
+                  Destinations that may suit{" "}
+                  {PURPOSES.find((p) => p.id === result.purpose)?.label.toLowerCase()}
                 </h2>
+                <p className="mb-6 max-w-2xl text-sm text-muted-foreground">
+                  Ranked from a curated city list, with nearby well-known places listed
+                  for context. Not a trip plan - just places worth putting on the shortlist
+                  for the client.
+                </p>
                 <div className="grid gap-4 md:grid-cols-3">
                   {result.suggestions.map((s, i) => (
                     <article
@@ -452,7 +660,7 @@ export default function Astrocartography() {
                       className="border border-border bg-card/40 p-6 hover:border-gold transition-colors"
                     >
                       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-gold mb-2">
-                        #{i + 1}
+                        Idea #{i + 1}
                       </p>
                       <h3 className="font-display text-xl text-ink">
                         {s.city.name}
@@ -460,10 +668,30 @@ export default function Astrocartography() {
                       <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-clay">
                         {s.city.country}
                       </p>
+                      {s.city.nearby?.length ? (
+                        <div className="mt-4">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-clay mb-2">
+                            Nearby popular places
+                          </p>
+                          <ul className="flex flex-wrap gap-2">
+                            {s.city.nearby.map((n) => (
+                              <li
+                                key={n.name}
+                                className="border border-border px-2.5 py-1 text-xs text-muted-foreground"
+                              >
+                                {n.name}
+                                {n.kind ? (
+                                  <span className="text-clay"> · {n.kind}</span>
+                                ) : null}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null}
                       <ul className="mt-4 space-y-2">
                         {s.nearest.length === 0 ? (
                           <li className="text-sm text-muted-foreground">
-                            Broad supportive pattern without a single tight line.
+                            A generally friendly pattern without one nearby standout line.
                           </li>
                         ) : (
                           s.nearest.map((n) => (
@@ -472,7 +700,10 @@ export default function Astrocartography() {
                                 {n.planet} {n.angle}
                               </span>
                               {" · "}
-                              ~{n.distanceKm} km
+                              about {n.distanceKm} km away
+                              {n.blurb ? (
+                                <span className="block text-clay">{n.blurb}</span>
+                              ) : null}
                             </li>
                           ))
                         )}
@@ -484,7 +715,7 @@ export default function Astrocartography() {
 
               <section>
                 <p className="eyebrow mb-4">
-                  {result.preferences.length > 0 ? "7" : "6"} · Reading
+                  {8 + sectionOffset} · Plain-language summary
                 </p>
                 <Explanation result={result} />
               </section>
@@ -509,16 +740,75 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
+function BirthDateField({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (iso: string) => void;
+}) {
+  const selected = parseLocalDate(value);
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="block">
+      <span className="mb-2 block font-mono text-[10px] uppercase tracking-[0.16em] text-clay">
+        Birth date
+      </span>
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <button
+            type="button"
+            className={cn(
+              "acg-input inline-flex items-center justify-between text-left",
+              !selected && "text-clay/70",
+            )}
+          >
+            <span>{selected ? format(selected, "d MMM yyyy") : "Pick a date"}</span>
+            <CalendarIcon className="h-4 w-4 shrink-0 text-clay" />
+          </button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={selected}
+            onSelect={(date) => {
+              if (!date) return;
+              onChange(toLocalDateIso(date));
+              setOpen(false);
+            }}
+            captionLayout="dropdown-buttons"
+            fromYear={BIRTH_FROM_YEAR}
+            toYear={BIRTH_TO_YEAR}
+            defaultMonth={selected ?? new Date(1990, 0, 1)}
+            disabled={{ after: new Date() }}
+            initialFocus
+          />
+        </PopoverContent>
+      </Popover>
+      <input
+        type="text"
+        required
+        tabIndex={-1}
+        aria-hidden
+        value={value}
+        onChange={() => undefined}
+        className="sr-only"
+      />
+    </div>
+  );
+}
+
 function toneLabel(tone: PlaceAnalysis["tone"]): string {
   switch (tone) {
     case "supportive":
-      return "Supportive";
+      return "Looks supportive";
     case "challenging":
-      return "Challenging";
+      return "May need more effort";
     case "mixed":
-      return "Mixed";
+      return "Mixed picture";
     default:
-      return "Quiet";
+      return "Quieter signal";
   }
 }
 
@@ -560,22 +850,24 @@ function PreferenceCard({ analysis }: { analysis: PlaceAnalysis }) {
 
 function Explanation({ result }: { result: ResultState }) {
   const nearby = result.currentInfluence.nearby.slice(0, 4);
-  const purposeLabel = PURPOSES.find((p) => p.id === result.purpose)?.label ?? "your purpose";
+  const purposeLabel = PURPOSES.find((p) => p.id === result.purpose)?.label ?? "this purpose";
+  const best = result.timing?.best?.[0];
 
   return (
     <div className="space-y-6 max-w-3xl text-base leading-relaxed text-muted-foreground">
       <p>
-        Born in{" "}
+        Based on a birth in{" "}
         <span className="text-ink">{result.birthPlace.cityName}</span>
-        {result.birthPlace.country ? `, ${result.birthPlace.country}` : ""}, your map is
-        drawn for UTC {new Date(result.birthUtc).toUTCString()}. Your current base (
-        <span className="text-ink">{result.currentPlace.cityName}</span>) is marked in gold.
+        {result.birthPlace.country ? `, ${result.birthPlace.country}` : ""}, and living now
+        in{" "}
+        <span className="text-ink">{result.currentPlace.cityName}</span>
+        {" "}(gold marker), here is a simple read of place and timing.
       </p>
 
       {nearby.length > 0 ? (
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-clay mb-3">
-            Near you now
+            Near where they live now
           </p>
           <ul className="space-y-2">
             {nearby.map((h) => (
@@ -584,31 +876,49 @@ function Explanation({ result }: { result: ResultState }) {
                   {h.planet} {h.angle}
                 </span>
                 {": "}
-                {describeLine(h.planet, h.angle)} (~{Math.round(h.distanceKm)} km)
+                {describeLine(h.planet, h.angle)} (about {Math.round(h.distanceKm)} km away)
               </li>
             ))}
           </ul>
         </div>
       ) : (
         <p>
-          No strong planetary line sits inside an 800 km orb of your current city. That
-          can feel quieter, with less activation than cities that sit on an angle.
+          No strong planetary line sits especially close to their current city. That often
+          feels quieter than places that sit right on a line - neither a bad nor a dazzling
+          signal on its own.
         </p>
       )}
 
+      {best ? (
+        <p>
+          Inside the months you named, one of the stronger stretches is roughly{" "}
+          <span className="text-ink">
+            {formatMonthDay(best.start_date)} – {formatMonthDay(best.end_date)}
+          </span>{" "}
+          ({best.dasha.maha}–{best.dasha.antar} dasha). Treat that as a timing hint when
+          narrowing dates with the client.
+        </p>
+      ) : null}
+
       {result.preferences.length > 0 ? (
         <p>
-          Your named preferences are scored above for{" "}
+          The places they already named were checked for{" "}
           <span className="text-ink">{purposeLabel.toLowerCase()}</span>
-          {" "}using the same line weights as the open suggestions.
+          {" "}using the same approach as the destination ideas above.
         </p>
       ) : null}
 
       <p>
-        The three suggestions score catalog cities for{" "}
-        <span className="text-ink">{purposeLabel.toLowerCase()}</span> by closeness to
-        supportive lines (and distance from harder ones). Treat them as directional
-        leads, not destiny: travel windows, timing, and your full chart still matter.
+        The three destination ideas are ranked for{" "}
+        <span className="text-ink">{purposeLabel.toLowerCase()}</span> by how close they are
+        to supportive map lines. Nearby popular places are listed for orientation only -
+        confirm with visas, season, budget, safety, and what the client actually likes.
+      </p>
+
+      <p className="text-sm border border-border bg-card/40 px-4 py-3">
+        Disclaimer: Peak&apos;s place and timing suggestions are based on astrology and
+        carry no guarantees. They are not legal, medical, financial, immigration advice,
+        or a travel itinerary.
       </p>
 
       {result.zodiacNote ? (

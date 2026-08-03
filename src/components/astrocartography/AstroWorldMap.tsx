@@ -137,7 +137,7 @@ function CurrentMarker({ point }: { point: GeoPoint }) {
         textAnchor="middle"
         style={{ fontSize: 11, fontFamily: "JetBrains Mono, monospace", fill: "#8A7360" }}
       >
-        You are here
+        Lives now
       </text>
     </g>
   );
@@ -167,7 +167,7 @@ export function MapLegend({ planets }: { planets: string[] }) {
       ))}
       <li className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.14em] text-clay">
         <span className="inline-block h-2 w-2 rounded-full bg-gold" />
-        Current
+        Lives now
       </li>
     </ul>
   );
