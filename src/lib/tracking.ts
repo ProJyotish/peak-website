@@ -189,6 +189,19 @@ export function initializeTracking() {
   }
 }
 
+/** Fire a custom GA4 event (no-ops if gtag is unavailable). */
+export function trackEvent(
+  eventName: string,
+  params: Record<string, string | number | boolean | undefined> = {},
+) {
+  if (typeof window.gtag !== "function") return;
+  const ga4Id = ga4MeasurementId();
+  window.gtag("event", eventName, {
+    ...params,
+    ...(ga4Id ? { send_to: ga4Id } : {}),
+  });
+}
+
 // Helper function for delayed navigation with gtag
 export function gtagSendEvent(url: string) {
   const callback = function () {

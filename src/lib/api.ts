@@ -24,5 +24,5 @@ export const SUBSCRIPTION_API_URL = API_BASE_URL
   ? apiUrl("/payments/razorpay/subscription")
   : "";
 
-/** Unauthenticated public astro tools (Peak AstroCarto Chalit + legacy helpers). */
+/** Unauthenticated public astro tools (travel-fit advise + legacy helpers). */
 export const PUBLIC_ASTRO_API_URL = API_BASE_URL ? apiUrl("/public/astro") : "";
