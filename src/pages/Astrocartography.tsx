@@ -7,6 +7,10 @@ import {
   TravelAdviseMap,
   TravelMapLegend,
 } from "@/components/astrocartography/TravelAdviseMap";
+import {
+  LocationAutocompleteInput,
+  PreferredPlacesField,
+} from "@/components/astrocartography/LocationAutocomplete";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import { Calendar } from "@/components/ui/calendar";
@@ -74,7 +78,7 @@ type FormState = {
   purposeId: string;
   travelStart: string;
   travelEnd: string;
-  preferredPlaces: string;
+  preferredPlaceList: string[];
   countries: string;
 };
 
@@ -96,7 +100,7 @@ const initialForm: FormState = {
   purposeId: "short_break",
   travelStart: todayIso(),
   travelEnd: plusMonthsIso(1),
-  preferredPlaces: "",
+  preferredPlaceList: [],
   countries: "",
 };
 
@@ -223,8 +227,7 @@ export default function Astrocartography() {
       setError("Enter the travel start and end dates.");
       return;
     }
-    const preferredPlaces = form.preferredPlaces
-      .split(/[,;\n]/)
+    const preferredPlaces = form.preferredPlaceList
       .map((s) => s.trim())
       .filter(Boolean);
     const countries = form.countries
@@ -348,12 +351,10 @@ export default function Astrocartography() {
                 </Popover>
               </Field>
               <Field label="Place of birth" className="sm:col-span-2">
-                <input
-                  type="text"
+                <LocationAutocompleteInput
                   value={form.birthCity}
-                  onChange={(e) => setForm((f) => ({ ...f, birthCity: e.target.value }))}
+                  onChange={(birthCity) => setForm((f) => ({ ...f, birthCity }))}
                   placeholder="City of birth"
-                  className="w-full border border-border bg-card px-3 py-2 text-sm"
                   required
                 />
               </Field>
@@ -422,12 +423,11 @@ export default function Astrocartography() {
 
           <Section n="4" title="Places already in mind (optional)">
             <Field label="Cities to check">
-              <textarea
-                value={form.preferredPlaces}
-                onChange={(e) => setForm((f) => ({ ...f, preferredPlaces: e.target.value }))}
-                placeholder="Lisbon, Goa, Bali - one per line or comma-separated"
-                rows={3}
-                className="w-full border border-border bg-card px-3 py-2 text-sm"
+              <PreferredPlacesField
+                places={form.preferredPlaceList}
+                onChange={(preferredPlaceList) =>
+                  setForm((f) => ({ ...f, preferredPlaceList }))
+                }
               />
             </Field>
             <Field label="Prefer countries (optional filter for alternatives)">
@@ -456,6 +456,14 @@ export default function Astrocartography() {
             {result.periodWarning && (
               <div className="border border-clay/50 bg-clay/10 px-4 py-3 text-sm">
                 {result.periodWarning}
+              </div>
+            )}
+            {result.periodFocus && (
+              <div className="border border-border bg-card px-4 py-3 text-sm text-ink/80">
+                <p>{result.periodFocus.label}</p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-ink/40">
+                  Changes with your travel dates — destinations re-rank when this focus shifts
+                </p>
               </div>
             )}
             {result.homeBest && (

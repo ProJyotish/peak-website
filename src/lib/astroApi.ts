@@ -70,11 +70,20 @@ export type RankedPlace = {
   reason?: string;
 };
 
+export type PeriodFocus = {
+  major: string;
+  secondary: string;
+  tertiary: string;
+  nextChange: string | null;
+  label: string;
+};
+
 export type LayAdviseData = {
   birthUtc: string;
   birthPlace: { cityName: string; country: string; lat: number; lon: number };
   purposeLabel: string;
   travelWindow: { start: string; end: string };
+  periodFocus: PeriodFocus;
   preferred: AssessedPlace[];
   alternatives: AssessedPlace[];
   scoreGrid: ScoreGrid;
@@ -102,6 +111,31 @@ async function postAstro<T>(path: string, body: unknown): Promise<T> {
     throw new Error(json.error || "Astro API request failed.");
   }
   return json.data;
+}
+
+export type LocationPrediction = {
+  placeId: string;
+  description: string;
+};
+
+export async function fetchLocationAutocomplete(
+  query: string,
+): Promise<LocationPrediction[]> {
+  if (!PUBLIC_ASTRO_API_URL) {
+    throw new Error("VITE_API_BASE_URL is not set.");
+  }
+  const q = query.trim();
+  if (q.length < 2) return [];
+  const url = `${PUBLIC_ASTRO_API_URL}/location/autocomplete?q=${encodeURIComponent(q)}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Location autocomplete HTTP ${res.status}`);
+  }
+  const json = (await res.json()) as ApiEnvelope<{ predictions: LocationPrediction[] }>;
+  if (!json.success || !json.data) {
+    throw new Error(json.error || "Location autocomplete failed.");
+  }
+  return json.data.predictions ?? [];
 }
 
 export function fetchAstroAdvise(
