@@ -3,6 +3,8 @@ export const ROUTES = {
   home: "/",
   blog: "/blog",
   blogPost: (slug: string) => `/blog/${slug}` as const,
+  product: "/product",
+  productPage: (slug: string) => `/product/${slug}` as const,
   terms: "/terms",
   termsEmbed: "/embed/terms",
   privacy: "/privacy-policy",

@@ -967,4 +967,56 @@ for (const post of blogPosts) {
   });
 }
 
+/** Keep in sync with `src/lib/product.ts` PRODUCT_PAGES slugs. */
+const PRODUCT_SLUGS = [
+  "daily-guidance",
+  "hora-timing",
+  "ask",
+  "birth-chart",
+  "goals",
+  "family-profiles",
+  "how-it-works",
+];
+
+const today = new Date().toISOString().slice(0, 10);
+const sitemapEntries = [
+  { loc: "/", changefreq: "weekly", priority: "1.0" },
+  { loc: "/product/", changefreq: "weekly", priority: "0.9" },
+  ...PRODUCT_SLUGS.map((slug) => ({
+    loc: `/product/${slug}/`,
+    changefreq: "weekly",
+    priority: "0.8",
+  })),
+  { loc: "/blog/", changefreq: "weekly", priority: "0.8" },
+  ...blogPosts.map((post) => ({
+    loc: `/blog/${post.slug}/`,
+    changefreq: "monthly",
+    priority: "0.7",
+    lastmod: post.date || today,
+  })),
+  { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
+  { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
+  { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
+  { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },
+  { loc: "/delete-my-account/", changefreq: "yearly", priority: "0.2" },
+];
+
+const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${sitemapEntries
+  .map(
+    (entry) => `  <url>
+    <loc>https://${SITE.domain}${entry.loc}</loc>
+    <lastmod>${entry.lastmod ?? today}</lastmod>
+    <changefreq>${entry.changefreq}</changefreq>
+    <priority>${entry.priority}</priority>
+  </url>`,
+  )
+  .join("\n")}
+</urlset>
+`;
+
+writeFileSync(resolve(dist, "sitemap.xml"), sitemapXml);
+console.log("✓ Generated sitemap.xml");
+
 console.log("\n✓ Static HTML pages generated successfully!");
