@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleAnalytics } from "@/components/site/GoogleAnalytics";
 import { ROUTES } from "@/lib/routes";
 import Index from "./pages/Index.tsx";
-import NotFound from "./pages/NotFound.tsx";
 import Terms from "./pages/Terms.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import AccountDeletion from "./pages/AccountDeletion.tsx";
@@ -16,6 +15,7 @@ import Contact from "./pages/Contact.tsx";
 import Checkout from "./pages/Checkout.tsx";
 import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
+import CmsPage from "./pages/CmsPage.tsx";
 import Astrocartography from "./pages/Astrocartography.tsx";
 
 const queryClient = new QueryClient();
@@ -39,7 +39,7 @@ const App = () => (
           <Route path={ROUTES.contact} element={<Contact />} />
           <Route path={ROUTES.checkout} element={<Checkout />} />
           <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
-          <Route path="*" element={<NotFound />} />
+          <Route path="*" element={<CmsPage />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

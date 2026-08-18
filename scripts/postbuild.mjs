@@ -1,11 +1,13 @@
-import { copyFileSync, mkdirSync, writeFileSync, readdirSync, readFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, writeFileSync, readdirSync, readFileSync } from "node:fs";
 import { resolve, dirname, join } from "node:path";
 import matter from "gray-matter";
 import { renderPostHtml } from "./markdown.mjs";
+import { isReservedPagePath, urlPathFromPageRel } from "./cms-paths.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
 const postsDir = resolve(root, "posts");
+const pagesDir = resolve(root, "pages");
 
 // Copy index.html to 404.html for client-side routing fallback
 copyFileSync(resolve(dist, "index.html"), resolve(dist, "404.html"));
@@ -892,6 +894,31 @@ function writePage(page) {
   console.log(`✓ Generated ${page.path}`);
 }
 
+function loadCmsPages() {
+  if (!existsSync(pagesDir)) return [];
+  const files = readdirSync(pagesDir, { recursive: true })
+    .map((f) => String(f).replaceAll("\\", "/"))
+    .filter((f) => f.endsWith(".md"));
+  return files.flatMap((rel) => {
+    const path = urlPathFromPageRel(rel);
+    if (isReservedPagePath(path)) {
+      console.warn(`⚠ Skipping CMS page ${rel} — reserved path ${path}`);
+      return [];
+    }
+    const raw = readFileSync(join(pagesDir, rel), "utf8");
+    const { data, content } = matter(raw);
+    return [
+      {
+        path,
+        title: String(data.title ?? path.replace(/^\//, "") || "Untitled"),
+        eyebrow: String(data.eyebrow ?? ""),
+        description: String(data.description ?? ""),
+        html: renderPostHtml(content),
+      },
+    ];
+  });
+}
+
 function loadBlogPosts() {
   const fileNames = readdirSync(postsDir).filter((f) => f.endsWith(".md"));
   return fileNames
@@ -964,6 +991,20 @@ for (const post of blogPosts) {
     backHref: "/blog/",
     backLabel: "Blog",
     content: post.html,
+  });
+}
+
+for (const cmsPage of loadCmsPages()) {
+  const distPath = `${cmsPage.path.replace(/^\//, "")}/index.html`;
+  writePage({
+    path: distPath,
+    title: `${cmsPage.title} - Peak`,
+    description: cmsPage.description || cmsPage.title,
+    eyebrow: cmsPage.eyebrow || "Peak",
+    heading: cmsPage.title,
+    backHref: "/",
+    backLabel: "Home",
+    content: cmsPage.html,
   });
 }
 

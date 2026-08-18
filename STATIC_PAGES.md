@@ -27,6 +27,7 @@ The following routes are served as **pure HTML** with no JavaScript required:
 | `/contact` | `dist/contact/index.html` |
 | `/blog` | `dist/blog/index.html` (post listing) |
 | `/blog/<slug>/` | `dist/blog/<slug>/index.html` (from `posts/*.md`) |
+| `/<folder>/<slug>/` | `dist/<folder>/<slug>/index.html` (from `pages/**/*.md`) |
 
 Also copied:
 
@@ -56,7 +57,29 @@ npm run build
 
 3. Postbuild reads every `posts/*.md` via `gray-matter` + `marked` and writes static HTML under `dist/blog/`.
 
-The React app still has `/blog` and `/blog/:slug` for in-app navigation; direct URL hits on GitHub Pages get the static HTML first.
+The React app still has `/blog` and `/blog/:slug` for in-app navigation; direct URL hits get the static HTML first.
+
+### Pages workflow (CMS)
+
+Use a **separate Pages collection** (not blog folders) for URLs outside `/blog`. Folders inside `pages/` become the path:
+
+| File | URL |
+|------|-----|
+| `pages/about.md` | `/about` |
+| `pages/guides/saturn.md` | `/guides/saturn` |
+| `pages/guides/index.md` | `/guides` |
+
+```markdown
+---
+title: About Peak
+eyebrow: Peak
+description: What Peak is and how it reads the chart.
+---
+
+Markdown body…
+```
+
+Reserved app routes (`/`, `/blog`, `/checkout`, legal pages, `/tools/astrocartography`, …) are skipped so CMS files cannot overwrite them. Create pages from Peak CMS → **Pages**; use **Add Folder** to nest paths.
 
 ### Key Features
 
