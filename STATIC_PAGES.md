@@ -27,7 +27,7 @@ The following routes are served as **pure HTML** with no JavaScript required:
 | `/contact` | `dist/contact/index.html` |
 | `/blog` | `dist/blog/index.html` (post listing) |
 | `/blog/<slug>/` | `dist/blog/<slug>/index.html` (from `posts/*.md`) |
-| `/<folder>/<slug>/` | `dist/<folder>/<slug>/index.html` (from `pages/**/*.md`) |
+| `/<folder>/<slug>/` | `dist/<folder>/<slug>/index.html` (from `site-pages/**/*.md`) |
 
 Also copied:
 
@@ -61,13 +61,13 @@ The React app still has `/blog` and `/blog/:slug` for in-app navigation; direct 
 
 ### Pages workflow (CMS)
 
-Use a **separate Pages collection** (not blog folders) for URLs outside `/blog`. Folders inside `pages/` become the path:
+Use a **separate Pages collection** (not blog folders) for URLs outside `/blog`. Folders inside `site-pages/` become the path:
 
 | File | URL |
 |------|-----|
-| `pages/about.md` | `/about` |
-| `pages/guides/saturn.md` | `/guides/saturn` |
-| `pages/guides/index.md` | `/guides` |
+| `site-pages/about.md` | `/about` |
+| `site-pages/guides/saturn.md` | `/guides/saturn` |
+| `site-pages/guides/index.md` | `/guides` |
 
 ```markdown
 ---

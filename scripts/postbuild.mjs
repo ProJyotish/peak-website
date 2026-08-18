@@ -7,7 +7,7 @@ import { isReservedPagePath, urlPathFromPageRel } from "./cms-paths.mjs";
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
 const postsDir = resolve(root, "posts");
-const pagesDir = resolve(root, "pages");
+const pagesDir = resolve(root, "site-pages");
 
 // Copy index.html to 404.html for client-side routing fallback
 copyFileSync(resolve(dist, "index.html"), resolve(dist, "404.html"));
@@ -898,7 +898,7 @@ function loadCmsPages() {
   if (!existsSync(pagesDir)) return [];
   const files = readdirSync(pagesDir, { recursive: true })
     .map((f) => String(f).replaceAll("\\", "/"))
-    .filter((f) => f.endsWith(".md"));
+    .filter((f) => f.endsWith(".md") && !f.split("/").pop()?.startsWith("."));
   return files.flatMap((rel) => {
     const path = urlPathFromPageRel(rel);
     if (isReservedPagePath(path)) {

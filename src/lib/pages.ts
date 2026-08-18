@@ -13,7 +13,7 @@ export interface CmsPage {
   content: string;
 }
 
-const pageModules = import.meta.glob("../../pages/**/*.md", {
+const pageModules = import.meta.glob("../../site-pages/**/*.md", {
   eager: true,
   query: "?raw",
   import: "default",
@@ -21,13 +21,16 @@ const pageModules = import.meta.glob("../../pages/**/*.md", {
 
 function relFromGlobKey(filePath: string): string {
   const normalized = filePath.replaceAll("\\", "/");
-  const marker = "/pages/";
+  const marker = "/site-pages/";
   const idx = normalized.lastIndexOf(marker);
   if (idx === -1) return normalized.split("/").pop() ?? normalized;
   return normalized.slice(idx + marker.length);
 }
 
 function parsePage(rel: string, raw: string): CmsPage | null {
+  const posix = rel.replaceAll("\\", "/");
+  const fileName = posix.split("/").pop() ?? "";
+  if (fileName.startsWith(".")) return null;
   const path = urlPathFromPageRel(rel);
   if (isReservedPagePath(path)) return null;
   const { data, content } = parseFrontmatter(raw);

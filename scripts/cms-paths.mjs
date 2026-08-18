@@ -1,5 +1,5 @@
 /**
- * URL mapping for CMS markdown pages (peak-website/pages).
+ * URL mapping for CMS markdown pages (peak-website/site-pages).
  * Keep reserved paths in sync with src/lib/routes.ts + App.tsx.
  */
 
@@ -29,7 +29,7 @@ export function normalizePagePath(pathname) {
 }
 
 /**
- * Relative file under pages/ → public URL.
+ * Relative file under site-pages/ → public URL.
  * about.md → /about
  * guides/saturn.md → /guides/saturn
  * guides/index.md → /guides
