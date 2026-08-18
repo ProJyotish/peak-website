@@ -1,5 +1,5 @@
 ---
-title: how-it-works
+title: How It Works
 eyebrow: ''
 description: ''
 ---
