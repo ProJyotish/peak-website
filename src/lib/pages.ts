@@ -33,7 +33,7 @@ function parsePage(rel: string, raw: string): CmsPage | null {
   const { data, content } = matter(raw);
   return {
     path,
-    title: String(data.title ?? path.replace(/^\//, "") || "Untitled"),
+    title: String(data.title ?? (path.replace(/^\//, "") || "Untitled")),
     eyebrow: String(data.eyebrow ?? ""),
     description: String(data.description ?? ""),
     content: content.trim(),

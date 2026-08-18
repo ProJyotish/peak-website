@@ -910,7 +910,7 @@ function loadCmsPages() {
     return [
       {
         path,
-        title: String(data.title ?? path.replace(/^\//, "") || "Untitled"),
+        title: String(data.title ?? (path.replace(/^\//, "") || "Untitled")),
         eyebrow: String(data.eyebrow ?? ""),
         description: String(data.description ?? ""),
         html: renderPostHtml(content),
