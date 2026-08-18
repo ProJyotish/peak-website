@@ -1,4 +1,4 @@
-import matter from "gray-matter";
+import { parseFrontmatter } from "./frontmatter";
 import {
   isReservedPagePath,
   normalizePagePath,
@@ -30,7 +30,7 @@ function relFromGlobKey(filePath: string): string {
 function parsePage(rel: string, raw: string): CmsPage | null {
   const path = urlPathFromPageRel(rel);
   if (isReservedPagePath(path)) return null;
-  const { data, content } = matter(raw);
+  const { data, content } = parseFrontmatter(raw);
   return {
     path,
     title: String(data.title ?? (path.replace(/^\//, "") || "Untitled")),

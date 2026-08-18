@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { parseFrontmatter } from "@/lib/frontmatter";
 import {
   isReservedPagePath,
   normalizePagePath,
@@ -38,5 +39,24 @@ describe("isReservedPagePath", () => {
 describe("normalizePagePath", () => {
   it("strips a trailing slash", () => {
     expect(normalizePagePath("/about/")).toBe("/about");
+  });
+});
+
+describe("parseFrontmatter", () => {
+  it("reads quoted YAML values without Node Buffer", () => {
+    const raw = [
+      "---",
+      "title: About Peak",
+      "eyebrow: Guide",
+      "excerpt: 'A quoted excerpt — with a dash.'",
+      "---",
+      "",
+      "Body copy.",
+    ].join("\n");
+    const { data, content } = parseFrontmatter(raw);
+    expect(data.title).toBe("About Peak");
+    expect(data.eyebrow).toBe("Guide");
+    expect(data.excerpt).toBe("A quoted excerpt — with a dash.");
+    expect(content.trim()).toBe("Body copy.");
   });
 });

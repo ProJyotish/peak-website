@@ -1,4 +1,4 @@
-import matter from "gray-matter";
+import { parseFrontmatter } from "./frontmatter";
 
 export interface BlogPost {
   slug: string;
@@ -21,7 +21,7 @@ function slugFromPath(filePath: string): string {
 }
 
 function parsePost(slug: string, raw: string): BlogPost {
-  const { data, content } = matter(raw);
+  const { data, content } = parseFrontmatter(raw);
   return {
     slug,
     title: String(data.title ?? slug),

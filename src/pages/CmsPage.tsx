@@ -9,7 +9,12 @@ import NotFound from "./NotFound";
 
 const CmsPage = () => {
   const { pathname } = useLocation();
-  const page = getPageByPath(pathname);
+  let page;
+  try {
+    page = getPageByPath(pathname);
+  } catch {
+    return <NotFound />;
+  }
 
   if (!page) {
     return <NotFound />;
