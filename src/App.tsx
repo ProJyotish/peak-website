@@ -17,6 +17,8 @@ import Blog from "./pages/Blog.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
 import CmsPage from "./pages/CmsPage.tsx";
 import Astrocartography from "./pages/Astrocartography.tsx";
+import ProductIndex from "./pages/ProductIndex.tsx";
+import ProductPage from "./pages/ProductPage.tsx";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +33,8 @@ const App = () => (
           <Route path={ROUTES.home} element={<Index />} />
           <Route path={ROUTES.blog} element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
+          <Route path={ROUTES.product} element={<ProductIndex />} />
+          <Route path="/product/:slug" element={<ProductPage />} />
           <Route path={ROUTES.terms} element={<Terms />} />
           <Route path={ROUTES.termsEmbed} element={<TermsEmbed />} />
           <Route path={ROUTES.privacy} element={<Privacy />} />

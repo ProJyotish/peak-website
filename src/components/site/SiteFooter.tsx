@@ -19,21 +19,24 @@ const socialLinks = [
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-border py-10">
+    <footer className="border-t border-ink bg-ink py-10 text-parchment">
       <div className="container-peak flex flex-col gap-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <Wordmark />
+          <Wordmark className="brightness-0 invert" />
           <nav
-            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-clay"
+            className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/70"
             aria-label="Footer"
           >
-            <Link to={ROUTES.contact} className="hover:text-ink transition-colors">
+            <Link to={ROUTES.product} className="hover:text-gold transition-colors">
+              Product
+            </Link>
+            <Link to={ROUTES.contact} className="hover:text-gold transition-colors">
               Contact
             </Link>
-            <Link to={ROUTES.privacy} className="hover:text-ink transition-colors">
+            <Link to={ROUTES.privacy} className="hover:text-gold transition-colors">
               Privacy
             </Link>
-            <Link to={ROUTES.terms} className="hover:text-ink transition-colors">
+            <Link to={ROUTES.terms} className="hover:text-gold transition-colors">
               Terms
             </Link>
           </nav>
@@ -45,7 +48,7 @@ export function SiteFooter() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={`Peak on ${label}`}
-                className="text-clay hover:text-ink transition-colors"
+                className="text-parchment/70 hover:text-gold transition-colors"
               >
                 <Icon className="h-4 w-4" />
               </a>
@@ -53,12 +56,12 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-clay">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/60">
             © Peak {new Date().getFullYear()} · All rights reserved
           </p>
-          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">
+          <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/60">
             Built and maintained by{" "}
-            <strong className="text-ink">{SITE.legalName}</strong>
+            <strong className="text-gold">{SITE.legalName}</strong>
           </p>
         </div>
       </div>

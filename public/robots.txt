@@ -14,4 +14,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://peaklife.me/sitemap.xml
-

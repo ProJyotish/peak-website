@@ -1120,77 +1120,12 @@ for (const post of blogPosts) {
   });
 }
 
-const cmsPages = loadCmsPages();
-for (const cmsPage of cmsPages) {
-  TITLE_BY_PATH[cmsPage.path] = cmsPage.title;
-}
-for (const folderPath of collectFolderPaths(cmsPages)) {
-  if (!TITLE_BY_PATH[folderPath]) {
-    TITLE_BY_PATH[folderPath] = titleFromSlug(folderPath.split("/").pop());
-  }
-}
-
-const writtenFolders = new Set();
-
-for (const cmsPage of cmsPages) {
-  const items = listingItems(cmsPage.path, cmsPages);
-  const extra = items.length ? `\n${listingHtml(items)}` : "";
-  const distPath = `${cmsPage.path.replace(/^\//, "")}/index.html`;
-  writePage({
-    path: distPath,
-    title: `${cmsPage.title} - Peak`,
-    description: cmsPage.description || cmsPage.title,
-    eyebrow: cmsPage.eyebrow || "Peak",
-    heading: cmsPage.title,
-    backHref: "/",
-    backLabel: "Home",
-    noindex: items.length
-      ? !folderHasIndexedDescendant(cmsPage.path, cmsPages)
-      : !cmsPage.indexed,
-    content: `${cmsPage.html}${extra}`,
-  });
-  if (items.length) writtenFolders.add(cmsPage.path);
-}
-
-for (const folderPath of collectFolderPaths(cmsPages)) {
-  if (writtenFolders.has(folderPath)) continue;
-  const items = listingItems(folderPath, cmsPages);
-  if (!items.length) continue;
-  const heading = TITLE_BY_PATH[folderPath] || titleFromSlug(folderPath.split("/").pop());
-  writePage({
-    path: `${folderPath.replace(/^\//, "")}/index.html`,
-    title: `${heading} - Peak`,
-    description: `Pages in ${heading}.`,
-    eyebrow: "Peak",
-    heading,
-    backHref: "/",
-    backLabel: "Home",
-    noindex: !folderHasIndexedDescendant(folderPath, cmsPages),
-    content: listingHtml(items),
-  });
-}
-
-const sitemapUrls = [
-  "/",
-  "/blog",
-  "/terms",
-  "/privacy-policy",
-  "/delete-my-account",
-  "/contact",
-  "/tools/astrocartography",
-  ...blogPosts.map((post) => `/blog/${post.slug}`),
-  ...cmsPages.filter((page) => page.indexed).map((page) => page.path),
-  ...collectFolderPaths(cmsPages).filter((folderPath) =>
-    folderHasIndexedDescendant(folderPath, cmsPages),
-  ),
-];
-
-writeFileSync(resolve(dist, "sitemap.xml"), buildSitemapXml(sitemapUrls, SITE_ORIGIN));
+const { writeSitemap } = await import("./sitemap.mjs");
+writeSitemap(
+  resolve(dist, "sitemap.xml"),
+  blogPosts.map((post) => ({ slug: post.slug, date: post.date })),
+);
+writeSitemap(resolve(root, "public", "sitemap.xml"), blogPosts.map((post) => ({ slug: post.slug, date: post.date })));
 console.log("✓ Generated sitemap.xml");
-
-const robotsSrc = resolve(root, "public/robots.txt");
-if (existsSync(robotsSrc)) {
-  copyFileSync(robotsSrc, resolve(dist, "robots.txt"));
-}
 
 console.log("\n✓ Static HTML pages generated successfully!");
