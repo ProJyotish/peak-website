@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, MessageCircle } from "lucide-react";
+import { SiteBreadcrumbs } from "@/components/site/SiteBreadcrumbs";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
+import { breadcrumbsForPath } from "@/lib/pages";
 import { SITE } from "@/lib/site";
 import { ROUTES } from "@/lib/routes";
 
@@ -27,6 +29,7 @@ const Contact = () => {
 
       <main className="flex-1 py-16 md:py-20">
         <div className="container-peak max-w-xl">
+          <SiteBreadcrumbs crumbs={breadcrumbsForPath(ROUTES.contact, "Contact")} />
           <p className="eyebrow mb-4">Contact</p>
           <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink">Get in touch</h1>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">

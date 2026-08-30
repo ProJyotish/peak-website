@@ -3,6 +3,18 @@ import { resolve, dirname, join } from "node:path";
 import matter from "gray-matter";
 import { renderPostHtml } from "./markdown.mjs";
 import { isReservedPagePath, urlPathFromPageRel } from "./cms-paths.mjs";
+import {
+  SITE_ORIGIN,
+  STATIC_PATH_LABELS,
+  buildSitemapXml,
+  collectFolderPaths,
+  crumbsForPath,
+  listingItems,
+  pageIsIndexed,
+  publicUrl,
+  titleFromSlug,
+  urlFromDistPath,
+} from "./site-nav.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
@@ -19,6 +31,8 @@ const SITE = {
   legalName: "Aryaman Knowledge Services Private Limited",
   address: "India",
 };
+
+const TITLE_BY_PATH = { ...STATIC_PATH_LABELS };
 
 const grievanceOfficer = {
   name: "Abhimanyu Singh Rana",
@@ -527,6 +541,9 @@ function htmlTemplate({
   metaLine,
   backHref = "/",
   backLabel = "Home",
+  breadcrumbs = [],
+  noindex = false,
+  canonical = "",
   content,
 }) {
   const desc = escapeHtml(
@@ -535,6 +552,14 @@ function htmlTemplate({
   // Static/SSR pages are full document loads — enable automatic page_view
   const GA4_ID = "G-0E72R2MF9P";
   const GTM_ID = "GTM-TTMK5Q4R";
+  const crumbNav = breadcrumbsHtml(breadcrumbs, backHref, backLabel);
+  const crumbJson = breadcrumbJsonLd(breadcrumbs);
+  const robots = noindex
+    ? `  <meta name="robots" content="noindex, follow">\n`
+    : "";
+  const canonicalTag = canonical
+    ? `  <link rel="canonical" href="${escapeHtml(canonical)}">\n`
+    : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -558,6 +583,7 @@ function htmlTemplate({
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${desc}">
+${robots}${canonicalTag}${crumbJson}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -841,6 +867,35 @@ function htmlTemplate({
       text-decoration: none;
     }
     footer.site-footer a:hover { color: var(--ink); }
+    nav.breadcrumbs {
+      margin: 0 0 2.5rem;
+    }
+    nav.breadcrumbs ol {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.35rem 0.5rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-family: "JetBrains Mono", ui-monospace, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--clay);
+    }
+    nav.breadcrumbs li {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    nav.breadcrumbs a {
+      color: var(--clay);
+      text-decoration: none;
+    }
+    nav.breadcrumbs a:hover { color: var(--ink); }
+    nav.breadcrumbs [aria-current="page"] { color: var(--ink); }
+    nav.breadcrumbs .sep { color: rgba(138, 115, 96, 0.5); }
   </style>
 </head>
 <body>
@@ -849,7 +904,7 @@ function htmlTemplate({
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
   <div class="wrap">
-    <a class="back" href="${escapeHtml(backHref)}">← ${escapeHtml(backLabel)}</a>
+    ${crumbNav}
 
     <header class="page-header">
       <p class="eyebrow">${escapeHtml(eyebrow)}</p>
@@ -875,9 +930,73 @@ function htmlTemplate({
 </html>`;
 }
 
+function breadcrumbsHtml(breadcrumbs, backHref, backLabel) {
+  if (!Array.isArray(breadcrumbs) || breadcrumbs.length < 2) {
+    return `<a class="back" href="${escapeHtml(backHref)}">← ${escapeHtml(backLabel)}</a>`;
+  }
+  const items = breadcrumbs
+    .map((crumb, index) => {
+      const sep = index > 0 ? `<span class="sep" aria-hidden="true">/</span>` : "";
+      if (crumb.current) {
+        return `<li>${sep}<span aria-current="page">${escapeHtml(crumb.label)}</span></li>`;
+      }
+      const href = crumb.href === "/" ? "/" : `${crumb.href}/`;
+      return `<li>${sep}<a href="${escapeHtml(href)}">${escapeHtml(crumb.label)}</a></li>`;
+    })
+    .join("");
+  return `<nav class="breadcrumbs" aria-label="Breadcrumb"><ol>${items}</ol></nav>`;
+}
+
+function breadcrumbJsonLd(breadcrumbs) {
+  if (!Array.isArray(breadcrumbs) || breadcrumbs.length < 2) return "";
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: breadcrumbs.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.label,
+      item: publicUrl(crumb.href),
+    })),
+  };
+  return `  <script type="application/ld+json">${JSON.stringify(data)}</script>\n`;
+}
+
+function listingHtml(items) {
+  if (!items.length) return "";
+  return items
+    .map((item) => {
+      const href = `${item.path}/`;
+      const chip = item.eyebrow
+        ? `<span class="chip">${escapeHtml(item.eyebrow)}</span>`
+        : "";
+      const excerpt = item.description
+        ? `<p>${escapeHtml(item.description)}</p>`
+        : "";
+      return `
+      <a class="post-card" href="${escapeHtml(href)}">
+        <div class="row-meta">${chip}</div>
+        <h2>${escapeHtml(item.title)}</h2>
+        ${excerpt}
+        <p class="read">Read →</p>
+      </a>`;
+    })
+    .join("\n");
+}
+
+function folderHasIndexedDescendant(folderPath, pages) {
+  const prefix = folderPath === "/" ? "/" : `${folderPath}/`;
+  return pages.some(
+    (page) =>
+      page.indexed &&
+      (page.path === folderPath || page.path.startsWith(prefix)),
+  );
+}
+
 function writePage(page) {
   const filePath = resolve(dist, page.path);
   mkdirSync(dirname(filePath), { recursive: true });
+  const urlPath = urlFromDistPath(page.path);
   const html = htmlTemplate({
     title: page.title,
     description: page.description,
@@ -888,6 +1007,9 @@ function writePage(page) {
       : page.metaLine,
     backHref: page.backHref ?? "/",
     backLabel: page.backLabel ?? "Home",
+    breadcrumbs: page.breadcrumbs ?? crumbsForPath(urlPath, TITLE_BY_PATH),
+    noindex: Boolean(page.noindex),
+    canonical: page.canonical || publicUrl(urlPath),
     content: page.content,
   });
   writeFileSync(filePath, html);
@@ -914,6 +1036,7 @@ function loadCmsPages() {
         eyebrow: String(data.eyebrow ?? ""),
         description: String(data.description ?? ""),
         html: renderPostHtml(content),
+        indexed: pageIsIndexed(data),
       },
     ];
   });
@@ -944,6 +1067,9 @@ for (const page of pages) {
 }
 
 const blogPosts = loadBlogPosts();
+for (const post of blogPosts) {
+  TITLE_BY_PATH[`/blog/${post.slug}`] = post.title;
+}
 
 const blogListingContent = blogPosts.length
   ? blogPosts
@@ -994,7 +1120,21 @@ for (const post of blogPosts) {
   });
 }
 
-for (const cmsPage of loadCmsPages()) {
+const cmsPages = loadCmsPages();
+for (const cmsPage of cmsPages) {
+  TITLE_BY_PATH[cmsPage.path] = cmsPage.title;
+}
+for (const folderPath of collectFolderPaths(cmsPages)) {
+  if (!TITLE_BY_PATH[folderPath]) {
+    TITLE_BY_PATH[folderPath] = titleFromSlug(folderPath.split("/").pop());
+  }
+}
+
+const writtenFolders = new Set();
+
+for (const cmsPage of cmsPages) {
+  const items = listingItems(cmsPage.path, cmsPages);
+  const extra = items.length ? `\n${listingHtml(items)}` : "";
   const distPath = `${cmsPage.path.replace(/^\//, "")}/index.html`;
   writePage({
     path: distPath,
@@ -1004,8 +1144,53 @@ for (const cmsPage of loadCmsPages()) {
     heading: cmsPage.title,
     backHref: "/",
     backLabel: "Home",
-    content: cmsPage.html,
+    noindex: items.length
+      ? !folderHasIndexedDescendant(cmsPage.path, cmsPages)
+      : !cmsPage.indexed,
+    content: `${cmsPage.html}${extra}`,
   });
+  if (items.length) writtenFolders.add(cmsPage.path);
+}
+
+for (const folderPath of collectFolderPaths(cmsPages)) {
+  if (writtenFolders.has(folderPath)) continue;
+  const items = listingItems(folderPath, cmsPages);
+  if (!items.length) continue;
+  const heading = TITLE_BY_PATH[folderPath] || titleFromSlug(folderPath.split("/").pop());
+  writePage({
+    path: `${folderPath.replace(/^\//, "")}/index.html`,
+    title: `${heading} - Peak`,
+    description: `Pages in ${heading}.`,
+    eyebrow: "Peak",
+    heading,
+    backHref: "/",
+    backLabel: "Home",
+    noindex: !folderHasIndexedDescendant(folderPath, cmsPages),
+    content: listingHtml(items),
+  });
+}
+
+const sitemapUrls = [
+  "/",
+  "/blog",
+  "/terms",
+  "/privacy-policy",
+  "/delete-my-account",
+  "/contact",
+  "/tools/astrocartography",
+  ...blogPosts.map((post) => `/blog/${post.slug}`),
+  ...cmsPages.filter((page) => page.indexed).map((page) => page.path),
+  ...collectFolderPaths(cmsPages).filter((folderPath) =>
+    folderHasIndexedDescendant(folderPath, cmsPages),
+  ),
+];
+
+writeFileSync(resolve(dist, "sitemap.xml"), buildSitemapXml(sitemapUrls, SITE_ORIGIN));
+console.log("✓ Generated sitemap.xml");
+
+const robotsSrc = resolve(root, "public/robots.txt");
+if (existsSync(robotsSrc)) {
+  copyFileSync(robotsSrc, resolve(dist, "robots.txt"));
 }
 
 console.log("\n✓ Static HTML pages generated successfully!");

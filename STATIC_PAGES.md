@@ -28,10 +28,14 @@ The following routes are served as **pure HTML** with no JavaScript required:
 | `/blog` | `dist/blog/index.html` (post listing) |
 | `/blog/<slug>/` | `dist/blog/<slug>/index.html` (from `posts/*.md`) |
 | `/<folder>/<slug>/` | `dist/<folder>/<slug>/index.html` (from `site-pages/**/*.md`) |
+| `/<folder>/` | `dist/<folder>/index.html` (auto listing of child pages, like `/blog`) |
+| `/sitemap.xml` | Regenerated every build from current posts + pages |
 
 Also copied:
 
 - `dist/404.html` — SPA fallback for client-side routes (e.g. `/checkout`)
+- `dist/robots.txt` — includes the sitemap URL
+
 
 ### Blog workflow
 
@@ -74,12 +78,25 @@ Use a **separate Pages collection** (not blog folders) for URLs outside `/blog`.
 title: About Peak
 eyebrow: Peak
 description: What Peak is and how it reads the chart.
+index: true
 ---
 
 Markdown body…
 ```
 
+Every folder is a list page (same card layout as `/blog`):
+
+- `site-pages/astrology/career/change-jobs.md` → `/astrology/career/change-jobs/`
+- `/astrology/career/` lists the decision pages in that folder
+- `/astrology/` lists life areas
+- Optional `index.md` supplies the folder title, description, and intro; children are still appended as cards
+- If there is no `index.md`, the folder URL is still generated from the child files
+
+Set `index: false` to keep a page `noindex` and **out of `sitemap.xml`** until expert QA. Adding or deleting a markdown file updates listings, breadcrumbs, and the sitemap on the next `npm run build`.
+
 Reserved app routes (`/`, `/blog`, `/checkout`, legal pages, `/tools/astrocartography`, …) are skipped so CMS files cannot overwrite them. Create pages from Peak CMS → **Pages**; use **Add Folder** to nest paths.
+
+Static HTML and the React app both render breadcrumbs (Home → folder → page) plus `BreadcrumbList` JSON-LD.
 
 ### Key Features
 

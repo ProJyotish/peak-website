@@ -11,6 +11,7 @@ import {
   LocationAutocompleteInput,
   PreferredPlacesField,
 } from "@/components/astrocartography/LocationAutocomplete";
+import { SiteBreadcrumbs } from "@/components/site/SiteBreadcrumbs";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import { Calendar } from "@/components/ui/calendar";
@@ -31,6 +32,7 @@ import {
   type PlaceVerdict,
 } from "@/lib/astroApi";
 import { ROUTES } from "@/lib/routes";
+import { breadcrumbsForPath } from "@/lib/pages";
 import { trackEvent } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
 
@@ -288,6 +290,9 @@ export default function Astrocartography() {
 
       <main className="mx-auto max-w-5xl px-4 py-10">
         <div className="mb-10 max-w-2xl">
+          <SiteBreadcrumbs
+            crumbs={breadcrumbsForPath(ROUTES.astrocartography, "Astrocartography")}
+          />
           <h1 className="mt-2 font-display text-4xl tracking-tight text-ink md:text-5xl">
             Find best places for your trip
           </h1>

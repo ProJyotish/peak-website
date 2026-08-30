@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { breadcrumbsForPath } from "@/lib/pages";
 import { ROUTES } from "@/lib/routes";
 import { LEGAL_LAST_UPDATED } from "@/lib/site";
+import { SiteBreadcrumbs } from "./SiteBreadcrumbs";
 import { SiteFooter } from "./SiteFooter";
 import { Wordmark } from "./Wordmark";
 
@@ -11,6 +13,9 @@ type LegalLayoutProps = {
 };
 
 export function LegalLayout({ title, children }: LegalLayoutProps) {
+  const { pathname } = useLocation();
+  const crumbs = breadcrumbsForPath(pathname, title);
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <header className="border-b border-border">
@@ -27,6 +32,7 @@ export function LegalLayout({ title, children }: LegalLayoutProps) {
       </header>
       <main className="flex-1 py-16 md:py-20">
         <article className="container-peak max-w-3xl">
+          <SiteBreadcrumbs crumbs={crumbs} />
           <p className="eyebrow mb-4">Legal</p>
           <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink">{title}</h1>
           <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">

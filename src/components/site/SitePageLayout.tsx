@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import type { Breadcrumb } from "@/lib/pages";
 import { ROUTES } from "@/lib/routes";
+import { SiteBreadcrumbs } from "./SiteBreadcrumbs";
 import { SiteFooter } from "./SiteFooter";
 import { Wordmark } from "./Wordmark";
 
@@ -9,6 +11,7 @@ type SitePageLayoutProps = {
   title: string;
   description?: string;
   backTo?: { href: string; label: string };
+  breadcrumbs?: Breadcrumb[];
   children: React.ReactNode;
   /** Wider content column for listings */
   wide?: boolean;
@@ -19,6 +22,7 @@ export function SitePageLayout({
   title,
   description,
   backTo = { href: ROUTES.home, label: "Home" },
+  breadcrumbs,
   children,
   wide = false,
 }: SitePageLayoutProps) {
@@ -38,6 +42,7 @@ export function SitePageLayout({
       </header>
       <main className="flex-1 py-16 md:py-20">
         <div className={`container-peak ${wide ? "max-w-4xl" : "max-w-3xl"}`}>
+          {breadcrumbs ? <SiteBreadcrumbs crumbs={breadcrumbs} /> : null}
           <p className="eyebrow mb-4">{eyebrow}</p>
           <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink">{title}</h1>
           {description ? (

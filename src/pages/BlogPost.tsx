@@ -1,8 +1,10 @@
 import { Link, useParams } from "react-router-dom";
 import { BlogPostView } from "@/components/site/BlogPostView";
+import { SiteBreadcrumbs } from "@/components/site/SiteBreadcrumbs";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import { getPostBySlug } from "@/lib/blog";
+import { breadcrumbsForPath } from "@/lib/pages";
 import { ROUTES } from "@/lib/routes";
 import { ArrowLeft } from "lucide-react";
 import NotFound from "./NotFound";
@@ -31,6 +33,7 @@ const BlogPost = () => {
       </header>
       <main className="flex-1 py-16 md:py-20">
         <div className="container-peak max-w-3xl">
+          <SiteBreadcrumbs crumbs={breadcrumbsForPath(ROUTES.blogPost(post.slug), post.title)} />
           <BlogPostView
             title={post.title}
             content={post.content}
