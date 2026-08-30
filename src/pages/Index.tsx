@@ -178,17 +178,17 @@ function Expert() {
           <p className="mt-6 text-lg leading-relaxed text-parchment/75">{HOME.expert.body}</p>
           <a
             href="#how"
-            className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors"
+            className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold border-b border-gold pb-0.5 hover:text-parchment hover:border-parchment transition-colors"
           >
             {HOME.expert.cta}
             <ArrowRight className="h-3.5 w-3.5" />
           </a>
         </motion.div>
         <div className="lg:col-span-6 space-y-8">
-          <AppScreenshotPlaceholder label="App" />
+          <AppScreenshotPlaceholder label="App" tone="dark" />
           <ul className="space-y-5">
             {HOME.expert.points.map((point) => (
-              <li key={point} className="text-base leading-relaxed text-ink border-l border-gold pl-4">
+              <li key={point} className="text-base leading-relaxed text-parchment/85 border-l-2 border-gold pl-4">
                 {point}
               </li>
             ))}
@@ -201,9 +201,10 @@ function Expert() {
 
 function Testimonials() {
   return (
-    <section className="py-24 bg-parchment-deep/30 border-t border-border">
+    <section className="py-24 bg-parchment-deep border-t border-border">
       <div className="container-peak">
         <motion.div {...fade} className="text-center mb-16 max-w-3xl mx-auto">
+          <div className="mx-auto mb-6 h-1 w-12 bg-gold" />
           <h2 className="font-display text-3xl md:text-5xl text-ink">{HOME.testimonialsHeading}</h2>
         </motion.div>
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -214,9 +215,9 @@ function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-parchment rounded-2xl p-6 shadow-md border border-border relative flex flex-col"
+              className="bg-parchment rounded-2xl p-6 shadow-md border border-gold/30 relative flex flex-col"
             >
-              <Quote className="w-8 h-8 text-gold/30 absolute top-4 right-4" />
+              <Quote className="w-8 h-8 text-gold absolute top-4 right-4" />
               <p className="text-ink leading-relaxed italic flex-1 mb-6">&ldquo;{quote}&rdquo;</p>
               <p className="text-xs text-clay italic border-t border-border/50 pt-4">Verified user</p>
             </motion.div>
@@ -231,6 +232,7 @@ function UseWhen() {
   return (
     <section className="py-28 md:py-32 border-t border-border">
       <div className="container-peak max-w-3xl">
+        <div className="mb-6 h-1 w-12 bg-gold" />
         <motion.h2 {...fade} className="font-display text-3xl md:text-5xl leading-tight text-ink">
           {HOME.useWhen.title}
         </motion.h2>
@@ -244,24 +246,25 @@ function UseWhen() {
 
 function Pricing() {
   return (
-    <section id="download" className="py-28 md:py-36 border-t border-border bg-parchment-deep/40">
+    <section id="download" className="py-28 md:py-36 border-t border-border bg-ink">
       <div className="container-peak max-w-3xl text-center">
-        <motion.h2 {...fade} className="font-display text-3xl md:text-5xl text-ink">
+        <div className="mx-auto mb-6 h-1 w-12 bg-gold" />
+        <motion.h2 {...fade} className="font-display text-3xl md:text-5xl text-parchment">
           {HOME.pricing.title}
         </motion.h2>
-        <motion.p {...fade} className="mt-6 text-lg text-clay">
+        <motion.p {...fade} className="mt-6 text-lg text-parchment/75">
           {HOME.pricing.intro}
         </motion.p>
         <ul className="mt-8 space-y-2">
           {HOME.pricing.perks.map((perk) => (
-            <li key={perk} className="font-mono text-sm uppercase tracking-[0.16em] text-ink">
+            <li key={perk} className="font-mono text-sm uppercase tracking-[0.16em] text-gold">
               {perk}
             </li>
           ))}
         </ul>
-        <p className="mt-8 text-base text-clay">{HOME.pricing.after}</p>
+        <p className="mt-8 text-base text-parchment/70">{HOME.pricing.after}</p>
         <div className="mt-10">
-          <TryTheAppCta />
+          <TryTheAppCta tone="dark" />
         </div>
       </div>
     </section>
@@ -287,7 +290,7 @@ function FounderCard({
     <motion.article
       {...fade}
       transition={{ duration: 0.8, delay }}
-      className="flex h-full flex-col rounded-sm border border-border bg-parchment p-6 sm:p-7 md:p-8"
+      className="flex h-full flex-col rounded-sm border border-gold/35 bg-parchment p-6 sm:p-7 md:p-8"
     >
       <PortraitPlaceholder name={name} className="mb-6" />
       <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-clay">{role}</p>
@@ -312,9 +315,10 @@ function FounderCard({
 
 function Founders() {
   return (
-    <section id="founder" className="py-28 md:py-36 border-t border-border">
+    <section id="founder" className="py-28 md:py-36 border-t border-border bg-parchment-deep">
       <div className="container-peak">
         <motion.div {...fade} className="mb-12 md:mb-16">
+          <div className="mb-6 h-1 w-12 bg-gold" />
           <p className="eyebrow mb-4">{HOME.founders.eyebrow}</p>
           <h2 className="font-display text-4xl md:text-5xl leading-[1.05] text-ink">{HOME.founders.title}</h2>
         </motion.div>
@@ -329,7 +333,7 @@ function Founders() {
 
 function Faqs() {
   return (
-    <section id="faq" className="py-28 md:py-36 border-t border-border bg-parchment-deep/30">
+    <section id="faq" className="py-28 md:py-36 border-t border-border">
       <div className="container-peak max-w-3xl">
         <motion.h2 {...fade} className="font-display text-3xl md:text-5xl text-ink mb-10">
           Frequently Asked Questions
@@ -349,12 +353,12 @@ function Faqs() {
 
 function FinalCta() {
   return (
-    <section className="py-32 md:py-40 border-t border-border">
+    <section className="py-32 md:py-40 border-t border-border bg-gold">
       <div className="container-peak max-w-3xl text-center">
         <motion.h2 {...fade} className="font-display text-4xl md:text-6xl leading-[1.05] text-ink">
           {HOME.hero.cta}
         </motion.h2>
-        <motion.p {...fade} className="mt-6 text-lg text-clay">
+        <motion.p {...fade} className="mt-6 text-lg text-ink/75">
           {HOME.pricing.after}
         </motion.p>
         <div className="mt-12">
