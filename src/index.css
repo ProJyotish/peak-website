@@ -86,7 +86,7 @@
     font-family: 'JetBrains Mono', ui-monospace, monospace;
   }
   .eyebrow {
-    @apply font-mono text-[11px] uppercase tracking-[0.2em] text-clay;
+    @apply font-mono text-[11px] uppercase tracking-[0.2em] text-gold;
   }
   .hairline {
     @apply h-px w-full bg-border;

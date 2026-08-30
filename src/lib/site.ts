@@ -2,6 +2,7 @@ export const SITE = {
   name: "Peak",
   legalName: "Aryaman Knowledge Services Private Limited",
   domain: "peaklife.me",
+  app: "https://app.peaklife.me",
   contactEmail: "support@peaklife.me",
   supportEmail: "support@peaklife.me",
   deleteAccountMailto:
@@ -10,6 +11,10 @@ export const SITE = {
   social: {
     linkedin: "https://www.linkedin.com/company/peaklife-me",
     instagram: "https://www.instagram.com/peaklife_me/"
+  },
+  stores: {
+    android: "https://play.google.com/store/apps/details?id=me.peaklife",
+    ios: null,
   },
 } as const;
 
