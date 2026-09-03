@@ -19,6 +19,7 @@ import BlogPost from "./pages/BlogPost.tsx";
 import Astrocartography from "./pages/Astrocartography.tsx";
 import ProductIndex from "./pages/ProductIndex.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
+import Prashna from "./pages/Prashna.tsx";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
           <Route path={ROUTES.contact} element={<Contact />} />
           <Route path={ROUTES.checkout} element={<Checkout />} />
           <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
+          <Route path={ROUTES.prashna} element={<Prashna />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

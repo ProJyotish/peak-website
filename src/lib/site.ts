@@ -16,6 +16,12 @@ export const SITE = {
     android: "https://play.google.com/store/apps/details?id=me.peaklife",
     ios: null,
   },
+  prashna: {
+    stores: {
+      android: "https://play.google.com/store/apps/details?id=me.peaklife.prashna",
+      ios: null,
+    },
+  },
 } as const;
 
 export const LEGAL_LAST_UPDATED = "January 9, 2026";

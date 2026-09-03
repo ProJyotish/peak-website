@@ -13,4 +13,5 @@ export const ROUTES = {
   contact: "/contact",
   checkout: "/checkout",
   astrocartography: "/tools/astrocartography",
+  prashna: "/prashna",
 } as const;

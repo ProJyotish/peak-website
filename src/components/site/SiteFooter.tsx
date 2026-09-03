@@ -30,6 +30,9 @@ export function SiteFooter() {
             <Link to={ROUTES.product} className="hover:text-gold transition-colors">
               Product
             </Link>
+            <Link to={ROUTES.prashna} className="hover:text-gold transition-colors">
+              Prashna
+            </Link>
             <Link to={ROUTES.contact} className="hover:text-gold transition-colors">
               Contact
             </Link>
