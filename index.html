@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Peak — No two lives come with the same user manual.</title>
+<meta name="description" content="Peak is an AI astrology app that helps you understand your life, with expert Jyotisha personalized to your chart, your location, your questions and your goals.">
+<link rel="canonical" href="https://peaklife.me/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://peaklife.me/">
+<meta property="og:title" content="Peak — No two lives come with the same user manual.">
+<meta property="og:description" content="An AI astrology app grounded in Jyotisha. Hour-by-hour timing, answers that remember your chart, and goals with the periods that support them.">
+<meta property="og:image" content="https://peaklife.me/assets/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0E1234">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="assets/img/favicon-48.png" sizes="48x48" type="image/png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap">
+<link rel="stylesheet" href="assets/css/peak.css">
+<style>
+/* ── Peak homepage. Every value below is a design-system token.
+      Sizes come from tokens/typography-web.css, everything else from styles.css. ── */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--surface-body);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-web-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { display: block; max-width: 100%; }
+
+.wrap { width: 100%; max-width: var(--container-web); margin-inline: auto; padding-inline: var(--space-web-gutter); }
+.wrap--narrow { max-width: var(--container-web-narrow); }
+.section { padding-block: var(--space-web-section); }
+.section--rule { border-top: 1px solid var(--border-hairline); }
+
+/* ── Type ── */
+h1, h2, h3 { margin: 0; font-family: var(--font-display); font-variation-settings: var(--fvs-display); font-weight: var(--fw-regular); line-height: var(--lh-tight); letter-spacing: -0.015em; }
+h1 { font-size: var(--fs-web-hero); }
+h2 { font-size: var(--fs-web-display); }
+h3 { font-size: var(--fs-web-heading); }
+p { margin: 0; }
+.lede { font-size: var(--fs-web-lede); line-height: 1.5; color: var(--text-muted); max-width: var(--measure-web); }
+.body { color: var(--text-muted); max-width: var(--measure-web); }
+.stack > * + * { margin-top: var(--space-4); }
+.stack-lg > * + * { margin-top: var(--space-web-stack); }
+.serif-italic { font-family: var(--font-display); font-variation-settings: var(--fvs-text); font-style: italic; }
+
+.eyebrow {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-size: var(--fs-web-eyebrow); font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+  color: var(--accent);
+}
+.eyebrow--muted { color: var(--text-faint); }
+.eyebrow .mark { width: 0.78em; height: auto; }
+
+/* ── The navigator mark ── */
+.mark { display: inline-block; color: var(--accent); flex: none; aspect-ratio: 90.778 / 79.611; }
+.mark svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+
+/* ── Wordmark ── */
+.wordmark { position: relative; display: block; width: clamp(6.5rem, 11vw, 8.25rem); line-height: 0; text-decoration: none; }
+.wordmark__img { width: 100%; height: auto; transition: opacity .25s ease; }
+.wordmark__img--ink { position: absolute; inset: 0; opacity: 0; }
+.nav.is-stuck .wordmark__img--on-ink { opacity: 0; }
+.nav.is-stuck .wordmark__img--ink { opacity: 1; }
+
+/* ── Buttons. Lowercase, per the design system. ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  font-family: var(--font-body); font-size: var(--fs-web-body); font-weight: var(--fw-bold);
+  text-transform: lowercase; text-decoration: none;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill); border: 1px solid transparent;
+  cursor: pointer; transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+.btn--primary { background: var(--accent); color: var(--peak-cream); }
+.btn--primary:hover { background: var(--accent-hover); }
+.btn--ghost { background: transparent; color: var(--text-primary); border-color: var(--peak-gold-border); }
+.btn--ghost:hover { background: var(--peak-gold-tint); }
+.btn--on-ink { background: transparent; color: var(--text-on-ink); border-color: rgba(241,231,208,0.32); }
+.btn--on-ink:hover { background: rgba(241,231,208,0.10); }
+.btn--link { padding: 0; background: none; border: none; color: var(--accent); text-transform: lowercase; }
+.btn--link:hover { color: var(--accent-hover); }
+.btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.btn-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+
+/* ── Nav ── */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 40; background: transparent; border-bottom: 1px solid transparent; transition: background-color .25s ease, border-color .25s ease; }
+.nav.is-stuck { background: color-mix(in srgb, var(--surface-body) 96%, transparent); backdrop-filter: blur(12px); border-bottom-color: var(--border-hairline); }
+.nav .nav__links a { color: rgba(241,231,208,0.72); }
+.nav .nav__links a:hover { color: var(--text-on-ink); }
+.nav.is-stuck .nav__links a { color: var(--text-muted); }
+.nav.is-stuck .nav__links a:hover { color: var(--text-primary); }
+.nav__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); padding-block: var(--space-4); }
+.nav__links { display: flex; gap: var(--space-6); align-items: center; }
+.nav__links a { font-size: var(--fs-web-caption); font-weight: var(--fw-bold); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--text-muted); text-decoration: none; }
+@media (max-width: 46rem) { .nav__links { display: none; } }
+
+/* ── Hero, dusk to parchment ── */
+.hero {
+  position: relative; overflow: hidden;
+  /* Dusk-to-parchment, the system's signature, rebuilt in percentages so it scales
+     with a page-height hero instead of the fixed 570px app gradient. Content sits
+     in the dark half; the handoff to parchment happens in ::after. */
+  background: linear-gradient(180deg, var(--peak-sky-top) 0%, var(--peak-sky-mid) 55%, var(--peak-ink-raised) 100%);
+  padding-top: clamp(7.5rem, 11vw, 10rem);
+  padding-bottom: clamp(9rem, 17vw, 16rem);
+}
+.hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; pointer-events: none;
+  height: clamp(6.5rem, 13vw, 12rem);
+  background: linear-gradient(180deg, var(--peak-ink-raised) 0%, var(--peak-muted) 44%, var(--peak-bone-darker) 76%, var(--peak-cream) 100%);
+}
+.hero__stars { position: absolute; inset: 0 0 auto 0; height: 60%; pointer-events: none; }
+.hero__stars span { position: absolute; border-radius: var(--radius-pill); background: var(--peak-on-ink); }
+.hero__inner { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
+.hero h1 { color: var(--text-on-ink); max-width: 18ch; }
+.hero .lede { color: rgba(241,231,208,0.78); max-width: 54ch; margin-inline: auto; }
+.hero__mark { width: clamp(2.75rem, 5vw, 3.75rem); height: auto; }
+.trustbar { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-5); font-size: var(--fs-web-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; color: rgba(241,231,208,0.6); font-weight: var(--fw-bold); }
+.trustbar .dot { color: var(--accent); }
+@media (max-width: 40rem) {
+  .trustbar { flex-direction: column; gap: var(--space-2); }
+  .trustbar .dot { display: none; }
+  .hero .btn-row { flex-direction: column; align-items: stretch; width: 100%; max-width: 20rem; margin-inline: auto; }
+  .hero .btn-row .btn { width: 100%; }
+}
+.hero__note { font-size: var(--fs-web-caption); color: var(--text-muted); }
+
+/* ── Marquee band ── */
+.band { border-block: 1px solid var(--border-hairline); background: var(--surface-recessed); }
+.band__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-3) var(--space-6); padding-block: var(--space-5); font-size: var(--fs-web-eyebrow); font-weight: var(--fw-bold); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); text-align: center; }
+
+/* ── Positioning statement ── */
+.statement { text-align: center; }
+.statement h2 { max-width: 20ch; margin-inline: auto; }
+.statement p { margin-inline: auto; margin-top: var(--space-5); max-width: 52ch; font-size: var(--fs-web-lede); color: var(--text-muted); }
+
+/* ── Feature rows ── */
+.feature { display: grid; grid-template-columns: 1fr minmax(0, 20rem); gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+.feature--flip { grid-template-columns: minmax(0, 20rem) 1fr; }
+.feature--flip .feature__copy { order: 2; }
+.feature--flip .feature__device { order: 1; }
+@media (max-width: 56rem) {
+  .feature, .feature--flip { grid-template-columns: 1fr; }
+  .feature--flip .feature__copy, .feature--flip .feature__device { order: initial; }
+}
+
+/* Phone frame. The screen inside is the real app screen from ui_kits/peak-app,
+   not a picture of it, so it cannot go stale. */
+.device { justify-self: center; width: 100%; max-width: 19.5rem; aspect-ratio: 9 / 19.5; border-radius: var(--radius-sheet); padding: var(--space-2); background: var(--surface-ink); box-shadow: var(--shadow-card-glow); }
+.device__screen { position: relative; width: 100%; height: 100%; border-radius: var(--radius-lg); overflow: hidden; background: var(--surface-canvas); }
+.device__screen img { position: absolute; top: 0; left: 0; width: 100%; height: auto; will-change: transform; }
+.device__label { margin-top: var(--space-3); text-align: center; font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); font-weight: var(--fw-bold); }
+/* Small devices in the steps sequence */
+.device--sm { max-width: 10.5rem; padding: var(--space-1); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+.device--sm .device__screen { border-radius: var(--radius-md); }
+.step__shot { margin-top: var(--space-6); }
+@media (prefers-reduced-motion: reduce) { .device__screen img { transform: none !important; } }
+
+/* ── Personalization radial ── */
+.radial { display: grid; grid-template-columns: 1fr auto 1fr; gap: clamp(1rem, 3vw, 2.5rem); align-items: center; margin-top: clamp(2.5rem, 5vw, 4rem); }
+.radial__hub { width: clamp(5rem, 11vw, 8rem); height: clamp(5rem, 11vw, 8rem); border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; background: var(--gradient-parchment); box-shadow: var(--shadow-card); border: 1px solid var(--peak-gold-border); }
+.radial__hub .mark { width: 46%; height: auto; }
+.radial__col { display: grid; gap: clamp(1.25rem, 3vw, 2.25rem); }
+.radial__col--right { text-align: left; }
+.radial__col--left { text-align: right; }
+.radial__col--left .radial__item { justify-items: end; }
+.pill-item h3 { font-size: var(--fs-web-heading); }
+.pill-item p { color: var(--text-muted); font-size: var(--fs-web-body); margin-top: var(--space-2); max-width: 34ch; }
+@media (max-width: 56rem) {
+  .radial { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .radial__col--left { text-align: center; } .radial__col--left .radial__item { justify-items: center; }
+  .pill-item p { margin-inline: auto; }
+}
+
+/* ── Steps ── */
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 4vw, 3rem); margin-top: clamp(2.5rem, 5vw, 4rem); }
+@media (max-width: 56rem) { .steps { grid-template-columns: 1fr; } }
+.step__num { font-family: var(--font-display); font-variation-settings: var(--fvs-display); font-size: var(--fs-web-display); color: var(--accent); line-height: 1; }
+.step h3 { margin-top: var(--space-4); }
+.step p { margin-top: var(--space-3); color: var(--text-muted); }
+.step { position: relative; padding-top: var(--space-5); border-top: 1px solid var(--border-hairline); }
+.step + .step::before {
+  content: ""; position: absolute; top: calc(-1 * var(--space-2)); left: calc(-1 * clamp(1.5rem, 4vw, 3rem) / 2 - 0.4rem);
+  width: 0.8rem; height: 0.8rem; background: var(--accent);
+  -webkit-mask: url("assets/img/nav-arrow.svg") center / contain no-repeat;
+          mask: url("assets/img/nav-arrow.svg") center / contain no-repeat;
+  transform: rotate(90deg);
+}
+@media (max-width: 56rem) { .step + .step::before { display: none; } }
+
+/* ── Cards ── */
+.card { background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: clamp(1.5rem, 3vw, 2.25rem); box-shadow: var(--shadow-card); }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1.25rem, 3vw, 2rem); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.25rem, 3vw, 2rem); }
+.grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1.25rem, 3vw, 2rem); }
+@media (max-width: 56rem) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+/* ── Founders ── */
+.founder__role { font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--accent); font-weight: var(--fw-bold); }
+.founder h3 { margin-top: var(--space-2); }
+.founder p { margin-top: var(--space-4); color: var(--text-muted); font-size: var(--fs-web-body); }
+.founder__portrait { width: 4.5rem; height: 4.5rem; border-radius: var(--radius-pill); background: var(--gradient-parchment); border: 1px solid var(--peak-gold-border); display: grid; place-items: center; font-family: var(--font-display); font-size: var(--fs-heading); color: var(--accent); margin-bottom: var(--space-5); }
+
+/* ── Method cards ── */
+.method__lead { max-width: 62ch; margin-top: var(--space-5); color: var(--text-muted); font-size: var(--fs-web-lede); }
+.method-card strong { display: block; font-family: var(--font-display); font-variation-settings: var(--fvs-display); font-size: var(--fs-web-heading); font-weight: var(--fw-regular); line-height: var(--lh-tight); }
+.method-card p { margin-top: var(--space-3); color: var(--text-muted); }
+
+/* ── Testimonials ── */
+.quote { display: flex; flex-direction: column; justify-content: space-between; height: 100%; background: transparent; border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: clamp(1.5rem, 3vw, 2rem); }
+.quote p { font-family: var(--font-display); font-variation-settings: var(--fvs-text); font-style: italic; font-size: var(--fs-web-lede); line-height: 1.45; color: var(--text-primary); }
+.quote footer { margin-top: var(--space-5); font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); font-weight: var(--fw-bold); }
+
+/* ── Dark band ── */
+.dark-band { background: var(--gradient-sky); color: var(--text-on-ink); position: relative; overflow: hidden; }
+.dark-band h2 { color: var(--text-on-ink); max-width: 22ch; }
+.dark-band p { color: rgba(241,231,208,0.75); max-width: 58ch; margin-top: var(--space-5); font-size: var(--fs-web-lede); }
+.dark-band .eyebrow { color: var(--peak-gold-soft); }
+
+/* ── Pricing ── */
+.pricing { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+@media (max-width: 56rem) { .pricing { grid-template-columns: 1fr; } }
+.freelist { list-style: none; padding: 0; margin: var(--space-6) 0 0; display: grid; gap: var(--space-4); }
+.freelist li { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--fs-web-lede); }
+.freelist .mark { width: 0.78em; height: auto; align-self: center; }
+.price { margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--border-hairline); color: var(--text-muted); }
+.price b { color: var(--text-primary); font-weight: var(--fw-bold); }
+.store-row { display: grid; gap: var(--space-3); margin-top: var(--space-6); }
+.store-btn { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); border: 1px solid var(--peak-gold-border); background: var(--surface-card); text-decoration: none; color: var(--text-primary); transition: background-color .18s ease; }
+.store-btn:hover { background: var(--peak-gold-tint); }
+.store-btn .mark { width: 1.5rem; height: auto; }
+.store-btn__logo { width: 6.5rem; height: auto; flex: none; }
+.store-btn span { display: block; }
+.store-btn .k { font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); font-weight: var(--fw-bold); }
+.store-btn .v { font-weight: var(--fw-bold); }
+
+/* ── FAQ ── */
+.faq { margin-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--border-hairline); }
+.faq details { border-bottom: 1px solid var(--border-hairline); }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); padding-block: var(--space-5); cursor: pointer; list-style: none; font-family: var(--font-display); font-variation-settings: var(--fvs-text); font-size: var(--fs-web-heading); line-height: 1.3; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: ""; flex: none; width: 0.7rem; height: 0.7rem; border-right: 1.5px solid var(--accent); border-bottom: 1.5px solid var(--accent); transform: rotate(45deg); transition: transform .2s ease; }
+.faq details[open] summary::after { transform: rotate(-135deg); }
+.faq p { padding-bottom: var(--space-6); color: var(--text-muted); max-width: var(--measure-web); }
+
+/* ── Footer ── */
+.footer { background: var(--surface-ink); color: var(--text-on-ink); padding-block: var(--space-web-section) var(--space-8); }
+.footer__inner { display: flex; flex-wrap: wrap; gap: var(--space-8); justify-content: space-between; align-items: flex-start; }
+.footer__links { display: flex; flex-wrap: wrap; gap: var(--space-6); }
+.footer__links a { font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: rgba(241,231,208,0.62); text-decoration: none; font-weight: var(--fw-bold); }
+.footer__links a:hover { color: var(--text-on-ink); }
+.footer__legal { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--peak-rule-dark); font-size: var(--fs-web-caption); color: rgba(241,231,208,0.45); display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); justify-content: space-between; }
+.footer__lockup { width: clamp(13rem, 24vw, 17.5rem); height: auto; }
+</style>
+</head>
+<body>
+
+<!-- ═══ The navigator mark, defined once ═══ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="peak-mark" viewBox="0 0 90.778 79.611"><g transform="translate(-115.172,3.964)"><path d="M162.494,53.951c-9.5-.6-18.552,3.046-23.79,10.731-2.2,3.234-4.756,6.08-8.933,6.531a9.5,9.5,0,0,1-7.964-2.541c-4.025-4.082-3.037-9.718.267-14.985L152.913,4.493a9.277,9.277,0,0,1,15.836-.029l31.63,52.387c2.44,4.038,2.071,9.241-1.337,12.4-4.247,3.926-11.395,2.875-14.625-2.049-4.991-7.608-12.157-12.634-21.922-13.247"/></g></symbol></svg>
+
+<!-- ═══ Nav ═══ -->
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a class="wordmark" href="#top" aria-label="Peak, home">
+      <img class="wordmark__img wordmark__img--on-ink" src="assets/img/peak-wordmark-on-ink.svg" width="718" height="73" alt="">
+      <img class="wordmark__img wordmark__img--ink" src="assets/img/peak-wordmark-ink.svg" width="718" height="73" alt="">
+    </a>
+    <nav class="nav__links">
+      <a href="#today">Today</a>
+      <a href="#ask">Ask</a>
+      <a href="#goals">Goals</a>
+      <a href="#how">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn--primary" href="https://play.google.com/store/apps/details?id=me.peaklife">try the app free</a>
+  </div>
+</header>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero" id="top">
+  <div class="hero__stars" aria-hidden="true">
+    <span style="width:2px;height:2px;left:12%;top:18%;opacity:.45"></span>
+    <span style="width:1.5px;height:1.5px;left:26%;top:32%;opacity:.3"></span>
+    <span style="width:2.5px;height:2.5px;left:44%;top:12%;opacity:.5"></span>
+    <span style="width:1.5px;height:1.5px;left:63%;top:26%;opacity:.35"></span>
+    <span style="width:2px;height:2px;left:78%;top:15%;opacity:.45"></span>
+    <span style="width:1.5px;height:1.5px;left:88%;top:34%;opacity:.28"></span>
+    <span style="width:2px;height:2px;left:34%;top:44%;opacity:.22"></span>
+    <span style="width:1.5px;height:1.5px;left:70%;top:48%;opacity:.2"></span>
+  </div>
+  <div class="wrap hero__inner">
+    <span class="mark hero__mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>
+    <h1>No two lives come with the same user manual.</h1>
+    <p class="lede">Peak is an AI astrology app that helps you understand yours, with expert astrology, personalized for your everyday life.</p>
+    <div class="btn-row" style="justify-content:center">
+      <a class="btn btn--primary" href="https://play.google.com/store/apps/details?id=me.peaklife">get the android app</a>
+      <a class="btn btn--on-ink" href="https://app.peaklife.me">open peak in your browser</a>
+    </div>
+    <div class="trustbar">
+      <span>Instant answers</span><span class="dot">&middot;</span>
+      <span>No credit card required</span><span class="dot">&middot;</span>
+      <span>Private by default</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Band ═══ -->
+<div class="band"><div class="wrap band__inner">
+  <span>Work</span><span>Relationships</span><span>Health</span><span>Money</span><span>Timing</span><span>The next move</span>
+</div></div>
+
+<!-- ═══ Positioning ═══ -->
+<section class="section">
+  <div class="wrap statement">
+    <h2>Find out what is meant for you, and what isn't.</h2>
+    <p>Don't waste your life working harder to achieve something that won't truly fulfil you.</p>
+  </div>
+</section>
+
+<!-- ═══ Today ═══ -->
+<section class="section section--rule" id="today">
+  <div class="wrap feature">
+    <div class="feature__copy stack-lg">
+      <span class="eyebrow"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>Today</span>
+      <h2>Start each day with clarity and confidence.</h2>
+      <p class="lede">Peak's <span class="serif-italic">Today</span> guides you through every hour of the day, so you can consistently improve your life.</p>
+      <p class="body">Plan work, conversations and important tasks around timing calculated for your chart and current location.</p>
+      <div class="btn-row"><a class="btn btn--ghost" href="#get">try the app</a></div>
+    </div>
+    <div class="feature__device">
+      <div class="device"><div class="device__screen">
+        <img src="assets/img/screen-today.jpg" alt="The Peak Today screen: the day distilled, the current Mars hora marked favorable, the hora timeline, and flow-with and hold-back guidance." data-parallax>
+      </div></div>
+      <p class="device__label">Today, scrolled</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Ask ═══ -->
+<section class="section section--rule" id="ask">
+  <div class="wrap feature feature--flip">
+    <div class="feature__copy stack-lg">
+      <span class="eyebrow"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>Ask</span>
+      <h2>Get real answers to the questions that matter most.</h2>
+      <p class="lede">Peak's <span class="serif-italic">Ask</span> gets you instant answers to whatever is on your mind, whether it's when to invest, whom to trust, or what to do next.</p>
+      <p class="body">Get instant answers that remember your chart, earlier conversations and the goals you care about.</p>
+      <div class="btn-row"><a class="btn btn--ghost" href="#get">try the app</a></div>
+    </div>
+    <div class="feature__device">
+      <div class="device"><div class="device__screen">
+        <img src="assets/img/screen-ask.jpg" alt="The Peak Ask screen, showing the kinds of questions people bring: when to hold a business meeting, when to schedule a health appointment, when to propose.">
+      </div></div>
+      <p class="device__label">Ask</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Goals ═══ -->
+<section class="section section--rule" id="goals">
+  <div class="wrap feature">
+    <div class="feature__copy stack-lg">
+      <span class="eyebrow"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>Goals</span>
+      <h2>Turn the future you want into your next move.</h2>
+      <p class="lede">Peak's <span class="serif-italic">Goals</span> helps you move closer, every day, to what your heart truly desires, be it a better career, relationship, or lifestyle.</p>
+      <p class="body">Add any short or long term goal. See the periods that support it, where patience may help and what to do next.</p>
+      <div class="btn-row"><a class="btn btn--ghost" href="#get">try the app</a></div>
+    </div>
+    <div class="feature__device">
+      <div class="device"><div class="device__screen">
+        <img src="assets/img/screen-goals.jpg" alt="A Peak goal opened: save for my dream vacation, with its dasha periods, a road-ahead timeline and guidance for the current window.">
+      </div></div>
+      <p class="device__label">Goals</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Personalization ═══ -->
+<section class="section section--rule">
+  <div class="wrap" style="text-align:center">
+    <span class="eyebrow eyebrow--muted">Astrology that's truly personalized</span>
+    <h2 style="margin-top:var(--space-4);max-width:22ch;margin-inline:auto">How Peak personalizes every interaction with you.</h2>
+  </div>
+  <div class="wrap radial">
+    <div class="radial__col radial__col--left">
+      <div class="pill-item radial__item">
+        <h3>Your chart</h3>
+        <p>Peak uses your unique birth details to customize every conversation.</p>
+      </div>
+      <div class="pill-item radial__item">
+        <h3>Your location</h3>
+        <p>Peak adjusts daily timing to where you are, so it's never a generic forecast.</p>
+      </div>
+    </div>
+    <div class="radial__hub"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span></div>
+    <div class="radial__col radial__col--right">
+      <div class="pill-item radial__item">
+        <h3>Your questions</h3>
+        <p>Peak remembers earlier conversations, so you don't have to repeat yourself.</p>
+      </div>
+      <div class="pill-item radial__item">
+        <h3>Your goals</h3>
+        <p>Peak keeps your long term goals in mind, so guidance is never short sighted.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ How it works ═══ -->
+<section class="section section--rule" id="how">
+  <div class="wrap">
+    <span class="eyebrow"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>How it works</span>
+    <h2 style="margin-top:var(--space-4);max-width:20ch">Make Peak work for you in three simple steps.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">01</div>
+        <h3>Tell Peak when and where you were born.</h3>
+        <p>Peak creates your birth chart to personalize every interaction you have.</p>
+        <div class="step__shot"><div class="device device--sm"><div class="device__screen">
+          <img src="assets/img/screen-profile.jpg" alt="The Add Profile screen: name, date, time and place of birth." loading="lazy">
+        </div></div></div>
+      </div>
+      <div class="step">
+        <div class="step__num">02</div>
+        <h3>Tell Peak what matters most to you.</h3>
+        <p>Ask a question, add a goal or simply see what each hour in the day holds for you.</p>
+        <div class="step__shot"><div class="device device--sm"><div class="device__screen">
+          <img src="assets/img/screen-ask.jpg" alt="The Ask screen with suggested questions." loading="lazy">
+        </div></div></div>
+      </div>
+      <div class="step">
+        <div class="step__num">03</div>
+        <h3>Let Peak help you decide your next move.</h3>
+        <p>Plan your day, track your life goals and keep asking as your plans evolve.</p>
+        <div class="step__shot"><div class="device device--sm"><div class="device__screen">
+          <img src="assets/img/screen-today.jpg" alt="The Today screen with the day's hora timeline." loading="lazy">
+        </div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Founders ═══ -->
+<section class="section section--rule" id="founders" style="background:var(--surface-recessed)">
+  <div class="wrap">
+    <span class="eyebrow"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>The founders</span>
+    <h2 style="margin-top:var(--space-4)">Meet the experts behind Peak.</h2>
+    <div class="grid-2" style="margin-top:clamp(2.5rem,5vw,4rem)">
+      <article class="card founder">
+        <div class="founder__portrait">A</div>
+        <div class="founder__role">Co-founder, PeakLife &amp; practising astrologer</div>
+        <h3>Abhimanyu Singh Rana</h3>
+        <p>Peak's astrology is shaped by Abhimanyu Singh Rana, an IIT Delhi graduate and practising Jyotishi trained in a rigorous astrological lineage. His own journey as a leader in technology, business and politics taught him that working hard doesn't help if you're working on the wrong thing.</p>
+        <p>After years of helping thousands find purpose and take back control of their lives, Abhimanyu helped build Peak so that his expertise could be available every day, not only during a consultation.</p>
+        <p>His method informs how Peak reads a chart, connects different signals and turns them into personalized guidance.</p>
+        <p style="margin-top:var(--space-6)"><a class="btn btn--link" href="#">read his jyotisha journey &rarr;</a></p>
+      </article>
+      <article class="card founder">
+        <div class="founder__portrait">N</div>
+        <div class="founder__role">Co-founder, PeakLife &amp; technology leader</div>
+        <h3>Nishant Kyal</h3>
+        <p>Peak's AI expertise is built by Nishant Kyal, an IIT Delhi graduate who has led technology at Amazon and Freecharge, co-founded startups, and built LLM solutions for a leading Indian law firm.</p>
+        <p>Two decades of shipping large-scale products, the same rigor behind legal research for hundreds of lawyers, now applied to making jyotisha practical, personal, and trustworthy at scale. He is also a certified yoga teacher.</p>
+        <p style="margin-top:var(--space-6)"><a class="btn btn--link" href="#">view his linkedin &rarr;</a></p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Method ═══ -->
+<section class="section section--rule" id="method">
+  <div class="wrap">
+    <span class="eyebrow"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>The method</span>
+    <h2 style="margin-top:var(--space-4);max-width:22ch">Expert astrology, made instantly available through AI.</h2>
+    <p class="method__lead">Jyotisha is an ancient Indian system of astrology that explains how and when unfolding karma impacts life. Peak allows you to access the power of practicing Jyotishis through a truly personalized AI astrology app.</p>
+    <div class="grid-4" style="margin-top:clamp(2.5rem,5vw,3.5rem)">
+      <article class="card method-card">
+        <strong>Peak is based on thousands of real readings.</strong>
+        <p>Peak follows the Jyotisha method shaped by our founder's training, lineage and experience as a Jyotishi.</p>
+      </article>
+      <article class="card method-card">
+        <strong>Peak offers astrological answers, not AI guesswork.</strong>
+        <p>Every answer is checked against your chart, so our AI's astrology stays consistent with your actual details.</p>
+      </article>
+      <article class="card method-card">
+        <strong>Peak is here to help you decide, not decide for you.</strong>
+        <p>Each answer helps you think and act on an hour-to-hour basis, so you can make progress on your goals.</p>
+      </article>
+      <article class="card method-card">
+        <strong>Your chart and your questions stay private.</strong>
+        <p>Privacy is a promise and zero judgement is a guarantee with Peak.</p>
+      </article>
+    </div>
+    <p style="margin-top:var(--space-8)"><a class="btn btn--link" href="#how">learn how Peak works &rarr;</a></p>
+  </div>
+</section>
+
+<!-- ═══ Testimonials ═══ -->
+<section class="section section--rule">
+  <div class="wrap">
+    <h2 style="max-width:24ch">Peak has helped thousands understand the user manual of their life.</h2>
+    <div class="grid-3" style="margin-top:clamp(2.5rem,5vw,3.5rem)">
+      <blockquote class="quote">
+        <p>&ldquo;Used Peak during a very low phase and it helped bring structure to my life and achieve some major goals.&rdquo;</p>
+        <footer>Verified user</footer>
+      </blockquote>
+      <blockquote class="quote">
+        <p>&ldquo;Peak helped me be patient in love and find my husband at the right time.&rdquo;</p>
+        <footer>Verified user</footer>
+      </blockquote>
+      <blockquote class="quote">
+        <p>&ldquo;My billionaire boss used to set her crucial meeting time astrologically. Now I do it too with Peak.&rdquo;</p>
+        <footer>Verified user</footer>
+      </blockquote>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ When to use ═══ -->
+<section class="section dark-band">
+  <div class="wrap">
+    <span class="eyebrow">When to use Peak</span>
+    <h2 style="margin-top:var(--space-4)">You do not have to wait until everything falls apart.</h2>
+    <p>Use Peak when life is difficult. Use it when life is going well. Use it while planning a week, preparing for a conversation, building a habit or moving steadily towards a goal. Take control of your life with the power of astrology.</p>
+  </div>
+</section>
+
+<!-- ═══ Pricing ═══ -->
+<section class="section section--rule" id="get">
+  <div class="wrap pricing">
+    <div>
+      <span class="eyebrow"><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>Free to start</span>
+      <h2 style="margin-top:var(--space-4);max-width:16ch">Try Peak before you subscribe.</h2>
+      <p class="body" style="margin-top:var(--space-5)">Use Peak for free and get</p>
+      <ul class="freelist">
+        <li><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>1 free birth chart</li>
+        <li><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>10 free questions</li>
+        <li><span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>3 personalized daily reports</li>
+      </ul>
+      <p class="price">And if you're enjoying Peak, subscribe from <b>&#8377;499 a month</b> in India, or <b>$20 a month</b> in the United States.</p>
+    </div>
+    <div>
+      <div class="store-row">
+        <a class="store-btn" href="https://play.google.com/store/apps/details?id=me.peaklife">
+          <img class="store-btn__logo" src="assets/img/google-play-logo.png" width="600" height="123" alt="Google Play" loading="lazy">
+          <span><span class="k">Android</span><span class="v">Get the app on Google Play</span></span>
+        </a>
+        <a class="store-btn" href="https://app.peaklife.me">
+          <span class="mark"><svg viewBox="0 0 90.778 79.611"><use href="#peak-mark"></use></svg></span>
+          <span><span class="k">iPhone and everything else</span><span class="v">Open Peak in your browser</span></span>
+        </a>
+      </div>
+      <p class="body" style="margin-top:var(--space-5);font-size:var(--fs-web-caption)">No download needed on iPhone. Peak runs at app.peaklife.me.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="section section--rule" id="faq">
+  <div class="wrap wrap--narrow">
+    <h2>Frequently asked questions.</h2>
+    <div class="faq">
+      <details open><summary>What is Peak Life?</summary><p>Peak is an AI astrology app built to make expert astrology personal, practical and useful in everyday life. It brings your birth chart, current timing, questions and goals together, so you can plan your day, understand what is changing and make your next move with more clarity.</p></details>
+      <details><summary>What does Peak mean by the &ldquo;manual&rdquo; to your life?</summary><p>No two people have exactly the same strengths, limitations, patterns or timing. Peak uses astrology to help you understand yours. This understanding is not a set of instructions or a fixed prediction. It gives you more context about what you are working with; what you choose to do with it remains up to you.</p></details>
+      <details><summary>Is Peak an AI astrologer?</summary><p>Yes. You can ask Peak questions and instantly receive astrologically accurate answers that are personalized to your chart. Peak is not a general AI chatbot, it's built as a custom engine trained by thousands of real readings conducted by PeakLife's founder and his team of astrologers.</p></details>
+      <details><summary>Does Peak use Vedic astrology or Western astrology?</summary><p>Peak is grounded in Jyotisha, also known as Vedic astrology. It reads your complete birth chart, planetary periods and current transits, not only your sun sign. You do not need to know the terminology. Peak explains what matters in plain language and connects it to the life you are actually living.</p></details>
+      <details><summary>How is Peak different from a daily horoscope app?</summary><p>A daily horoscope gives one message to everyone born under the same sign. Peak begins with you. Your chart, location, timing, goals and previous conversations can all change the answer. The result is daily guidance designed for one life, yours.</p></details>
+      <details><summary>Is Peak a birth-chart app?</summary><p>Your birth chart is where Peak begins, not where it ends. Peak creates your chart and then helps you use it: to plan your day, ask questions, understand recurring patterns, set goals and ask questions that build on your earlier conversations.</p></details>
+      <details><summary>How does Peak personalize my astrology?</summary><p>Peak brings together your birth chart, current location, planetary timing, questions, conversation history and goals. That context helps it understand not only what is happening astrologically, but what you are trying to do with it.</p></details>
+      <details><summary>What can I ask Peak?</summary><p>Ask about the things that matter in real life: work, relationships, money, wellbeing, timing, habits and difficult decisions. You might ask when to have a conversation, how to approach a career move or why the same pattern keeps returning. Peak gives you context and a next step, not a command.</p></details>
+      <details><summary>Does Peak remember my previous questions and goals?</summary><p>Yes. Peak can use your earlier conversations and the goals you have entered to make later guidance more relevant. You do not have to explain your life again every time you return. Your chart stays the same, but the conversation can keep moving with you.</p></details>
+      <details><summary>Does Peak tell me what to do?</summary><p>No. Peak can show you the timing, the pattern, the trade-offs and the possibilities around a decision. It may also point out when your choices contradict a goal you have set. But the decision remains yours.</p></details>
+      <details><summary>What is a personalized daily report?</summary><p>It is a daily reading created from your chart and current planetary timing, not a general forecast for your zodiac sign. It can show which parts of the day support action, where more care may be useful and what deserves your attention now.</p></details>
+      <details><summary>How was Peak's AI astrologer trained?</summary><p>Peak is built on thousands of real astrology readings and the working knowledge of its astrologer-founder. That experience informs how Peak reads charts, connects different signals and turns them into relevant guidance.</p></details>
+      <details><summary>How reliable is Peak's astrology?</summary><p>Peak is designed to give chart-specific answers through a consistent, founder-governed astrological method. It does not rely on generic sign descriptions or AI guesswork. Astrology can offer patterns, timing and perspective; it cannot guarantee an outcome or remove the role of your choices.</p></details>
+      <details><summary>Are human astrologers involved in Peak?</summary><p>Yes. Human astrological judgment sits at the heart of the product. Peak's method, rules, interpretations and boundaries are shaped by its astrologer-founder and the lineage in which he trained. AI allows that knowledge to be available at scale; it does not replace the expertise behind it.</p></details>
+      <details><summary>Can Peak answer medical, legal or investment questions?</summary><p>Peak can help you explore timing, pressure, patterns and personal priorities around serious decisions. It does not replace a doctor, lawyer or financial adviser, and it will not tell you to buy a particular stock, choose a medical treatment or take a specific legal action. Where professional expertise is needed, Peak will say so.</p></details>
+      <details><summary>What information do I need to create my chart?</summary><p>You will need your date, time and place of birth, along with your current location. These details allow Peak to calculate the planetary positions and houses in your birth chart. The more accurate your birth information, the more precise the chart can be.</p></details>
+      <details><summary>Can I use Peak if I do not know my exact birth time?</summary><p>Peak works best with an accurate birth time because it can change your rising sign, houses and timing. If you do not know it, some chart information may still be available, but the guidance may be less precise. Peak will not pretend that an uncertain chart offers the same level of detail.</p></details>
+      <details><summary>What can I use for free?</summary><p>You can start with one free birth chart, ten free questions in Ask and three personalized daily reports. No credit card is required. You can subscribe whenever you want more access.</p></details>
+      <details><summary>How much does Peak cost?</summary><p>Peak costs &#8377;499 a month in India and $20 a month in the United States. Some plans or in-app purchases may unlock additional charts or other features. You are paying for ongoing access, not by the question and not by the minute.</p></details>
+      <details><summary>Can I use Peak on my phone?</summary><p>Peak has an Android app. On iPhone, and on any other device, Peak runs in your browser at app.peaklife.me with no download. Verify your mobile number and create your first chart to begin.</p></details>
+      <details><summary>Is my birth chart and conversation data private?</summary><p>Yes. Your birth details, chart and conversations are private. Peak protects what you share, so you can ask honest questions without turning your personal life into public content.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__inner">
+      <div>
+        <img class="footer__lockup" src="assets/img/peak-lockup-on-ink.png" width="1200" height="212"
+             alt="PEAK. User manual for your life.">
+      </div>
+      <nav class="footer__links">
+        <a href="#">Product</a><a href="#">Contact</a><a href="#">Privacy</a><a href="#">Terms</a>
+      </nav>
+    </div>
+    <div class="footer__legal">
+      <span>&copy; Peak 2026. All rights reserved.</span>
+      <span>Built and maintained by Aryaman Knowledge Services Private Limited.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* The Today frame holds a full scrolling capture, taller than the frame. Ease it
+   through as the section passes, so the visitor sees the whole screen without a
+   second click. Everything else sits top-aligned. */
+var shots = Array.prototype.slice.call(document.querySelectorAll('[data-parallax]'));
+var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function parallax() {
+  if (reduce) return;
+  shots.forEach(function (img) {
+    var frame = img.parentElement;
+    var r = frame.getBoundingClientRect();
+    var travel = img.offsetHeight - frame.offsetHeight;
+    if (travel <= 0) return;
+    var p = (window.innerHeight - r.top) / (window.innerHeight + r.height);
+    p = Math.max(0, Math.min(1, p));
+    img.style.transform = 'translateY(' + (-travel * p) + 'px)';
+  });
+}
+var navEl = document.querySelector('.nav');
+function markNav() { navEl.classList.toggle('is-stuck', window.scrollY > 24); }
+function onScroll() { markNav(); parallax(); }
+window.addEventListener('scroll', onScroll, { passive: true });
+window.addEventListener('resize', onScroll);
+window.addEventListener('load', onScroll);
+onScroll();
+</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is Peak Life?", "acceptedAnswer": {"@type": "Answer", "text": "Peak is an AI astrology app built to make expert astrology personal, practical and useful in everyday life. It brings your birth chart, current timing, questions and goals together, so you can plan your day, understand what is changing and make your next move with more clarity."}}, {"@type": "Question", "name": "What does Peak mean by the “manual” to your life?", "acceptedAnswer": {"@type": "Answer", "text": "No two people have exactly the same strengths, limitations, patterns or timing. Peak uses astrology to help you understand yours. This understanding is not a set of instructions or a fixed prediction. It gives you more context about what you are working with; what you choose to do with it remains up to you."}}, {"@type": "Question", "name": "Is Peak an AI astrologer?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can ask Peak questions and instantly receive astrologically accurate answers that are personalized to your chart. Peak is not a general AI chatbot, it's built as a custom engine trained by thousands of real readings conducted by PeakLife's founder and his team of astrologers."}}, {"@type": "Question", "name": "Does Peak use Vedic astrology or Western astrology?", "acceptedAnswer": {"@type": "Answer", "text": "Peak is grounded in Jyotisha, also known as Vedic astrology. It reads your complete birth chart, planetary periods and current transits, not only your sun sign. You do not need to know the terminology. Peak explains what matters in plain language and connects it to the life you are actually living."}}, {"@type": "Question", "name": "How is Peak different from a daily horoscope app?", "acceptedAnswer": {"@type": "Answer", "text": "A daily horoscope gives one message to everyone born under the same sign. Peak begins with you. Your chart, location, timing, goals and previous conversations can all change the answer. The result is daily guidance designed for one life, yours."}}, {"@type": "Question", "name": "Is Peak a birth-chart app?", "acceptedAnswer": {"@type": "Answer", "text": "Your birth chart is where Peak begins, not where it ends. Peak creates your chart and then helps you use it: to plan your day, ask questions, understand recurring patterns, set goals and ask questions that build on your earlier conversations."}}, {"@type": "Question", "name": "How does Peak personalize my astrology?", "acceptedAnswer": {"@type": "Answer", "text": "Peak brings together your birth chart, current location, planetary timing, questions, conversation history and goals. That context helps it understand not only what is happening astrologically, but what you are trying to do with it."}}, {"@type": "Question", "name": "What can I ask Peak?", "acceptedAnswer": {"@type": "Answer", "text": "Ask about the things that matter in real life: work, relationships, money, wellbeing, timing, habits and difficult decisions. You might ask when to have a conversation, how to approach a career move or why the same pattern keeps returning. Peak gives you context and a next step, not a command."}}, {"@type": "Question", "name": "Does Peak remember my previous questions and goals?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Peak can use your earlier conversations and the goals you have entered to make later guidance more relevant. You do not have to explain your life again every time you return. Your chart stays the same, but the conversation can keep moving with you."}}, {"@type": "Question", "name": "Does Peak tell me what to do?", "acceptedAnswer": {"@type": "Answer", "text": "No. Peak can show you the timing, the pattern, the trade-offs and the possibilities around a decision. It may also point out when your choices contradict a goal you have set. But the decision remains yours."}}, {"@type": "Question", "name": "What is a personalized daily report?", "acceptedAnswer": {"@type": "Answer", "text": "It is a daily reading created from your chart and current planetary timing, not a general forecast for your zodiac sign. It can show which parts of the day support action, where more care may be useful and what deserves your attention now."}}, {"@type": "Question", "name": "How was Peak's AI astrologer trained?", "acceptedAnswer": {"@type": "Answer", "text": "Peak is built on thousands of real astrology readings and the working knowledge of its astrologer-founder. That experience informs how Peak reads charts, connects different signals and turns them into relevant guidance."}}, {"@type": "Question", "name": "How reliable is Peak's astrology?", "acceptedAnswer": {"@type": "Answer", "text": "Peak is designed to give chart-specific answers through a consistent, founder-governed astrological method. It does not rely on generic sign descriptions or AI guesswork. Astrology can offer patterns, timing and perspective; it cannot guarantee an outcome or remove the role of your choices."}}, {"@type": "Question", "name": "Are human astrologers involved in Peak?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Human astrological judgment sits at the heart of the product. Peak's method, rules, interpretations and boundaries are shaped by its astrologer-founder and the lineage in which he trained. AI allows that knowledge to be available at scale; it does not replace the expertise behind it."}}, {"@type": "Question", "name": "Can Peak answer medical, legal or investment questions?", "acceptedAnswer": {"@type": "Answer", "text": "Peak can help you explore timing, pressure, patterns and personal priorities around serious decisions. It does not replace a doctor, lawyer or financial adviser, and it will not tell you to buy a particular stock, choose a medical treatment or take a specific legal action. Where professional expertise is needed, Peak will say so."}}, {"@type": "Question", "name": "What information do I need to create my chart?", "acceptedAnswer": {"@type": "Answer", "text": "You will need your date, time and place of birth, along with your current location. These details allow Peak to calculate the planetary positions and houses in your birth chart. The more accurate your birth information, the more precise the chart can be."}}, {"@type": "Question", "name": "Can I use Peak if I do not know my exact birth time?", "acceptedAnswer": {"@type": "Answer", "text": "Peak works best with an accurate birth time because it can change your rising sign, houses and timing. If you do not know it, some chart information may still be available, but the guidance may be less precise. Peak will not pretend that an uncertain chart offers the same level of detail."}}, {"@type": "Question", "name": "What can I use for free?", "acceptedAnswer": {"@type": "Answer", "text": "You can start with one free birth chart, ten free questions in Ask and three personalized daily reports. No credit card is required. You can subscribe whenever you want more access."}}, {"@type": "Question", "name": "How much does Peak cost?", "acceptedAnswer": {"@type": "Answer", "text": "Peak costs ₹499 a month in India and $20 a month in the United States. Some plans or in-app purchases may unlock additional charts or other features. You are paying for ongoing access, not by the question and not by the minute."}}, {"@type": "Question", "name": "Can I use Peak on my phone?", "acceptedAnswer": {"@type": "Answer", "text": "Peak has an Android app. On iPhone, and on any other device, Peak runs in your browser at app.peaklife.me with no download. Verify your mobile number and create your first chart to begin."}}, {"@type": "Question", "name": "Is my birth chart and conversation data private?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Your birth details, chart and conversations are private. Peak protects what you share, so you can ask honest questions without turning your personal life into public content."}}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Peak", "applicationCategory": "LifestyleApplication", "operatingSystem": "Android, Web", "url": "https://peaklife.me/", "offers": {"@type": "Offer", "price": "499", "priceCurrency": "INR"}, "publisher": {"@type": "Organization", "name": "Aryaman Knowledge Services Private Limited"}}</script>
+</body>
+</html>

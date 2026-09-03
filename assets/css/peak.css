@@ -1,0 +1,102 @@
+/* Peak — design tokens.
+   Copied verbatim from the Peak Design System (claude.ai/design, project
+   "Peak Design System"): tokens/colors.css, tokens/typography.css,
+   tokens/effects.css, tokens/typography-web.css.
+
+   DO NOT hand-edit values in this file. It is a build artifact of the design
+   system. Change a colour there and re-sync, or the site and the app drift.
+   Webfonts are loaded from Google Fonts in index.html rather than the
+   design system's local Fraunces TTFs, the only intentional difference. */
+
+/* ── colour ── */
+:root {
+  --peak-gold: #C28D2A;
+  --peak-gold-bright: #C79A3B;
+  --peak-gold-deep: #A07C2C;
+  --peak-gold-soft: #D9B26A;
+  --peak-gold-tint: rgba(194,141,42,0.10);
+  --peak-gold-border: rgba(194,141,42,0.35);
+
+  --peak-cream: #F8EFDB;
+  --peak-bone: #F5ECD9;
+  --peak-bone-deep: #EDE3CC;
+  --peak-bone-darker: #E2D8C0;
+  --peak-parchment: #F3EAD8;
+  --peak-parchment-deep: #E9DFC9;
+
+  --peak-graphite: #2A2418;
+  --peak-ink: #0E1234;
+  --peak-ink-raised: #171E4C;
+  --peak-ink-elevated: #222A5C;
+  --peak-sky-top: #0B0E2A;
+  --peak-sky-mid: #0E1234;
+  --peak-sky-bot: #171E4C;
+  --peak-on-ink: #F1E7D0;
+
+  --peak-muted: #6F6350;
+  --peak-muted-light: #9A8C74;
+  --peak-rule: #CBBF9F;
+  --peak-rule-dark: rgba(255,255,255,0.08);
+
+  --peak-fav-good: #5E7C46;
+  --peak-fav-mixed: #A07C2C;
+  --peak-fav-caution: #B0554C;
+  --peak-fav-neutral: #7C7466;
+
+  --surface-body: var(--peak-cream);
+  --surface-canvas: var(--peak-bone);
+  --surface-card: var(--peak-parchment);
+  --surface-recessed: var(--peak-bone-deep);
+  --surface-ink: var(--peak-ink);
+  --text-primary: var(--peak-graphite);
+  --text-muted: var(--peak-muted);
+  --text-faint: var(--peak-muted-light);
+  --text-on-ink: var(--peak-on-ink);
+  --accent: var(--peak-gold);
+  --accent-hover: var(--peak-gold-soft);
+  --border-hairline: var(--peak-rule);
+}
+
+/* ── type ── */
+:root {
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Lato", system-ui, -apple-system, sans-serif;
+  --fvs-display: "SOFT" 100, "opsz" 144;
+  --fvs-text: "SOFT" 100, "opsz" 36;
+  --fw-light: 300; --fw-regular: 400; --fw-bold: 700; --fw-black: 900;
+  --fs-display: 30px; --fs-heading: 22px; --fs-lede: 19px;
+  --fs-body: 14px; --fs-caption: 12px; --fs-eyebrow: 10px;
+  --lh-tight: 1.12; --lh-body: 1.55;
+  --tracking-eyebrow: 0.26em; --tracking-wordmark: 0.18em; --tracking-label: 0.18em;
+}
+
+/* ── radii, spacing, shadows, gradients ── */
+:root {
+  --radius-sm: 6px; --radius-md: 18px; --radius-lg: 22px; --radius-sheet: 24px; --radius-pill: 999px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px;
+  --shadow-card: 0 0 0 1px rgba(255,252,240,0.35) inset, 0 10px 26px rgba(59,44,14,0.10);
+  --shadow-card-glow: 0 0 0 1px rgba(255,252,240,0.35) inset, 0 14px 34px rgba(59,44,14,0.12), 0 0 46px rgba(255,243,214,0.5);
+  --shadow-sheet: 0 -16px 48px rgba(15,15,16,0.20);
+  --focus-ring: 0 0 0 3px rgba(194,141,42,0.12);
+  --gradient-sky: linear-gradient(180deg, #0B0E2A 0%, #0E1234 45%, #171E4C 100%);
+  --gradient-parchment: linear-gradient(180deg, #F3EAD8, #E9DFC9);
+  --gradient-dusk: linear-gradient(180deg, #1B2250 0px, #454A73 170px, #8B8494 250px, #CBB99E 340px, #F0E2C1 450px, #F8EFDB 570px);
+}
+
+/* ── web-only additions ── */
+:root {
+  --fs-web-hero: clamp(2.5rem, 6.4vw, 4.75rem);
+  --fs-web-display: clamp(1.875rem, 3.9vw, 3rem);
+  --fs-web-heading: clamp(1.375rem, 2.1vw, 1.75rem);
+  --fs-web-lede: clamp(1.0625rem, 1.5vw, 1.3125rem);
+  --fs-web-body: 1.0625rem;
+  --fs-web-caption: 0.8125rem;
+  --fs-web-eyebrow: 0.6875rem;
+  --space-web-section: clamp(4.5rem, 9vw, 8.75rem);
+  --space-web-gutter: clamp(1.25rem, 4vw, 3rem);
+  --space-web-stack: clamp(1.25rem, 2.5vw, 2rem);
+  --measure-web: 60ch;
+  --container-web: 71.25rem;
+  --container-web-narrow: 48rem;
+}
