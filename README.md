@@ -34,8 +34,10 @@ robots.txt, sitemap.xml
    minimum size and with their required clear space. Do not redraw it, do not recolour it,
    do not put it on a coloured chip.
 
-2. **Founder portraits.** Currently lettered circles, `A` and `N`. Add square headshots
-   to `assets/img/` and replace the two `.founder__portrait` divs with `<img>`.
+2. **Abhimanyu's headshot.** Nishant's is in (`founder-nishant.jpg`). Abhimanyu is still a
+   lettered circle. Drop a square photo into `assets/img/` as `founder-abhimanyu.jpg` and
+   swap his `.founder__portrait` div for the same `<img class="founder__portrait
+   founder__portrait--photo">` markup Nishant uses.
 3. **Two dead links.** "read his jyotisha journey" and "view his linkedin" are `#`.
 4. **Testimonials** are attributed "Verified user". Confirm that, or use first name and
    city.
@@ -80,6 +82,12 @@ Serving locally: `python3 -m http.server` in this folder. Use a server, not
   correctly in a nav bar (the originals carry ~88 units of empty space on the left).
   Colours and paths are untouched. The two cross-fade: cream over the dark hero, ink once
   the nav goes solid.
+- **Nishant's portrait is the supplied photo, cropped only.** Square crop, head and
+  shoulders, resized to 560px. I tried a white-balance correction and reverted it: the
+  brightest thing in frame is a yellow wall, not a neutral reference, so auto-balancing
+  pushed his skin green. The warm cast is the room, not an error. Nothing else about the
+  photo was altered.
+
 - **Icons come from the real app icon.** `app-icon.png` is the store icon as supplied.
   `favicon.svg` reproduces its composition as vector: cream `#F4EFE5` ground with the
   navigator at the same size and the same slight upward nudge the designer used (the mark
