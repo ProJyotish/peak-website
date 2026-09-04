@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { AppScreenshotPlaceholder } from "@/components/home/AppScreenshotPlaceholder";
+import { IphoneFrame } from "@/components/site/IphoneFrame";
 import { SeoHead } from "@/components/site/SeoHead";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { StoreDownloadButtons } from "@/components/site/StoreDownloadButtons";
@@ -10,7 +10,6 @@ import { HORARY } from "@/lib/horaryCopy";
 import { getHoraryStoreUrls } from "@/lib/horaryStores";
 import { ROUTES } from "@/lib/routes";
 import { productSeoKeywords } from "@/lib/seo";
-import { SITE } from "@/lib/site";
 
 const fade = {
   initial: { opacity: 0, y: 12 },
@@ -19,31 +18,13 @@ const fade = {
   transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] as const },
 };
 
-function HoraryBrand({
-  className = "",
-  subtitleClassName = "text-clay",
-}: {
-  className?: string;
-  subtitleClassName?: string;
-}) {
-  return (
-    <div className={`flex flex-col items-start gap-3 ${className}`} aria-label="PeakLife Horary">
-      <img src={peakLogo} alt="Peak" className="h-[18px] w-auto" width={192} height={18} />
-      <p className="font-display text-2xl md:text-3xl text-ink tracking-tight">PeakLife Horary</p>
-      <p className={`font-mono text-[10px] uppercase tracking-[0.18em] ${subtitleClassName}`}>
-        from PeakLife
-      </p>
-    </div>
-  );
-}
-
 const Horary = () => {
   const stores = getHoraryStoreUrls();
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <SeoHead
-        title="PeakLife Horary — KP Horary Astrology App by Peak"
+        title="PeakLife Horary - KP Horary Astrology App"
         description={HORARY.description}
         keywords={productSeoKeywords(
           "peaklife horary",
@@ -51,6 +32,7 @@ const Horary = () => {
           "prashna kundli",
           "vedic horary",
           "ask one question astrology",
+          "no birth chart needed",
         )}
         path={ROUTES.home}
       />
@@ -58,12 +40,6 @@ const Horary = () => {
       <header className="border-b border-border">
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />
-          <a
-            href={SITE.peakUrl}
-            className="font-mono text-xs uppercase tracking-[0.18em] text-clay hover:text-ink transition-colors"
-          >
-            Peak
-          </a>
         </div>
       </header>
 
@@ -71,25 +47,36 @@ const Horary = () => {
         <section className="border-b border-border py-16 md:py-24">
           <div className="container-peak grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <motion.div {...fade}>
-              <HoraryBrand className="mb-8" />
+              
+              <p className="font-display text-2xl md:text-3xl text-ink tracking-tight mb-4">
+                PeakLife Horary
+              </p>
               <p className="eyebrow mb-4">{HORARY.hero.eyebrow}</p>
               <h1 className="font-display text-4xl md:text-5xl lg:text-6xl leading-[1.05] text-ink">
                 {HORARY.hero.title}
               </h1>
+              <p className="mt-5 inline-flex font-mono text-xs uppercase tracking-[0.18em] text-gold border border-gold/40 bg-gold/5 px-3 py-2">
+                {HORARY.hero.highlight}
+              </p>
               <p className="mt-6 text-lg leading-relaxed text-clay">{HORARY.hero.lede}</p>
               <div className="mt-10">
                 <StoreDownloadButtons
-                  androidUrl={stores.android}
                   iosUrl={stores.ios}
-                  androidLabel={HORARY.download.androidLabel}
                   iosLabel={HORARY.download.iosLabel}
-                  androidSoon={HORARY.download.androidSoon}
                   iosSoon={HORARY.download.iosSoon}
+                  showAndroid={false}
                 />
               </div>
             </motion.div>
-            <motion.div {...fade} transition={{ ...fade.transition, delay: 0.08 }}>
-              <AppScreenshotPlaceholder label="PeakLife Horary" />
+            <motion.div
+              {...fade}
+              transition={{ ...fade.transition, delay: 0.08 }}
+              className="flex justify-center"
+            >
+              <IphoneFrame
+                src="/horary/ask-screen.jpg"
+                alt="PeakLife Horary app: ask a question and pick a number from 1 to 249"
+              />
             </motion.div>
           </div>
         </section>
@@ -174,37 +161,27 @@ const Horary = () => {
           <div className="container-peak max-w-3xl text-center">
             <motion.div {...fade}>
               <div className="flex justify-center mb-6">
-                <div className="flex flex-col items-center gap-3" aria-label="PeakLife Horary">
-                  <img
-                    src={peakLogo}
-                    alt="Peak"
-                    className="h-[18px] w-auto brightness-0 invert"
-                    width={192}
-                    height={18}
-                  />
-                  <p className="font-display text-2xl text-parchment">PeakLife Horary</p>
-                </div>
+                <img
+                  src={peakLogo}
+                  alt="PeakLife Horary"
+                  className="h-10 w-auto brightness-0 invert"
+                  width={192}
+                  height={18}
+                />
               </div>
+              <p className="font-display text-2xl text-parchment mb-6">PeakLife Horary</p>
               <h2 className="font-display text-3xl md:text-5xl text-parchment">{HORARY.download.title}</h2>
               <p className="mt-5 text-lg text-parchment/75">{HORARY.download.subtitle}</p>
               <div className="mt-10 flex justify-center">
                 <StoreDownloadButtons
-                  androidUrl={stores.android}
                   iosUrl={stores.ios}
-                  androidLabel={HORARY.download.androidLabel}
                   iosLabel={HORARY.download.iosLabel}
-                  androidSoon={HORARY.download.androidSoon}
                   iosSoon={HORARY.download.iosSoon}
+                  showAndroid={false}
                   tone="dark"
                   className="justify-center"
                 />
               </div>
-              <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/50">
-                Part of the Peak family ·{" "}
-                <a href={SITE.peakUrl} className="text-gold hover:text-parchment transition-colors">
-                  peaklife.me
-                </a>
-              </p>
             </motion.div>
           </div>
         </section>

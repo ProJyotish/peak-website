@@ -15,9 +15,15 @@ describe("PeakLife Horary landing", () => {
 
   it("ships core marketing copy under PeakLife Horary", () => {
     expect(HORARY.name).toBe("PeakLife Horary");
+    expect(HORARY.hero.highlight).toMatch(/no birth chart/i);
     expect(HORARY.tagline).toContain("One question");
     expect(HORARY.steps).toHaveLength(3);
-    expect(HORARY.faqs.length).toBeGreaterThan(3);
+    expect(HORARY.faqs.length).toBeGreaterThan(2);
+    const blob = JSON.stringify(HORARY);
+    expect(blob).not.toMatch(/[—–]/);
+    expect(HORARY.faqs.every((f) => !/peak app|peak family|from peak/i.test(`${f.q} ${f.a}`))).toBe(
+      true,
+    );
   });
 
   it("defaults android store url for horary app", () => {

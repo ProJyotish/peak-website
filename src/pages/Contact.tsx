@@ -2,12 +2,14 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, MessageCircle } from "lucide-react";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
+import { isHorarySite } from "@/lib/siteMode";
 import { SITE } from "@/lib/site";
 import { ROUTES } from "@/lib/routes";
 
 const Contact = () => {
   const whatsappUrl = import.meta.env.VITE_WHATSAPP_URL || "https://wa.me/919560057789?text=Hi";
-  const emailSubject = "Peak - Contact";
+  const brand = isHorarySite ? "PeakLife Horary" : "Peak";
+  const emailSubject = `${brand} - Contact`;
   const mailtoLink = `mailto:${SITE.contactEmail}?subject=${encodeURIComponent(emailSubject)}`;
 
   return (
@@ -30,7 +32,9 @@ const Contact = () => {
           <p className="eyebrow mb-4">Contact</p>
           <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink">Get in touch</h1>
           <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-            Questions about Peak, partnerships, press, or support — reach out through email or WhatsApp.
+            {isHorarySite
+              ? "Questions about PeakLife Horary, partnerships, press, or support. Reach out through email or WhatsApp."
+              : "Questions about Peak, partnerships, press, or support. Reach out through email or WhatsApp."}
           </p>
 
           <div className="mt-12 space-y-6">

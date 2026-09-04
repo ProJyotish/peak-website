@@ -74,7 +74,7 @@ export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
   const site = opts.site === "horary" ? "horary" : "peak";
   const domain =
     opts.domain ||
-    (site === "horary" ? "horary.peaklife.me" : "peaklife.me");
+    (site === "horary" ? "peaklifehorary.me" : "peaklife.me");
 
   /** @type {{ loc: string, changefreq: string, priority: string, lastmod?: string }[]} */
   const entries =

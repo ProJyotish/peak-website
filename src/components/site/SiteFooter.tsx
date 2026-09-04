@@ -11,6 +11,8 @@ const socialLinks = [
 ] as const;
 
 export function SiteFooter() {
+  const brand = isHorarySite ? "PeakLife Horary" : "Peak";
+
   return (
     <footer className="border-t border-ink bg-ink py-10 text-parchment">
       <div className="container-peak flex flex-col gap-8">
@@ -25,11 +27,6 @@ export function SiteFooter() {
                 Product
               </Link>
             )}
-            {isHorarySite && (
-              <a href={SITE.peakUrl} className="hover:text-gold transition-colors">
-                Peak
-              </a>
-            )}
             <Link to={ROUTES.contact} className="hover:text-gold transition-colors">
               Contact
             </Link>
@@ -40,25 +37,26 @@ export function SiteFooter() {
               Terms
             </Link>
           </nav>
-          <div className="flex items-center gap-4">
-            {socialLinks.map(({ label, href, icon: Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Peak on ${label}`}
-                className="text-parchment/70 hover:text-gold transition-colors"
-              >
-                <Icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
+          {!isHorarySite && (
+            <div className="flex items-center gap-4">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`${brand} on ${label}`}
+                  className="text-parchment/70 hover:text-gold transition-colors"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
         <div className="text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/60">
-            © {isHorarySite ? "PeakLife Horary" : "Peak"} {new Date().getFullYear()} · All rights
-            reserved
+            © {brand} {new Date().getFullYear()} · All rights reserved
           </p>
           <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/60">
             Built and maintained by{" "}

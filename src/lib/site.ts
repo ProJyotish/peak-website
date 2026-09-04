@@ -1,23 +1,23 @@
 import { isHorarySite } from "@/lib/siteMode";
 
 const peakDomain = "peaklife.me";
-const horaryDomainDefault = "horary.peaklife.me";
+const horaryDomainDefault = "peaklifehorary.me";
+const peakSupport = "support@peaklife.me";
+const horarySupport = "support@peaklifehorary.me";
 
 const envDomain = (import.meta.env.VITE_SITE_DOMAIN as string | undefined)?.trim();
+const supportEmail = isHorarySite ? horarySupport : peakSupport;
 
 export const SITE = {
   name: isHorarySite ? "PeakLife Horary" : "Peak",
-  brandFamily: "Peak",
   legalName: "Aryaman Knowledge Services Private Limited",
   domain: envDomain || (isHorarySite ? horaryDomainDefault : peakDomain),
-  /** Main Peak marketing site — used for cross-links from Horary. */
   peakDomain,
   peakUrl: `https://${peakDomain}`,
   app: "https://app.peaklife.me",
-  contactEmail: "support@peaklife.me",
-  supportEmail: "support@peaklife.me",
-  deleteAccountMailto:
-    "mailto:support@peaklife.me?subject=Account%20deletion%20request",
+  contactEmail: supportEmail,
+  supportEmail,
+  deleteAccountMailto: `mailto:${supportEmail}?subject=Account%20deletion%20request`,
   address: "India",
   social: {
     linkedin: "https://www.linkedin.com/company/peaklife-me",
@@ -39,7 +39,7 @@ export const LEGAL_LAST_UPDATED = "January 9, 2026";
 
 export const grievanceOfficer = {
   name: "Abhimanyu Singh Rana",
-  email: "support@peaklife.me",
+  email: supportEmail,
 } as const;
 
 export const PAYMENTS_REFUNDS_FAQS = [
@@ -62,5 +62,23 @@ export const PAYMENTS_REFUNDS_FAQS = [
     question: "Refund policy",
     answer:
       "We do not offer refunds once payment is made. We provide a free trial of 10 questions and 3 days of personalized reports so you can evaluate our service before subscribing.",
+  },
+] as const;
+
+/** PeakLife Horary is pay-per-ask, not Peak subscriptions. */
+export const HORARY_PAYMENTS_FAQS = [
+  {
+    question: "How much does each question cost?",
+    answer:
+      "Each PeakLife Horary ask costs ₹51. You top up your balance in the app before asking.",
+  },
+  {
+    question: "Can I get a refund?",
+    answer:
+      "We do not offer refunds once payment is made for asks or top-ups. You can evaluate the product with the downloadable app experience before purchasing additional asks.",
+  },
+  {
+    question: "Who do I contact about billing?",
+    answer: `Email ${horarySupport} with your phone number and payment reference.`,
   },
 ] as const;

@@ -24,7 +24,22 @@ Landing page is the site root; shared Contact / Privacy / Terms / account-deleti
 | OAC | `E37PMMPSXXU48Y` |
 | CloudFront ID | `E2P0N7O9K9QVC1` |
 | URL (prod) | https://d3tqhwmwpt2bt7.cloudfront.net |
-| Suggested domain | `horary.peaklife.me` |
+| Custom domain | `peaklifehorary.me` |
+| ACM cert (us-east-1) | `arn:aws:acm:us-east-1:660878112326:certificate/d4f3ebd9-c9d4-48b8-bfe0-674fc07b66d1` (**ISSUED**, attached) |
+
+### Custom domain (`peaklifehorary.me`)
+
+CloudFront distribution `E2P0N7O9K9QVC1` already has alias `peaklifehorary.me` + ACM cert.
+
+Point apex DNS at CloudFront (if not already):
+
+| Name | Type | Value |
+|------|------|-------|
+| `peaklifehorary.me` | ALIAS / ANAME / CNAME | `d3tqhwmwpt2bt7.cloudfront.net` |
+
+Optional `www`: add validation CNAME from the older dual-SAN cert (or request a new cert including www), then re-run `attach-horary-domain.sh` with both aliases.
+
+Validation record archive: `scripts/aws/peaklifehorary-acm-validation.json`
 
 ### One-time Horary CloudFront setup
 
@@ -97,7 +112,7 @@ CloudFront custom certs must be in **us-east-1** (AWS requirement), even when th
 2. Add alternate domain + cert on distribution `E3JRZB3NUFKIKH`
 3. Point DNS (Route 53 or registrar) CNAME/ALIAS → `dsdjkb0guxr1r.cloudfront.net`
 
-Same pattern for Horary (`horary.peaklife.me` → Horary distribution domain).
+Same pattern for Horary (`peaklifehorary.me` → Horary distribution `d3tqhwmwpt2bt7.cloudfront.net`). See ACM + attach steps above.
 
 ## Directory URLs (`/blog/` → static HTML)
 

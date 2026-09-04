@@ -1,12 +1,13 @@
 import { trackEvent } from "@/lib/tracking";
 
 type StoreDownloadButtonsProps = {
-  androidUrl: string | null;
+  androidUrl?: string | null;
   iosUrl: string | null;
   androidLabel?: string;
   iosLabel?: string;
   androidSoon?: string;
   iosSoon?: string;
+  showAndroid?: boolean;
   tone?: "light" | "dark";
   className?: string;
 };
@@ -74,18 +75,21 @@ export function StoreDownloadButtons({
   iosLabel = "Download on the App Store",
   androidSoon = "Coming soon on Google Play",
   iosSoon = "Coming soon on the App Store",
+  showAndroid = true,
   tone = "light",
   className = "",
 }: StoreDownloadButtonsProps) {
   return (
     <div className={`flex flex-wrap items-stretch gap-4 ${className}`}>
-      <StoreButton
-        href={androidUrl}
-        label={androidLabel}
-        soonLabel={androidSoon}
-        platform="android"
-        tone={tone}
-      />
+      {showAndroid && (
+        <StoreButton
+          href={androidUrl}
+          label={androidLabel}
+          soonLabel={androidSoon}
+          platform="android"
+          tone={tone}
+        />
+      )}
       <StoreButton
         href={iosUrl}
         label={iosLabel}

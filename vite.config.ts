@@ -24,11 +24,11 @@ export default defineConfig(({ mode }) => {
         return html
           .replace(
             "<title>Peak — Realise your Peak Potential</title>",
-            "<title>PeakLife Horary — One question. One number. A verdict.</title>",
+            "<title>PeakLife Horary - One question. One number. A verdict.</title>",
           )
           .replace(
             'content="Peak is an AI astrology platform built from India. Hour-by-hour guidance, long-term pattern mapping, and goal-bound advice grounded in jyotisha — not mysticism."',
-            'content="PeakLife Horary is a KP horary astrology app by Peak. Ask one question, pick a number from 1 to 249, and get a clear verdict."',
+            'content="PeakLife Horary is a KP horary astrology app. No birth chart needed. Ask one question, pick a number from 1 to 249, and get a clear verdict."',
           );
       },
     },

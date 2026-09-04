@@ -14,9 +14,9 @@ const isHorary = siteArg === "horary";
 copyFileSync(resolve(dist, "index.html"), resolve(dist, "404.html"));
 
 const SITE = {
-  domain: isHorary ? "horary.peaklife.me" : "peaklife.me",
-  supportEmail: "support@peaklife.me",
-  contactEmail: "support@peaklife.me",
+  domain: isHorary ? "peaklifehorary.me" : "peaklife.me",
+  supportEmail: isHorary ? "support@peaklifehorary.me" : "support@peaklife.me",
+  contactEmail: isHorary ? "support@peaklifehorary.me" : "support@peaklife.me",
   legalName: "Aryaman Knowledge Services Private Limited",
   address: "India",
   brand: isHorary ? "PeakLife Horary" : "Peak",
@@ -24,7 +24,7 @@ const SITE = {
 
 const grievanceOfficer = {
   name: "Abhimanyu Singh Rana",
-  email: "support@peaklife.me",
+  email: isHorary ? "support@peaklifehorary.me" : "support@peaklife.me",
 };
 
 const PAYMENTS_REFUNDS_FAQS = [
@@ -51,7 +51,7 @@ const PAYMENTS_REFUNDS_FAQS = [
 ];
 
 // Standalone static HTML pages for SEO
-const pages = [
+let pages = [
   {
     path: "terms/index.html",
     title: "Terms and Conditions - Peak",
@@ -914,6 +914,105 @@ function loadBlogPosts() {
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+}
+
+if (isHorary) {
+  pages = [
+    {
+      path: "terms/index.html",
+      title: "Terms and Conditions - PeakLife Horary",
+      heading: "Terms and Conditions",
+      eyebrow: "Legal",
+      backHref: "/",
+      backLabel: "Home",
+      lastUpdated: "January 9, 2026",
+      description: "Terms and Conditions for PeakLife Horary KP astrology app",
+      content: `
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">1. Acceptance of Terms</h2>
+        <p class="text-gray-700">By accessing and using PeakLife Horary through our mobile application or website at ${SITE.domain}, you agree to these Terms and Conditions.</p>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">2. Description of Services</h2>
+        <p class="text-gray-700 mb-3">PeakLife Horary provides KP horary astrology services: question-based chart casting, number selection (1-249), and plain-English verdicts. No birth chart is required.</p>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">3. Payments</h2>
+        <p class="text-gray-700">PeakLife Horary is pay-per-ask (currently ₹51 per ask). Top-ups are prepaid. Refunds are not offered once payment is made, except where required by law.</p>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">4. Disclaimer</h2>
+        <p class="text-gray-700">Services are for informational and entertainment purposes only and are not a substitute for professional medical, legal, or financial advice.</p>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">5. Contact</h2>
+        <p class="text-gray-700">Email: <a href="mailto:${SITE.supportEmail}">${SITE.supportEmail}</a> · <a href="/contact/">Contact form</a></p>
+      </section>
+    `,
+    },
+    {
+      path: "privacy-policy/index.html",
+      title: "Privacy Policy - PeakLife Horary",
+      heading: "Privacy Policy",
+      eyebrow: "Legal",
+      backHref: "/",
+      backLabel: "Home",
+      lastUpdated: "January 9, 2026",
+      description: "Privacy Policy for PeakLife Horary",
+      content: `
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">1. Introduction</h2>
+        <p class="text-gray-700">PeakLife Horary, operated by ${SITE.legalName}, explains here how we collect and use data on ${SITE.domain} and in the app.</p>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">2. Information We Collect</h2>
+        <p class="text-gray-700 mb-3">Phone number, questions and horary numbers, approximate location when asking, payment data via processors, and device/usage data. Birth chart details are not required.</p>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">3. Contact</h2>
+        <p class="text-gray-700">Privacy: <a href="mailto:${SITE.contactEmail}">${SITE.contactEmail}</a></p>
+        <p class="text-gray-700">Account deletion: <a href="/delete-my-account/">delete-my-account</a></p>
+        <p class="text-gray-700">Grievance Officer: ${grievanceOfficer.name} · <a href="mailto:${grievanceOfficer.email}">${grievanceOfficer.email}</a></p>
+      </section>
+    `,
+    },
+    {
+      path: "delete-my-account/index.html",
+      title: "Delete your account - PeakLife Horary",
+      heading: "Delete your account",
+      eyebrow: "Account",
+      backHref: "/",
+      backLabel: "Home",
+      lastUpdated: "January 9, 2026",
+      description: "How to delete your PeakLife Horary account",
+      content: `
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Request account deletion</h2>
+        <p class="text-gray-700">Email <a href="mailto:${SITE.supportEmail}?subject=Account%20deletion%20request">${SITE.supportEmail}</a> with subject "Account deletion request", your PeakLife Horary phone number, and a clear deletion request. We aim to complete verified requests within 5 working days.</p>
+      </section>
+    `,
+    },
+    {
+      path: "contact/index.html",
+      title: "Contact Us - PeakLife Horary",
+      heading: "Contact Us",
+      eyebrow: "Contact",
+      backHref: "/",
+      backLabel: "Home",
+      lastUpdated: "January 9, 2026",
+      description: "Contact PeakLife Horary support",
+      content: `
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Email</h2>
+        <p class="text-gray-700"><a href="mailto:${SITE.supportEmail}">${SITE.supportEmail}</a></p>
+      </section>
+      <section class="mb-8">
+        <h2 class="text-2xl font-semibold mb-4">Company</h2>
+        <p class="text-gray-700">${SITE.legalName} · ${SITE.address}</p>
+      </section>
+    `,
+    },
+  ];
 }
 
 for (const page of pages) {
