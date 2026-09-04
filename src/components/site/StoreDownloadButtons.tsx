@@ -59,7 +59,7 @@ function StoreButton({
       href={href!}
       target="_blank"
       rel="noopener noreferrer"
-      onClick={() => trackEvent("prashna_store_click", { platform })}
+      onClick={() => trackEvent("horary_store_click", { platform })}
       className={`inline-flex min-w-[220px] items-center justify-center border px-6 py-4 transition-colors ${base}`}
     >
       {content}

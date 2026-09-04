@@ -6,7 +6,6 @@ import matter from "gray-matter";
 const root = resolve(import.meta.dirname, "..");
 const postsDir = resolve(root, "posts");
 
-const SITE_DOMAIN = "peaklife.me";
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** Keep in sync with `src/lib/product.ts` PRODUCT_PAGES slugs. */
@@ -67,30 +66,47 @@ function loadBlogSlugs() {
     });
 }
 
-/** @param {{ slug: string, date?: string }[]} [blogPosts] */
-export function buildSitemapXml(blogPosts = loadBlogSlugs()) {
-  const entries = [
-    { loc: "/", changefreq: "weekly", priority: "1.0" },
-    { loc: "/product/", changefreq: "weekly", priority: "0.9" },
-    ...PRODUCT_SLUGS.map((slug) => ({
-      loc: `/product/${slug}/`,
-      changefreq: "weekly",
-      priority: "0.8",
-    })),
-    { loc: "/blog/", changefreq: "weekly", priority: "0.8" },
-    ...blogPosts.map((post) => ({
-      loc: `/blog/${post.slug}/`,
-      changefreq: "monthly",
-      priority: "0.7",
-      lastmod: toIsoDate(post.date),
-    })),
-    { loc: "/prashna/", changefreq: "weekly", priority: "0.85" },
-    { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
-    { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
-    { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
-    { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },
-    { loc: "/delete-my-account/", changefreq: "yearly", priority: "0.2" },
-  ];
+/**
+ * @param {{ slug: string, date?: string }[]} [blogPosts]
+ * @param {{ site?: "peak" | "horary", domain?: string }} [opts]
+ */
+export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
+  const site = opts.site === "horary" ? "horary" : "peak";
+  const domain =
+    opts.domain ||
+    (site === "horary" ? "horary.peaklife.me" : "peaklife.me");
+
+  /** @type {{ loc: string, changefreq: string, priority: string, lastmod?: string }[]} */
+  const entries =
+    site === "horary"
+      ? [
+          { loc: "/", changefreq: "weekly", priority: "1.0" },
+          { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
+          { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
+          { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },
+          { loc: "/delete-my-account/", changefreq: "yearly", priority: "0.2" },
+        ]
+      : [
+          { loc: "/", changefreq: "weekly", priority: "1.0" },
+          { loc: "/product/", changefreq: "weekly", priority: "0.9" },
+          ...PRODUCT_SLUGS.map((slug) => ({
+            loc: `/product/${slug}/`,
+            changefreq: "weekly",
+            priority: "0.8",
+          })),
+          { loc: "/blog/", changefreq: "weekly", priority: "0.8" },
+          ...blogPosts.map((post) => ({
+            loc: `/blog/${post.slug}/`,
+            changefreq: "monthly",
+            priority: "0.7",
+            lastmod: toIsoDate(post.date),
+          })),
+          { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
+          { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
+          { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
+          { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },
+          { loc: "/delete-my-account/", changefreq: "yearly", priority: "0.2" },
+        ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -99,7 +115,7 @@ ${entries
     const lastmod = entry.lastmod && ISO_DATE.test(entry.lastmod) ? entry.lastmod : "";
     const lastmodLine = lastmod ? `\n    <lastmod>${lastmod}</lastmod>` : "";
     return `  <url>
-    <loc>https://${SITE_DOMAIN}${entry.loc}</loc>${lastmodLine}
+    <loc>https://${domain}${entry.loc}</loc>${lastmodLine}
     <changefreq>${entry.changefreq}</changefreq>
     <priority>${entry.priority}</priority>
   </url>`;
@@ -109,16 +125,21 @@ ${entries
 `;
 }
 
-/** @param {string} outPath @param {{ slug: string, date?: string }[]} [blogPosts] */
-export function writeSitemap(outPath, blogPosts) {
-  writeFileSync(outPath, buildSitemapXml(blogPosts));
+/**
+ * @param {string} outPath
+ * @param {{ slug: string, date?: string }[]} [blogPosts]
+ * @param {{ site?: "peak" | "horary", domain?: string }} [opts]
+ */
+export function writeSitemap(outPath, blogPosts, opts) {
+  writeFileSync(outPath, buildSitemapXml(blogPosts, opts));
 }
 
 const isDirectRun =
   process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
 
 if (isDirectRun) {
+  const siteArg = process.argv[2] === "horary" ? "horary" : "peak";
   const out = resolve(root, "public", "sitemap.xml");
-  writeSitemap(out);
-  console.log(`✓ Wrote ${out}`);
+  writeSitemap(out, undefined, { site: siteArg });
+  console.log(`✓ Wrote ${out} (${siteArg})`);
 }

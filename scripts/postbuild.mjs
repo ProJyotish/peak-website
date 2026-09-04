@@ -7,15 +7,19 @@ const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
 const postsDir = resolve(root, "posts");
 
+const siteArg = process.argv[2] === "horary" ? "horary" : "peak";
+const isHorary = siteArg === "horary";
+
 // Copy index.html to 404.html for client-side routing fallback
 copyFileSync(resolve(dist, "index.html"), resolve(dist, "404.html"));
 
 const SITE = {
-  domain: "peaklife.me",
+  domain: isHorary ? "horary.peaklife.me" : "peaklife.me",
   supportEmail: "support@peaklife.me",
   contactEmail: "support@peaklife.me",
   legalName: "Aryaman Knowledge Services Private Limited",
   address: "India",
+  brand: isHorary ? "PeakLife Horary" : "Peak",
 };
 
 const grievanceOfficer = {
@@ -866,7 +870,7 @@ function htmlTemplate({
         <a href="/privacy-policy/">Privacy</a>
         <a href="/terms/">Terms</a>
       </nav>
-      <p>© ${new Date().getFullYear()} Peak · All rights reserved</p>
+      <p>© ${new Date().getFullYear()} ${escapeHtml(SITE.brand)} · All rights reserved</p>
     </footer>
   </div>
 </body>
@@ -916,12 +920,15 @@ for (const page of pages) {
   writePage(page);
 }
 
-const blogPosts = loadBlogPosts();
+const { writeSitemap } = await import("./sitemap.mjs");
 
-const blogListingContent = blogPosts.length
-  ? blogPosts
-      .map(
-        (post) => `
+if (!isHorary) {
+  const blogPosts = loadBlogPosts();
+
+  const blogListingContent = blogPosts.length
+    ? blogPosts
+        .map(
+          (post) => `
       <a class="post-card" href="/blog/${escapeHtml(post.slug)}/">
         <div class="row-meta">
           ${post.category ? `<span class="chip">${escapeHtml(post.category)}</span>` : ""}
@@ -931,48 +938,58 @@ const blogListingContent = blogPosts.length
         <p>${escapeHtml(post.excerpt)}</p>
         <p class="read">Read →</p>
       </a>`,
-      )
-      .join("\n")
-  : `<p>No posts yet.</p>`;
+        )
+        .join("\n")
+    : `<p>No posts yet.</p>`;
 
-writePage({
-  path: "blog/index.html",
-  title: "Blog - Peak",
-  description: "Vedic insights from Peak — planetary wisdom and timing for real decisions.",
-  eyebrow: "Blog",
-  heading: "Vedic Insights",
-  metaLine: "Explore planetary wisdom",
-  backHref: "/",
-  backLabel: "Home",
-  content: `
+  writePage({
+    path: "blog/index.html",
+    title: "Blog - Peak",
+    description: "Vedic insights from Peak — planetary wisdom and timing for real decisions.",
+    eyebrow: "Blog",
+    heading: "Vedic Insights",
+    metaLine: "Explore planetary wisdom",
+    backHref: "/",
+    backLabel: "Home",
+    content: `
     <p style="margin-bottom: 2rem;">Explore planetary wisdom, timing, and how Peak reads the chart for real decisions.</p>
     ${blogListingContent}
   `,
-});
+  });
 
-for (const post of blogPosts) {
-  const categoryMeta = post.category
-    ? `${escapeHtml(post.category)} · ${escapeHtml(formatPostDate(post.date))}`
-    : escapeHtml(formatPostDate(post.date));
-  writePage({
-    path: `blog/${post.slug}/index.html`,
-    title: `${post.title} - Peak`,
-    description: post.excerpt || post.title,
-    eyebrow: "Blog",
-    heading: post.title,
-    metaLine: categoryMeta,
-    backHref: "/blog/",
-    backLabel: "Blog",
-    content: post.html,
+  for (const post of blogPosts) {
+    const categoryMeta = post.category
+      ? `${escapeHtml(post.category)} · ${escapeHtml(formatPostDate(post.date))}`
+      : escapeHtml(formatPostDate(post.date));
+    writePage({
+      path: `blog/${post.slug}/index.html`,
+      title: `${post.title} - Peak`,
+      description: post.excerpt || post.title,
+      eyebrow: "Blog",
+      heading: post.title,
+      metaLine: categoryMeta,
+      backHref: "/blog/",
+      backLabel: "Blog",
+      content: post.html,
+    });
+  }
+
+  writeSitemap(
+    resolve(dist, "sitemap.xml"),
+    blogPosts.map((post) => ({ slug: post.slug, date: post.date })),
+    { site: "peak", domain: SITE.domain },
+  );
+  writeSitemap(
+    resolve(root, "public", "sitemap.xml"),
+    blogPosts.map((post) => ({ slug: post.slug, date: post.date })),
+    { site: "peak", domain: SITE.domain },
+  );
+} else {
+  writeSitemap(resolve(dist, "sitemap.xml"), [], {
+    site: "horary",
+    domain: SITE.domain,
   });
 }
 
-const { writeSitemap } = await import("./sitemap.mjs");
-writeSitemap(
-  resolve(dist, "sitemap.xml"),
-  blogPosts.map((post) => ({ slug: post.slug, date: post.date })),
-);
-writeSitemap(resolve(root, "public", "sitemap.xml"), blogPosts.map((post) => ({ slug: post.slug, date: post.date })));
-console.log("✓ Generated sitemap.xml");
-
-console.log("\n✓ Static HTML pages generated successfully!");
+console.log(`✓ Generated sitemap.xml (${siteArg})`);
+console.log(`\n✓ Static HTML pages generated successfully (${siteArg})!`);

@@ -1,7 +1,18 @@
+import { isHorarySite } from "@/lib/siteMode";
+
+const peakDomain = "peaklife.me";
+const horaryDomainDefault = "horary.peaklife.me";
+
+const envDomain = (import.meta.env.VITE_SITE_DOMAIN as string | undefined)?.trim();
+
 export const SITE = {
-  name: "Peak",
+  name: isHorarySite ? "PeakLife Horary" : "Peak",
+  brandFamily: "Peak",
   legalName: "Aryaman Knowledge Services Private Limited",
-  domain: "peaklife.me",
+  domain: envDomain || (isHorarySite ? horaryDomainDefault : peakDomain),
+  /** Main Peak marketing site — used for cross-links from Horary. */
+  peakDomain,
+  peakUrl: `https://${peakDomain}`,
   app: "https://app.peaklife.me",
   contactEmail: "support@peaklife.me",
   supportEmail: "support@peaklife.me",
@@ -10,16 +21,16 @@ export const SITE = {
   address: "India",
   social: {
     linkedin: "https://www.linkedin.com/company/peaklife-me",
-    instagram: "https://www.instagram.com/peaklife_me/"
+    instagram: "https://www.instagram.com/peaklife_me/",
   },
   stores: {
     android: "https://play.google.com/store/apps/details?id=me.peaklife",
-    ios: null,
+    ios: null as string | null,
   },
-  prashna: {
+  horary: {
     stores: {
       android: "https://play.google.com/store/apps/details?id=me.peaklife.prashna",
-      ios: null,
+      ios: null as string | null,
     },
   },
 } as const;

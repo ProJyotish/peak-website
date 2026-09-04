@@ -1,4 +1,4 @@
-/** Client routes — keep in sync with `App.tsx` and GitHub Pages SPA `404.html` copy. */
+/** Client routes — keep in sync with `App.tsx` and SPA `404.html` copy. */
 export const ROUTES = {
   home: "/",
   blog: "/blog",
@@ -13,5 +13,4 @@ export const ROUTES = {
   contact: "/contact",
   checkout: "/checkout",
   astrocartography: "/tools/astrocartography",
-  prashna: "/prashna",
 } as const;

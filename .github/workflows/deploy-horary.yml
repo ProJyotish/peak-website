@@ -1,0 +1,55 @@
+name: Deploy Horary to S3 / CloudFront
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time; newer pushes cancel older in-progress runs
+concurrency:
+  group: peak-horary-website-deploy
+  cancel-in-progress: true
+
+# Self-hosted Ubuntu — no GitHub-hosted minutes
+jobs:
+  deploy:
+    runs-on: self-hosted
+    environment: horary
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install
+        run: npm ci
+
+      - name: Build PeakLife Horary
+        env:
+          VITE_SITE: horary
+          VITE_SITE_DOMAIN: ${{ vars.VITE_SITE_DOMAIN }}
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+          VITE_GTM_ID: ${{ vars.VITE_GTM_ID }}
+          VITE_GA4_ID: ${{ vars.VITE_GA4_ID }}
+          VITE_META_PIXEL_ID: ${{ vars.VITE_META_PIXEL_ID }}
+          VITE_CLARITY_ID: ${{ vars.VITE_CLARITY_ID }}
+          VITE_POSTHOG_KEY: ${{ vars.VITE_POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.VITE_POSTHOG_HOST }}
+          VITE_REDDIT_PIXEL_ID: ${{ vars.VITE_REDDIT_PIXEL_ID }}
+          VITE_HORARY_ANDROID_URL: ${{ vars.VITE_HORARY_ANDROID_URL }}
+          VITE_HORARY_IOS_URL: ${{ vars.VITE_HORARY_IOS_URL }}
+        run: npm run build:horary
+
+      - name: Sync to S3 + invalidate CloudFront
+        env:
+          AWS_DEFAULT_REGION: ap-south-1
+          S3_BUCKET: ${{ vars.S3_BUCKET }}
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
+        run: |
+          set -euo pipefail
+          BUCKET="${S3_BUCKET:-peaklife-horary-website-ap-south-1}"
+          DIST_ID="${CLOUDFRONT_DISTRIBUTION_ID:-E2P0N7O9K9QVC1}"
+          aws s3 sync dist/ "s3://${BUCKET}/" --delete --region ap-south-1
+          aws cloudfront create-invalidation \
+            --distribution-id "${DIST_ID}" \
+            --paths "/*"
