@@ -43,8 +43,8 @@
   .eyebrow .mark { width: 0.78em; height: auto; }
 
   /* ── The navigator mark ── */
-  .mark { display: inline-block; color: var(--accent); flex: none; aspect-ratio: 90.778 / 79.611; }
-  .mark svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+  .mark { display: inline-block; color: var(--peak-gold); flex: none; aspect-ratio: 90.778 / 79.611; }
+  .mark svg { display: block; width: 100%; height: 100%; }
 
   /* ── Wordmark ── */
   .wordmark { position: relative; display: block; width: clamp(6.5rem, 11vw, 8.25rem); line-height: 0; text-decoration: none; }
