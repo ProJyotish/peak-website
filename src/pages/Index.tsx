@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { PeakMark, PeakMarkSymbol } from "@/components/home/PeakMark";
+import { PeakMark } from "@/components/home/PeakMark";
 import { SeoHead } from "@/components/site/SeoHead";
 import { HOME } from "@/lib/homeCopy";
 import { ROUTES } from "@/lib/routes";
@@ -155,8 +155,6 @@ const Index = () => {
         )}
         path={ROUTES.home}
       />
-      <PeakMarkSymbol />
-
       <header className={navStuck ? "nav is-stuck" : "nav"}>
         <div className="wrap nav__inner">
           <a className="wordmark" href="#top" aria-label="Peak, home">
