@@ -1,391 +1,486 @@
-import { motion } from "framer-motion";
-import { ArrowRight, Quote } from "lucide-react";
-import { AppScreenshotPlaceholder } from "@/components/home/AppScreenshotPlaceholder";
-import { PortraitPlaceholder } from "@/components/home/PortraitPlaceholder";
-import { StoryBand } from "@/components/home/StoryBand";
-import { TryTheAppCta } from "@/components/home/TryTheAppCta";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { Wordmark } from "@/components/site/Wordmark";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Link } from "react-router-dom";
+import { PeakMark, PeakMarkSymbol } from "@/components/home/PeakMark";
+import { SeoHead } from "@/components/site/SeoHead";
 import { HOME } from "@/lib/homeCopy";
+import { ROUTES } from "@/lib/routes";
+import { productSeoKeywords } from "@/lib/seo";
 import { SITE } from "@/lib/site";
+import { withUtm } from "@/lib/utm";
+import "@/styles/peak-home.css";
 
-const fade = {
-  initial: { opacity: 0, y: 12 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
-};
+const NAV_SECTIONS = [
+  { id: "today", label: "Today" },
+  { id: "ask", label: "Ask" },
+  { id: "goals", label: "Goals" },
+  { id: "how", label: "How it works" },
+  { id: "faq", label: "FAQ" },
+] as const;
 
-function Nav() {
-  return (
-    <header className="absolute top-0 left-0 right-0 z-30">
-      <div className="container-peak flex items-center justify-between py-6">
-        <Wordmark />
-        <nav className="flex items-center gap-8">
-          <a href="#how" className="hidden md:inline text-sm text-clay hover:text-gold transition-colors">
-            How it works
-          </a>
-          <a href="#faq" className="hidden md:inline text-sm text-clay hover:text-gold transition-colors">
-            FAQ
-          </a>
-          <a
-            href={SITE.app}
-            className="bg-ink px-4 py-2 font-mono text-xs uppercase tracking-[0.18em] text-parchment hover:bg-gold hover:text-ink transition-colors"
-          >
-            Try The App
-          </a>
-        </nav>
-      </div>
-    </header>
-  );
-}
+const STAR_SPECS = [
+  { width: 2, height: 2, left: "12%", top: "18%", opacity: 0.45 },
+  { width: 1.5, height: 1.5, left: "26%", top: "32%", opacity: 0.3 },
+  { width: 2.5, height: 2.5, left: "44%", top: "12%", opacity: 0.5 },
+  { width: 1.5, height: 1.5, left: "63%", top: "26%", opacity: 0.35 },
+  { width: 2, height: 2, left: "78%", top: "15%", opacity: 0.45 },
+  { width: 1.5, height: 1.5, left: "88%", top: "34%", opacity: 0.28 },
+  { width: 2, height: 2, left: "34%", top: "44%", opacity: 0.22 },
+  { width: 1.5, height: 1.5, left: "70%", top: "48%", opacity: 0.2 },
+] as const;
 
-function Opening() {
-  return (
-    <>
-      <StoryBand
-        first
-        showCta
-        graphic
-        title={HOME.hero.manualTitle}
-        body={HOME.hero.manualBody}
-      />
-      <StoryBand tone="dark" title={HOME.hero.title} body={HOME.hero.lede} />
-    </>
-  );
-}
-
-function Products() {
-  return (
-    <section id="product" className="border-t border-border">
-      {HOME.products.map((product, i) => {
-        const dark = i % 2 === 1;
-        const phonesLeft = dark;
-        const copy = (
-          <div className="max-w-xl">
-            <p className="eyebrow mb-3">{product.name}</p>
-            <h3 className={`font-display text-2xl md:text-4xl leading-tight ${dark ? "text-parchment" : "text-ink"}`}>
-              {product.title}
-            </h3>
-            <p className={`mt-4 text-base leading-relaxed md:text-lg ${dark ? "text-parchment/75" : "text-clay"}`}>
-              {product.summary}
-            </p>
-            <p className={`mt-3 text-sm leading-relaxed ${dark ? "text-parchment/60" : "text-muted-foreground"}`}>
-              {product.detail}
-            </p>
-            <div className="mt-6">
-              <TryTheAppCta tone={dark ? "dark" : "light"} />
-            </div>
-          </div>
-        );
-        const art = (
-          <div className="flex justify-center">
-            <AppScreenshotPlaceholder label={product.name} tone={dark ? "dark" : "light"} />
-          </div>
-        );
-        return (
-          <motion.article
-            key={product.id}
-            {...fade}
-            transition={{ duration: 0.6, delay: i * 0.06 }}
-            className={`py-20 md:py-28 ${dark ? "bg-ink" : ""} ${i > 0 ? "border-t border-border" : ""}`}
-          >
-            <div className="container-peak grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-              {phonesLeft ? (
-                <>
-                  {art}
-                  {copy}
-                </>
-              ) : (
-                <>
-                  {copy}
-                  {art}
-                </>
-              )}
-            </div>
-          </motion.article>
-        );
-      })}
-    </section>
-  );
-}
-
-function Steps() {
-  return (
-    <section id="how" className="py-28 md:py-36 bg-parchment-deep border-t border-border">
-      <div className="container-peak">
-        <motion.div {...fade} className="max-w-3xl mx-auto text-center mb-16">
-          <div className="mx-auto mb-6 h-1 w-12 bg-gold" />
-          <p className="eyebrow mb-4">{HOME.stepsEyebrow}</p>
-          <h2 className="font-display text-3xl md:text-5xl leading-tight text-ink">{HOME.stepsHeading}</h2>
-        </motion.div>
-        <div className="grid gap-12 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:gap-4 items-start">
-          {HOME.steps.map((step, i) => (
-            <div key={step.n} className="contents">
-              <motion.div {...fade} transition={{ duration: 0.6, delay: i * 0.08 }} className="text-center">
-                <AppScreenshotPlaceholder label={`Step ${step.n}`} />
-                <p className="eyebrow mt-6 mb-3">{step.n}</p>
-                <h3 className="font-display text-2xl leading-tight text-ink">{step.title}</h3>
-                <p className="mt-4 text-base leading-relaxed text-clay">{step.body}</p>
-              </motion.div>
-              {i < HOME.steps.length - 1 && (
-                <p className="hidden md:flex items-center justify-center font-mono text-2xl text-gold pt-40" aria-hidden>
-                  →
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Personalize() {
-  return (
-    <section className="py-28 md:py-36 border-t border-border">
-      <div className="container-peak">
-        <motion.h2 {...fade} className="font-display text-3xl md:text-5xl leading-tight text-ink max-w-3xl mb-14">
-          {HOME.personalize.title}
-        </motion.h2>
-        <div className="grid md:grid-cols-2 gap-px bg-border border border-border">
-          {HOME.personalize.items.map((item, i) => (
-            <motion.div
-              key={item.title}
-              {...fade}
-              transition={{ duration: 0.6, delay: i * 0.06 }}
-              className={`${i % 2 === 0 ? "bg-parchment" : "bg-gold/10"} px-6 py-10 md:px-10`}
-            >
-              <h3 className="font-display text-2xl text-ink">{item.title}</h3>
-              <p className="mt-3 text-base leading-relaxed text-clay">{item.body}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Expert() {
-  return (
-    <section id="expert" className="py-28 md:py-36 border-t border-border bg-ink">
-      <div className="container-peak grid lg:grid-cols-12 gap-12 items-start">
-        <motion.div {...fade} className="lg:col-span-6">
-          <div className="mb-6 h-1 w-12 bg-gold" />
-          <p className="eyebrow mb-4">{HOME.expert.eyebrow}</p>
-          <h2 className="font-display text-3xl md:text-5xl leading-tight text-parchment">{HOME.expert.title}</h2>
-          <p className="mt-6 text-lg leading-relaxed text-parchment/75">{HOME.expert.body}</p>
-          <a
-            href="#how"
-            className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-gold border-b border-gold pb-0.5 hover:text-parchment hover:border-parchment transition-colors"
-          >
-            {HOME.expert.cta}
-            <ArrowRight className="h-3.5 w-3.5" />
-          </a>
-        </motion.div>
-        <div className="lg:col-span-6 space-y-8">
-          <AppScreenshotPlaceholder label="App" tone="dark" />
-          <ul className="space-y-5">
-            {HOME.expert.points.map((point) => (
-              <li key={point} className="text-base leading-relaxed text-parchment/85 border-l-2 border-gold pl-4">
-                {point}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Testimonials() {
-  return (
-    <section className="py-24 bg-parchment-deep border-t border-border">
-      <div className="container-peak">
-        <motion.div {...fade} className="text-center mb-16 max-w-3xl mx-auto">
-          <div className="mx-auto mb-6 h-1 w-12 bg-gold" />
-          <h2 className="font-display text-3xl md:text-5xl text-ink">{HOME.testimonialsHeading}</h2>
-        </motion.div>
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {HOME.testimonials.map((quote, index) => (
-            <motion.div
-              key={quote}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-parchment rounded-2xl p-6 shadow-md border border-gold/30 relative flex flex-col"
-            >
-              <Quote className="w-8 h-8 text-gold absolute top-4 right-4" />
-              <p className="text-ink leading-relaxed italic flex-1 mb-6">&ldquo;{quote}&rdquo;</p>
-              <p className="text-xs text-clay italic border-t border-border/50 pt-4">Verified user</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function UseWhen() {
-  return (
-    <section className="py-28 md:py-32 border-t border-border">
-      <div className="container-peak max-w-3xl">
-        <div className="mb-6 h-1 w-12 bg-gold" />
-        <motion.h2 {...fade} className="font-display text-3xl md:text-5xl leading-tight text-ink">
-          {HOME.useWhen.title}
-        </motion.h2>
-        <motion.p {...fade} className="mt-6 text-lg leading-relaxed text-clay">
-          {HOME.useWhen.body}
-        </motion.p>
-      </div>
-    </section>
-  );
-}
-
-function Pricing() {
-  return (
-    <section id="download" className="py-28 md:py-36 border-t border-border bg-ink">
-      <div className="container-peak max-w-3xl text-center">
-        <div className="mx-auto mb-6 h-1 w-12 bg-gold" />
-        <motion.h2 {...fade} className="font-display text-3xl md:text-5xl text-parchment">
-          {HOME.pricing.title}
-        </motion.h2>
-        <motion.p {...fade} className="mt-6 text-lg text-parchment/75">
-          {HOME.pricing.intro}
-        </motion.p>
-        <ul className="mt-8 space-y-2">
-          {HOME.pricing.perks.map((perk) => (
-            <li key={perk} className="font-mono text-sm uppercase tracking-[0.16em] text-gold">
-              {perk}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-8 text-base text-parchment/70">{HOME.pricing.after}</p>
-        <div className="mt-10">
-          <TryTheAppCta tone="dark" />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function FounderCard({
-  name,
-  role,
-  paragraphs,
-  href,
-  linkLabel,
-  delay = 0,
+function Device({
+  src,
+  alt,
+  label,
+  parallax,
+  small,
 }: {
-  name: string;
-  role: string;
-  paragraphs: readonly string[];
-  href: string;
-  linkLabel: string;
-  delay?: number;
+  src: string;
+  alt: string;
+  label?: string;
+  parallax?: boolean;
+  small?: boolean;
 }) {
   return (
-    <motion.article
-      {...fade}
-      transition={{ duration: 0.8, delay }}
-      className="flex h-full flex-col rounded-sm border border-gold/35 bg-parchment p-6 sm:p-7 md:p-8"
-    >
-      <PortraitPlaceholder name={name} className="mb-6" />
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-clay">{role}</p>
-      <h3 className="mt-3 font-display text-2xl md:text-3xl leading-tight text-gold">{name}</h3>
-      <div className="mt-4 space-y-4 text-base leading-relaxed text-muted-foreground flex-1">
-        {paragraphs.map((p) => (
-          <p key={p}>{p}</p>
-        ))}
-      </div>
-      <a
-        href={href}
-        target="_blank"
-        rel="noreferrer"
-        className="mt-8 inline-flex items-center gap-2 self-start font-mono text-xs uppercase tracking-[0.18em] text-ink border-b border-gold pb-0.5 hover:text-gold transition-colors"
-      >
-        {linkLabel}
-        <ArrowRight className="h-3.5 w-3.5" />
-      </a>
-    </motion.article>
-  );
-}
-
-function Founders() {
-  return (
-    <section id="founder" className="py-28 md:py-36 border-t border-border bg-parchment-deep">
-      <div className="container-peak">
-        <motion.div {...fade} className="mb-12 md:mb-16">
-          <div className="mb-6 h-1 w-12 bg-gold" />
-          <p className="eyebrow mb-4">{HOME.founders.eyebrow}</p>
-          <h2 className="font-display text-4xl md:text-5xl leading-[1.05] text-ink">{HOME.founders.title}</h2>
-        </motion.div>
-        <div className="grid gap-6 md:grid-cols-2 md:gap-8">
-          <FounderCard {...HOME.founders.abhimanyu} />
-          <FounderCard {...HOME.founders.nishant} delay={0.1} />
+    <div>
+      <div className={small ? "device device--sm" : "device"}>
+        <div className="device__screen">
+          <img src={src} alt={alt} {...(parallax ? { "data-parallax": true } : {})} loading={parallax ? undefined : "lazy"} />
         </div>
       </div>
-    </section>
+      {label ? <p className="device__label">{label}</p> : null}
+    </div>
   );
 }
 
-function Faqs() {
+function Eyebrow({ children, muted, mark = true }: { children: ReactNode; muted?: boolean; mark?: boolean }) {
   return (
-    <section id="faq" className="py-28 md:py-36 border-t border-border">
-      <div className="container-peak max-w-3xl">
-        <motion.h2 {...fade} className="font-display text-3xl md:text-5xl text-ink mb-10">
-          Frequently Asked Questions
-        </motion.h2>
-        <Accordion type="single" collapsible className="w-full">
-          {HOME.faqs.map((item, i) => (
-            <AccordionItem key={item.q} value={`faq-${i}`}>
-              <AccordionTrigger className="text-left font-display text-lg text-ink">{item.q}</AccordionTrigger>
-              <AccordionContent className="text-base leading-relaxed text-clay">{item.a}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
-      </div>
-    </section>
+    <span className={muted ? "eyebrow eyebrow--muted" : "eyebrow"}>
+      {mark && !muted && <PeakMark />}
+      {children}
+    </span>
   );
 }
 
-function FinalCta() {
-  return (
-    <section className="py-32 md:py-40 border-t border-border bg-gold">
-      <div className="container-peak max-w-3xl text-center">
-        <motion.h2 {...fade} className="font-display text-4xl md:text-6xl leading-[1.05] text-ink">
-          {HOME.hero.cta}
-        </motion.h2>
-        <motion.p {...fade} className="mt-6 text-lg text-ink/75">
-          {HOME.pricing.after}
-        </motion.p>
-        <div className="mt-12">
-          <TryTheAppCta />
-        </div>
-      </div>
-    </section>
-  );
+function activeSectionId(): string | null {
+  const offset = 120;
+  let current: string | null = null;
+  for (const { id } of NAV_SECTIONS) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    if (el.getBoundingClientRect().top - offset <= 0) current = id;
+  }
+  return current;
 }
 
 const Index = () => {
+  const [navStuck, setNavStuck] = useState(false);
+  const [activeNav, setActiveNav] = useState<string | null>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const onScroll = () => {
+      setNavStuck(window.scrollY > 24);
+      setActiveNav(activeSectionId());
+      if (reduce || !rootRef.current) return;
+      rootRef.current.querySelectorAll<HTMLImageElement>("[data-parallax]").forEach((img) => {
+        const frame = img.parentElement;
+        if (!frame) return;
+        const r = frame.getBoundingClientRect();
+        const travel = img.offsetHeight - frame.offsetHeight;
+        if (travel <= 0) return;
+        const p = Math.max(0, Math.min(1, (window.innerHeight - r.top) / (window.innerHeight + r.height)));
+        img.style.transform = `translateY(${-travel * p}px)`;
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    window.addEventListener("load", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("load", onScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    const faqLd = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: HOME.faqs.map((item) => ({
+        "@type": "Question",
+        name: item.q,
+        acceptedAnswer: { "@type": "Answer", text: item.a },
+      })),
+    };
+    const appLd = {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Peak",
+      applicationCategory: "LifestyleApplication",
+      operatingSystem: "Android, Web",
+      url: SITE.peakUrl + "/",
+      publisher: { "@type": "Organization", name: SITE.legalName },
+    };
+    const scripts = [faqLd, appLd].map((data, i) => {
+      const el = document.createElement("script");
+      el.type = "application/ld+json";
+      el.id = `peak-home-ld-${i}`;
+      el.text = JSON.stringify(data);
+      document.head.appendChild(el);
+      return el;
+    });
+    return () => scripts.forEach((el) => el.remove());
+  }, []);
+
+  const androidNav = withUtm(SITE.stores.android, "nav");
+  const androidHero = withUtm(SITE.stores.android, "hero_android");
+  const webHero = withUtm(SITE.app, "hero_web");
+  const androidGet = withUtm(SITE.stores.android, "get_android");
+  const webGet = withUtm(SITE.app, "get_web");
+
   return (
-    <main className="min-h-screen bg-background text-foreground">
-      <Nav />
-      <Opening />
-      <Products />
-      <Steps />
-      <Personalize />
-      <Expert />
-      <Testimonials />
-      <UseWhen />
-      <Pricing />
-      <Founders />
-      <Faqs />
-      <FinalCta />
-      <SiteFooter />
-    </main>
+    <div className="peak-home" ref={rootRef}>
+      <SeoHead
+        title={HOME.seo.title}
+        description={HOME.seo.description}
+        keywords={productSeoKeywords(
+          "peaklife",
+          "AI astrology app",
+          "vedic astrology",
+          "jyotisha",
+          "personalized daily horoscope",
+        )}
+        path={ROUTES.home}
+      />
+      <PeakMarkSymbol />
+
+      <header className={navStuck ? "nav is-stuck" : "nav"}>
+        <div className="wrap nav__inner">
+          <a className="wordmark" href="#top" aria-label="Peak, home">
+            <img
+              className="wordmark__img wordmark__img--on-ink"
+              src="/home/peak-wordmark-on-ink.svg"
+              width={718}
+              height={73}
+              alt=""
+            />
+            <img
+              className="wordmark__img wordmark__img--ink"
+              src="/home/peak-wordmark-ink.svg"
+              width={718}
+              height={73}
+              alt=""
+            />
+          </a>
+          <nav className="nav__links" aria-label="Page sections">
+            {NAV_SECTIONS.map(({ id, label }) => (
+              <a
+                key={id}
+                href={`#${id}`}
+                className={activeNav === id ? "is-active" : undefined}
+                aria-current={activeNav === id ? "true" : undefined}
+              >
+                {label}
+              </a>
+            ))}
+          </nav>
+          <a className="btn btn--primary" href={androidNav}>
+            {HOME.hero.navCta}
+          </a>
+        </div>
+      </header>
+
+      <section className="hero" id="top">
+        <div className="hero__stars" aria-hidden="true">
+          {STAR_SPECS.map((star, i) => (
+            <span
+              key={i}
+              style={{
+                width: star.width,
+                height: star.height,
+                left: star.left,
+                top: star.top,
+                opacity: star.opacity,
+              }}
+            />
+          ))}
+        </div>
+        <div className="wrap hero__inner">
+          <PeakMark className="hero__mark" />
+          <h1>{HOME.hero.title}</h1>
+          <p className="lede">{HOME.hero.lede}</p>
+          <div className="btn-row" style={{ justifyContent: "center" }}>
+            <a className="btn btn--primary" href={androidHero}>
+              {HOME.hero.ctaAndroid}
+            </a>
+            <a className="btn btn--on-ink" href={webHero}>
+              {HOME.hero.ctaWeb}
+            </a>
+          </div>
+          <div className="trustbar">
+            {HOME.hero.trust.flatMap((item, i) =>
+              i === 0
+                ? [<span key={item}>{item}</span>]
+                : [
+                    <span key={`${item}-dot`} className="dot">
+                      &middot;
+                    </span>,
+                    <span key={item}>{item}</span>,
+                  ],
+            )}
+          </div>
+        </div>
+      </section>
+
+      <div className="band">
+        <div className="wrap band__inner">
+          {HOME.band.map((item) => (
+            <span key={item}>{item}</span>
+          ))}
+        </div>
+      </div>
+
+      <section className="section">
+        <div className="wrap statement">
+          <h2>{HOME.statement.title}</h2>
+          <p>{HOME.statement.body}</p>
+        </div>
+      </section>
+
+      {HOME.products.map((product) => (
+        <section key={product.id} className="section section--rule" id={product.id}>
+          <div className={product.flip ? "wrap feature feature--flip" : "wrap feature"}>
+            <div className="feature__copy stack-lg">
+              <Eyebrow>{product.name}</Eyebrow>
+              <h2>{product.title}</h2>
+              <p className="lede">
+                Peak&apos;s <span className="serif-italic">{product.name}</span> {product.summary}
+              </p>
+              <p className="body">{product.detail}</p>
+              <div className="btn-row">
+                <a className="btn btn--ghost" href={withUtm(SITE.app, `feature_${product.id}`)}>
+                  try the app
+                </a>
+              </div>
+            </div>
+            <div className="feature__device">
+              <Device
+                src={product.screen}
+                alt={product.screenAlt}
+                label={product.label}
+                parallax={product.parallax}
+              />
+            </div>
+          </div>
+        </section>
+      ))}
+
+      <section className="section section--rule">
+        <div className="wrap" style={{ textAlign: "center" }}>
+          <Eyebrow muted>{HOME.personalize.eyebrow}</Eyebrow>
+          <h2 style={{ marginTop: "var(--space-4)", maxWidth: "22ch", marginInline: "auto" }}>
+            {HOME.personalize.title}
+          </h2>
+        </div>
+        <div className="wrap radial">
+          <div className="radial__col radial__col--left">
+            {HOME.personalize.items.slice(0, 2).map((item) => (
+              <div key={item.title} className="pill-item radial__item">
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </div>
+            ))}
+          </div>
+          <div className="radial__hub">
+            <PeakMark />
+          </div>
+          <div className="radial__col radial__col--right">
+            {HOME.personalize.items.slice(2).map((item) => (
+              <div key={item.title} className="pill-item radial__item">
+                <h3>{item.title}</h3>
+                <p>{item.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--rule" id="how">
+        <div className="wrap">
+          <Eyebrow>{HOME.stepsEyebrow}</Eyebrow>
+          <h2 style={{ marginTop: "var(--space-4)", maxWidth: "20ch" }}>{HOME.stepsHeading}</h2>
+          <div className="steps">
+            {HOME.steps.map((step) => (
+              <div key={step.n} className="step">
+                <div className="step__num">{step.n}</div>
+                <h3>{step.title}</h3>
+                <p>{step.body}</p>
+                <div className="step__shot">
+                  <Device src={step.screen} alt={step.screenAlt} small />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--rule" id="founders" style={{ background: "var(--surface-recessed)" }}>
+        <div className="wrap">
+          <Eyebrow>{HOME.founders.eyebrow}</Eyebrow>
+          <h2 style={{ marginTop: "var(--space-4)" }}>{HOME.founders.title}</h2>
+          <div className="grid-2" style={{ marginTop: "clamp(2.5rem,5vw,4rem)" }}>
+            {[HOME.founders.abhimanyu, HOME.founders.nishant].map((founder) => (
+              <article key={founder.name} className="card founder">
+                <img
+                  className="founder__portrait founder__portrait--photo"
+                  src={founder.photo}
+                  width={560}
+                  height={560}
+                  alt={founder.name}
+                  loading="lazy"
+                />
+                <div className="founder__role">{founder.role}</div>
+                <h3>{founder.name}</h3>
+                {founder.paragraphs.map((p) => (
+                  <p key={p.slice(0, 48)}>{p}</p>
+                ))}
+                <p style={{ marginTop: "var(--space-6)" }}>
+                  <a className="btn btn--link" href={founder.href} target="_blank" rel="noreferrer">
+                    {founder.linkLabel}
+                  </a>
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--rule" id="method">
+        <div className="wrap">
+          <Eyebrow>{HOME.method.eyebrow}</Eyebrow>
+          <h2 style={{ marginTop: "var(--space-4)", maxWidth: "22ch" }}>{HOME.method.title}</h2>
+          <p className="method__lead">{HOME.method.lead}</p>
+          <div className="grid-4" style={{ marginTop: "clamp(2.5rem,5vw,3.5rem)" }}>
+            {HOME.method.cards.map((card) => (
+              <article key={card.title} className="card method-card">
+                <strong>{card.title}</strong>
+                <p>{card.body}</p>
+              </article>
+            ))}
+          </div>
+          <p style={{ marginTop: "var(--space-8)" }}>
+            <a className="btn btn--link" href="#how">
+              {HOME.method.cta}
+            </a>
+          </p>
+        </div>
+      </section>
+
+      <section className="section section--rule">
+        <div className="wrap">
+          <h2 style={{ maxWidth: "24ch" }}>{HOME.testimonialsHeading}</h2>
+          <div className="grid-3" style={{ marginTop: "clamp(2.5rem,5vw,3.5rem)" }}>
+            {HOME.testimonials.map((item) => (
+              <blockquote key={item.quote} className="quote">
+                <p>&ldquo;{item.quote}&rdquo;</p>
+                <footer>{item.attribution}</footer>
+              </blockquote>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section dark-band">
+        <div className="wrap">
+          <Eyebrow mark={false}>{HOME.useWhen.eyebrow}</Eyebrow>
+          <h2 style={{ marginTop: "var(--space-4)" }}>{HOME.useWhen.title}</h2>
+          <p>{HOME.useWhen.body}</p>
+        </div>
+      </section>
+
+      <section className="section section--rule" id="get">
+        <div className="wrap pricing">
+          <div>
+            <Eyebrow>{HOME.pricing.eyebrow}</Eyebrow>
+            <h2 style={{ marginTop: "var(--space-4)", maxWidth: "16ch" }}>{HOME.pricing.title}</h2>
+            <p className="body" style={{ marginTop: "var(--space-5)" }}>
+              {HOME.pricing.intro}
+            </p>
+          </div>
+          <div>
+            <div className="store-row">
+              <a className="store-btn" href={androidGet}>
+                <img
+                  className="store-btn__logo"
+                  src="/home/google-play-logo.png"
+                  width={600}
+                  height={123}
+                  alt="Google Play"
+                  loading="lazy"
+                />
+                <span>
+                  <span className="k">Android</span>
+                  <span className="v">{HOME.pricing.androidLabel}</span>
+                </span>
+              </a>
+              <a className="store-btn" href={webGet}>
+                <PeakMark />
+                <span>
+                  <span className="k">{HOME.pricing.webEyebrow}</span>
+                  <span className="v">{HOME.pricing.webLabel}</span>
+                </span>
+              </a>
+            </div>
+            <p className="body" style={{ marginTop: "var(--space-5)", fontSize: "var(--fs-web-caption)" }}>
+              {HOME.pricing.webNote}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--rule" id="faq">
+        <div className="wrap wrap--narrow">
+          <h2>Frequently asked questions.</h2>
+          <div className="faq">
+            {HOME.faqs.map((item, i) => (
+              <details key={item.q} open={i === 0}>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <footer className="footer">
+        <div className="wrap">
+          <div className="footer__inner">
+            <div>
+              <img
+                className="footer__lockup"
+                src="/home/peak-lockup-on-ink.png"
+                width={1200}
+                height={212}
+                alt="PEAK. User manual for your life."
+              />
+            </div>
+            <nav className="footer__links">
+              <Link to={ROUTES.product}>Product</Link>
+              <Link to={ROUTES.contact}>Contact</Link>
+              <Link to={ROUTES.privacy}>Privacy</Link>
+              <Link to={ROUTES.terms}>Terms</Link>
+            </nav>
+          </div>
+          <div className="footer__legal">
+            <span>&copy; Peak {new Date().getFullYear()}. All rights reserved.</span>
+            <span>Built and maintained by {SITE.legalName}.</span>
+          </div>
+        </div>
+      </footer>
+    </div>
   );
 };
 

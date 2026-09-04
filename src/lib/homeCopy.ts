@@ -1,141 +1,199 @@
 export const HOME = {
+  seo: {
+    title: "Peak — No two lives come with the same user manual.",
+    description:
+      "Peak is an AI astrology app that helps you understand your life, with expert Jyotisha personalized to your chart, your location, your questions and your goals.",
+  },
   hero: {
-    title: "Find Out What Is Meant for You – And What Isn’t",
-    lede: "Don’t waste your life working harder to achieve something that won’t truly fulfil you.",
-    manualTitle: "No Two Lives Come with the Same User Manual",
-    manualBody:
-      "Peak is an AI astrology app that helps you understand yours - with expert astrology, personalized for your everyday life.",
-    trust: ["Instant answers", "Bank-grade security", "No Credit Card required"],
-    cta: "Try The App For Free",
+    title: "No two lives come with the same user manual.",
+    lede: "Peak is an AI astrology app that helps you understand yours, with expert astrology, personalized for your everyday life.",
+    trust: ["Instant answers", "No credit card required", "Private by default"],
+    ctaAndroid: "get the android app",
+    ctaWeb: "open peak in your browser",
+    navCta: "try the app free",
+  },
+  band: ["Work", "Relationships", "Health", "Money", "Timing", "The next move"],
+  statement: {
+    title: "Find out what is meant for you, and what isn't.",
+    body: "Don't waste your life working harder to achieve something that won't truly fulfil you.",
   },
   products: [
     {
       id: "today",
-      title: "Start Each Day with Clarity and Confidence",
       name: "Today",
-      summary:
-        "Peak’s ‘Today’ guides you through every hour of the day, so you can consistently improve your life.",
+      title: "Start each day with clarity and confidence.",
+      summary: "guides you through every hour of the day, so you can consistently improve your life.",
       detail:
         "Plan work, conversations and important tasks around timing calculated for your chart and current location.",
+      screen: "/home/screen-today.jpg",
+      screenAlt:
+        "The Peak Today screen: the day distilled, the current Mars hora marked favorable, the hora timeline, and flow-with and hold-back guidance.",
+      label: "Today, scrolled",
+      parallax: true,
+      flip: false,
     },
     {
       id: "ask",
-      title: "Get Real Answers to the Questions That Matter Most",
       name: "Ask",
+      title: "Get real answers to the questions that matter most.",
       summary:
-        "Peak’s ‘Ask’ gets you instant answers to whatever is on your mind – whether it’s when to invest, whom to trust, or what to do next.",
+        "gets you instant answers to whatever is on your mind, whether it's when to invest, whom to trust, or what to do next.",
       detail:
         "Get instant answers that remember your chart, earlier conversations and the goals you care about.",
+      screen: "/home/screen-ask.jpg",
+      screenAlt:
+        "The Peak Ask screen, showing the kinds of questions people bring: when to hold a business meeting, when to schedule a health appointment, when to propose.",
+      label: "Ask",
+      parallax: false,
+      flip: true,
     },
     {
       id: "goals",
-      title: "Turn The Future You Want into Your Next Move",
       name: "Goals",
+      title: "Turn the future you want into your next move.",
       summary:
-        "Peak’s ‘Goals’ helps you move closer, every day, to what your heart truly desires – be it a better career, relationship, or lifestyle.",
+        "helps you move closer, every day, to what your heart truly desires, be it a better career, relationship, or lifestyle.",
       detail:
-        "Add any short- or long-term goal. See the periods that support it, where patience may help and what to do next.",
-    },
-  ],
-  stepsHeading: "Make Peak Yours in Three Simple Steps",
-  stepsEyebrow: "Astrology That’s Made for You - and Only You",
-  steps: [
-    {
-      n: "01",
-      title: "Tell Peak when and where you were born",
-      body: "Peak creates your birth chart to personalize every interaction you have.",
-    },
-    {
-      n: "02",
-      title: "Tell Peak what matters most to you",
-      body: "Ask a question, add a goal or simply see what each hour in the day holds for you.",
-    },
-    {
-      n: "03",
-      title: "Let Peak help you decide your next move",
-      body: "Plan your day, track your life goals and keep asking as your plans evolve.",
+        "Add any short or long term goal. See the periods that support it, where patience may help and what to do next.",
+      screen: "/home/screen-goals.jpg",
+      screenAlt:
+        "A Peak goal opened: save for my dream vacation, with its dasha periods, a road-ahead timeline and guidance for the current window.",
+      label: "Goals",
+      parallax: false,
+      flip: false,
     },
   ],
   personalize: {
-    title: "How Peak Personalizes Every Interaction With You",
+    eyebrow: "Astrology that's truly personalized",
+    title: "How Peak personalizes every interaction with you.",
     items: [
       {
         title: "Your chart",
-        body: "Peak uses your unique birth details to customize every conversation",
+        body: "Peak uses your unique birth details to customize every conversation.",
       },
       {
         title: "Your location",
-        body: "Peak adjusts daily timing to where you are- so it’s never a generic forecast",
+        body: "Peak adjusts daily timing to where you are, so it's never a generic forecast.",
       },
       {
         title: "Your questions",
-        body: "Peak remembers earlier conversations, so you don’t have to repeat yourself",
+        body: "Peak remembers earlier conversations, so you don't have to repeat yourself.",
       },
       {
         title: "Your goals",
-        body: "Peak keeps your long term goals in mind, so guidance is never short sighted",
+        body: "Peak keeps your long term goals in mind, so guidance is never short sighted.",
       },
     ],
   },
-  expert: {
-    eyebrow: "Meet the Expert Behind Peak",
-    title: "Expert Astrology, Made Available Through AI",
-    body: "Jyotisha is an ancient Indian system of astrology that studies your chart and timing together. Peak allows you to access the power of Jyotisha through a truly personalized AI astrology app.",
-    points: [
-      "Peak is based on our thousands of real readings.",
-      "Peak follows the Jyotisha method shaped by our founder’s training, lineage and experience as a Jyotishi.",
-      "Peak is here to help you decide, not decide for you.",
-      "Peak offers astrological answers, not AI guesswork. Every answer is checked against your chart, so our AI’s astrology stays consistent with your actual details.",
-      "Peak protects your information with bank-grade security. Privacy is a promise, and zero judgement is a guarantee with Peak.",
-    ],
-    cta: "Learn How Peak Works",
-  },
-  testimonialsHeading: "Peak Has Helped Thousands Understand the User Manual of Their Life",
-  testimonials: [
-    "It told me that I will have a medical procedure. And I had one the very next week! Freaky!",
-    "My billionaire boss used to set her crucial meeting time astrologically. Now I do it too.",
-    "It told me about my break-up last year. Also told me how to avoid a repeat. Very useful inputs",
+  stepsEyebrow: "How it works",
+  stepsHeading: "Make Peak work for you in three simple steps.",
+  steps: [
+    {
+      n: "01",
+      title: "Tell Peak when and where you were born.",
+      body: "Peak creates your birth chart to personalize every interaction you have.",
+      screen: "/home/screen-profile.jpg",
+      screenAlt: "The Add Profile screen: name, date, time and place of birth.",
+    },
+    {
+      n: "02",
+      title: "Tell Peak what matters most to you.",
+      body: "Ask a question, add a goal or simply see what each hour in the day holds for you.",
+      screen: "/home/screen-ask.jpg",
+      screenAlt: "The Ask screen with suggested questions.",
+    },
+    {
+      n: "03",
+      title: "Let Peak help you decide your next move.",
+      body: "Plan your day, track your life goals and keep asking as your plans evolve.",
+      screen: "/home/screen-today.jpg",
+      screenAlt: "The Today screen with the day's hora timeline.",
+    },
   ],
-  useWhen: {
-    title: "You do not have to wait until everything falls apart.",
-    body: "Use Peak when life is difficult. Use it when life is going well. Use it while planning a week, preparing for a conversation, building a habit or moving steadily towards a goal. Enjoy the power of astrology – before you need it.",
-  },
-  pricing: {
-    title: "Try Peak before you subscribe",
-    intro: "Use Peak for free and get",
-    perks: ["1 Free birth chart", "10 Free Questions", "3 Personalized Daily Reports"],
-    after: "And if you’re enjoying Peak, subscribe from ₹499 a month.",
-    android: "Get Peak for Android",
-    ios: "Get Peak for iOS",
-    iosSoon: "Coming soon",
-  },
   founders: {
     eyebrow: "The founders",
-    title: "Meet the people behind Peak",
+    title: "Meet the experts behind Peak.",
     abhimanyu: {
       name: "Abhimanyu Singh Rana",
-      role: "Co-founder",
+      role: "Co-founder, PeakLife & practising astrologer",
+      photo: "/home/founder-abhimanyu.jpg",
       paragraphs: [
-        "Peak’s astrology is shaped by Abhimanyu Singh Rana, a practising Jyotishi trained in a rigorous astrological lineage.",
-        "His own journey as a leader in technology, business and politics taught him that working hard is not always the same as working on the right thing, at the right time.",
-        "After years of working through real charts, questions and decisions, he helped build Peak so that the same depth of judgment could be available every day - not only during a consultation.",
-        "His method informs how Peak reads a chart, connects different signals and turns them into personalised guidance.",
+        "Peak's astrology is shaped by Abhimanyu Singh Rana, an IIT Delhi graduate and practising Jyotishi trained in a rigorous astrological lineage. His own journey as a leader in technology, business and politics taught him that working hard doesn't help if you're working on the wrong thing.",
+        "After years of helping thousands find purpose and take back control of their lives, Abhimanyu helped build Peak so that his expertise could be available every day, not only during a consultation.",
+        "His method informs how Peak reads a chart, connects different signals and turns them into personalized guidance.",
       ],
       href: "https://www.pinpointjyotish.com/my-jyotisha-journey",
-      linkLabel: "Read his Jyotisha journey",
+      linkLabel: "read his jyotisha journey →",
     },
     nishant: {
       name: "Nishant Kyal",
-      role: "Co-founder",
-      paragraphs: ["Blurb for Nishant to be provided."],
+      role: "Co-founder, PeakLife & technology leader",
+      photo: "/home/founder-nishant.jpg",
+      paragraphs: [
+        "An IIT Delhi graduate who has led technology at Amazon and Freecharge, co-founded startups, and built LLM solutions for a leading Indian law firm.",
+        "Two decades of shipping large-scale products, the same rigor behind legal research for hundreds of lawyers, now applied to making jyotisha practical, personal, and trustworthy at scale.",
+      ],
       href: "https://www.linkedin.com/in/nishant-kyal",
-      linkLabel: "View on LinkedIn",
+      linkLabel: "view his linkedin →",
     },
+  },
+  method: {
+    eyebrow: "The method",
+    title: "Expert astrology, made instantly available through AI.",
+    lead: "Jyotisha is an ancient Indian system of astrology that explains how and when unfolding karma impacts life. Peak allows you to access the power of practicing Jyotishis through a truly personalized AI astrology app.",
+    cards: [
+      {
+        title: "Peak is based on thousands of real readings.",
+        body: "Peak follows the Jyotisha method shaped by our founder's training, lineage and experience as a Jyotishi.",
+      },
+      {
+        title: "Peak offers astrological answers, not AI guesswork.",
+        body: "Every answer is checked against your chart, so our AI's astrology stays consistent with your actual details.",
+      },
+      {
+        title: "Peak is here to help you decide, not decide for you.",
+        body: "Each answer helps you think and act on an hour-to-hour basis, so you can make progress on your goals.",
+      },
+      {
+        title: "Your chart and your questions stay private.",
+        body: "Privacy is a promise and zero judgement is a guarantee with Peak.",
+      },
+    ],
+    cta: "learn how Peak works →",
+  },
+  testimonialsHeading: "Peak has helped thousands understand the user manual of their life.",
+  testimonials: [
+    {
+      quote: "Used Peak during a very low phase and it helped bring structure to my life and achieve some major goals.",
+      attribution: "Verified user",
+    },
+    {
+      quote: "Peak helped me be patient in love and find my husband at the right time.",
+      attribution: "Verified user",
+    },
+    {
+      quote: "My billionaire boss used to set her crucial meeting time astrologically. Now I do it too with Peak.",
+      attribution: "Verified user",
+    },
+  ],
+  useWhen: {
+    eyebrow: "When to use Peak",
+    title: "You do not have to wait until everything falls apart.",
+    body: "Use Peak when life is difficult. Use it when life is going well. Use it while planning a week, preparing for a conversation, building a habit or moving steadily towards a goal. Take control of your life with the power of astrology.",
+  },
+  pricing: {
+    eyebrow: "Get Peak",
+    title: "Start with Peak today.",
+    intro: "Download the Android app, or open Peak in your browser.",
+    androidLabel: "Get the app on Google Play",
+    webEyebrow: "iPhone and everything else",
+    webLabel: "Open Peak in your browser",
+    webNote: "No download needed on iPhone. Peak runs at app.peaklife.me.",
   },
   faqs: [
     {
       q: "What is Peak Life?",
-      a: "Peak is an AI astrology app built to make expert astrology personal, practical and useful in everyday life. It brings your birth chart, current timing, questions and goals together—so you can plan your day, understand what is changing and make your next move with more clarity.",
+      a: "Peak is an AI astrology app built to make expert astrology personal, practical and useful in everyday life. It brings your birth chart, current timing, questions and goals together, so you can plan your day, understand what is changing and make your next move with more clarity.",
     },
     {
       q: "What does Peak mean by the “manual” to your life?",
@@ -143,15 +201,15 @@ export const HOME = {
     },
     {
       q: "Is Peak an AI astrologer?",
-      a: "Yes. You can ask Peak questions and receive instant, personalized astrological answers. But Peak is not a general AI chatbot with an astrology personality. Its answers are grounded in your chart and shaped by a founder-governed Jyotisha method built from thousands of real readings.",
+      a: "Yes. You can ask Peak questions and instantly receive astrologically accurate answers that are personalized to your chart. Peak is not a general AI chatbot, it's built as a custom engine trained by thousands of real readings conducted by PeakLife's founder and his team of astrologers.",
     },
     {
       q: "Does Peak use Vedic astrology or Western astrology?",
-      a: "Peak is grounded in Jyotisha, also known as Vedic astrology. It reads your complete birth chart, planetary periods and current transits-not only your sun sign. You do not need to know the terminology. Peak explains what matters in plain language and connects it to the life you are actually living.",
+      a: "Peak is grounded in Jyotisha, also known as Vedic astrology. It reads your complete birth chart, planetary periods and current transits, not only your sun sign. You do not need to know the terminology. Peak explains what matters in plain language and connects it to the life you are actually living.",
     },
     {
       q: "How is Peak different from a daily horoscope app?",
-      a: "A daily horoscope gives one message to everyone born under the same sign. Peak begins with you. Your chart, location, timing, goals and previous conversations can all change the answer. The result is daily guidance designed for one life—yours.",
+      a: "A daily horoscope gives one message to everyone born under the same sign. Peak begins with you. Your chart, location, timing, goals and previous conversations can all change the answer. The result is daily guidance designed for one life, yours.",
     },
     {
       q: "Is Peak a birth-chart app?",
@@ -163,7 +221,7 @@ export const HOME = {
     },
     {
       q: "What can I ask Peak?",
-      a: "Ask about the things that matter in real life: work, relationships, money, wellbeing, timing, habits and difficult decisions. You might ask when to have a conversation, how to approach a career move or why the same pattern keeps returning. Peak gives you context and a next step—not a command.",
+      a: "Ask about the things that matter in real life: work, relationships, money, wellbeing, timing, habits and difficult decisions. You might ask when to have a conversation, how to approach a career move or why the same pattern keeps returning. Peak gives you context and a next step, not a command.",
     },
     {
       q: "Does Peak remember my previous questions and goals?",
@@ -175,19 +233,19 @@ export const HOME = {
     },
     {
       q: "What is a personalized daily report?",
-      a: "It is a daily reading created from your chart and current planetary timing—not a general forecast for your zodiac sign. It can show which parts of the day support action, where more care may be useful and what deserves your attention now.",
+      a: "It is a daily reading created from your chart and current planetary timing, not a general forecast for your zodiac sign. It can show which parts of the day support action, where more care may be useful and what deserves your attention now.",
     },
     {
-      q: "How was Peak’s AI astrologer trained?",
+      q: "How was Peak's AI astrologer trained?",
       a: "Peak is built on thousands of real astrology readings and the working knowledge of its astrologer-founder. That experience informs how Peak reads charts, connects different signals and turns them into relevant guidance.",
     },
     {
-      q: "How reliable is Peak’s astrology?",
+      q: "How reliable is Peak's astrology?",
       a: "Peak is designed to give chart-specific answers through a consistent, founder-governed astrological method. It does not rely on generic sign descriptions or AI guesswork. Astrology can offer patterns, timing and perspective; it cannot guarantee an outcome or remove the role of your choices.",
     },
     {
       q: "Are human astrologers involved in Peak?",
-      a: "Yes. Human astrological judgment sits at the heart of the product. Peak’s method, rules, interpretations and boundaries are shaped by its astrologer-founder and the lineage in which he trained. AI allows that knowledge to be available at scale; it does not replace the expertise behind it.",
+      a: "Yes. Human astrological judgment sits at the heart of the product. Peak's method, rules, interpretations and boundaries are shaped by its astrologer-founder and the lineage in which he trained. AI allows that knowledge to be available at scale; it does not replace the expertise behind it.",
     },
     {
       q: "Can Peak answer medical, legal or investment questions?",
@@ -203,19 +261,15 @@ export const HOME = {
     },
     {
       q: "What can I use for free?",
-      a: "You can start with one free birth chart, ten free questions in Ask and three personalized daily reports. No credit card is required. You can subscribe whenever you want more access.",
+      a: "You can start with a free birth chart, questions in Ask and personalized daily reports. No credit card is required. You can subscribe whenever you want more access.",
     },
     {
-      q: "How much does Peak cost?",
-      a: "Peak costs ₹499 a month in India and $20 a month in the United States. Some plans or in-app purchases may unlock additional charts or other features. You are paying for ongoing access - not by the question and not by the minute.",
-    },
-    {
-      q: "Is Peak available on iOS and Android?",
-      a: "Yes. Peak is designed for both iOS and Android. Download the app, verify your mobile number and create your first chart to begin.",
+      q: "Can I use Peak on my phone?",
+      a: "Peak has an Android app. On iPhone, and on any other device, Peak runs in your browser at app.peaklife.me with no download. Verify your mobile number and create your first chart to begin.",
     },
     {
       q: "Is my birth chart and conversation data private?",
-      a: "Yes. Your birth details, chart and conversations are private. Peak uses bank-grade security to protect what you share, so you can ask honest questions without turning your personal life into public content.",
+      a: "Yes. Your birth details, chart and conversations are private. Peak protects what you share, so you can ask honest questions without turning your personal life into public content.",
     },
   ],
 } as const;
