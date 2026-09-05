@@ -1,6 +1,6 @@
 export const HOME = {
   seo: {
-    title: "Peak — No two lives come with the same user manual.",
+    title: "Peak: No two lives come with the same user manual.",
     description:
       "Peak is an AI astrology app that helps you understand your life, with expert Jyotisha personalized to your chart, your location, your questions and your goals.",
   },
@@ -119,7 +119,7 @@ export const HOME = {
       photo: "/home/founder-abhimanyu.jpg",
       paragraphs: [
         "Peak's astrology is shaped by Abhimanyu Singh Rana, an IIT Delhi graduate and practising Jyotishi trained in a rigorous astrological lineage. His own journey as a leader in technology, business and politics taught him that working hard doesn't help if you're working on the wrong thing.",
-        "After years of helping thousands find purpose and take back control of their lives, Abhimanyu helped build Peak so that his expertise could be available every day, not only during a consultation.",
+        "After years of helping many find purpose and take back control of their lives, Abhimanyu helped build Peak so that his expertise could be available every day, not only during a consultation.",
         "His method informs how Peak reads a chart, connects different signals and turns them into personalized guidance.",
       ],
       href: "https://www.pinpointjyotish.com/my-jyotisha-journey",
@@ -143,7 +143,7 @@ export const HOME = {
     lead: "Jyotisha is an ancient Indian system of astrology that explains how and when unfolding karma impacts life. Peak allows you to access the power of practicing Jyotishis through a truly personalized AI astrology app.",
     cards: [
       {
-        title: "Peak is based on thousands of real readings.",
+        title: "Peak has given many readings.",
         body: "Peak follows the Jyotisha method shaped by our founder's training, lineage and experience as a Jyotishi.",
       },
       {
@@ -161,7 +161,7 @@ export const HOME = {
     ],
     cta: "learn how Peak works →",
   },
-  testimonialsHeading: "Peak has helped thousands understand the user manual of their life.",
+  testimonialsHeading: "Peak has helped many understand the user manual of their life.",
   testimonials: [
     {
       quote: "Used Peak during a very low phase and it helped bring structure to my life and achieve some major goals.",
@@ -201,7 +201,7 @@ export const HOME = {
     },
     {
       q: "Is Peak an AI astrologer?",
-      a: "Yes. You can ask Peak questions and instantly receive astrologically accurate answers that are personalized to your chart. Peak is not a general AI chatbot, it's built as a custom engine trained by thousands of real readings conducted by PeakLife's founder and his team of astrologers.",
+      a: "Yes. You can ask Peak questions and instantly receive astrologically accurate answers that are personalized to your chart. Peak is not a general AI chatbot, it's a custom engine based on systems built by PeakLife's founder, who has learnt from a centuries-old tradition.",
     },
     {
       q: "Does Peak use Vedic astrology or Western astrology?",
@@ -237,7 +237,7 @@ export const HOME = {
     },
     {
       q: "How was Peak's AI astrologer trained?",
-      a: "Peak is built on thousands of real astrology readings and the working knowledge of its astrologer-founder. That experience informs how Peak reads charts, connects different signals and turns them into relevant guidance.",
+      a: "Peak is built on years of real astrology experience and knowledge of its astrologer-founder. That experience informs how Peak reads charts, connects different signals and turns them into relevant guidance.",
     },
     {
       q: "How reliable is Peak's astrology?",
