@@ -178,7 +178,7 @@ export const HOME = {
         portrait: { src: "/assets/img/founder-abhimanyu.jpg", alt: "Abhimanyu Singh Rana" },
         paragraphs: [
           "Peak's astrology is shaped by Abhimanyu Singh Rana, an IIT Delhi graduate and practising Jyotishi trained in a rigorous astrological lineage. His own journey as a leader in technology, business and politics taught him that working hard doesn't help if you're working on the wrong thing.",
-          "After years of helping thousands find purpose and take back control of their lives, Abhimanyu helped build Peak so that his expertise could be available every day, not only during a consultation.",
+          "After years of helping many find purpose and take back control of their lives, Abhimanyu helped build Peak so that his expertise could be available every day, not only during a consultation.",
           "His method informs how Peak reads a chart, connects different signals and turns them into personalized guidance.",
         ],
         // Destination still to be decided; placeholder in the approved design too.
@@ -204,7 +204,7 @@ export const HOME = {
     lead: "Jyotisha is an ancient Indian system of astrology that explains how and when unfolding karma impacts life. Peak allows you to access the power of practicing Jyotishis through a truly personalized AI astrology app.",
     cards: [
       {
-        title: "Peak has given thousands of readings.",
+        title: "Peak has given many readings.",
         body: "Peak follows the Jyotisha method shaped by our founder's training, lineage and experience as a Jyotishi.",
       },
       {
@@ -224,7 +224,7 @@ export const HOME = {
   },
 
   testimonials: {
-    title: "Peak has helped thousands understand the user manual of their life.",
+    title: "Peak has helped many understand the user manual of their life.",
     quotes: [
       {
         quote:
