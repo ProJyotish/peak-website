@@ -9,7 +9,7 @@ type Emphasis = { before: string; em: string; after: string };
 
 export const HOME = {
   seo: {
-    title: "Peak — No two lives come with the same user manual.",
+    title: "Peak: No two lives come with the same user manual.",
     description:
       "Peak is an AI astrology app that helps you understand your life, with expert Jyotisha personalized to your chart, your location, your questions and your goals.",
     ogDescription:
@@ -181,7 +181,7 @@ export const HOME = {
           "After years of helping thousands find purpose and take back control of their lives, Abhimanyu helped build Peak so that his expertise could be available every day, not only during a consultation.",
           "His method informs how Peak reads a chart, connects different signals and turns them into personalized guidance.",
         ],
-        // Destination still to be decided — placeholder in the approved design too.
+        // Destination still to be decided; placeholder in the approved design too.
         link: { label: "read his jyotisha journey →", href: "#" },
       },
       {
@@ -192,7 +192,7 @@ export const HOME = {
           "An IIT Delhi graduate who has led technology at Amazon and Freecharge, co-founded startups, and built LLM solutions for a leading Indian law firm.",
           "Two decades of shipping large-scale products, the same rigor behind legal research for hundreds of lawyers, now applied to making jyotisha practical, personal, and trustworthy at scale.",
         ],
-        // Destination still to be decided — placeholder in the approved design too.
+        // Destination still to be decided; placeholder in the approved design too.
         link: { label: "view his linkedin →", href: "#" },
       },
     ],
@@ -204,7 +204,7 @@ export const HOME = {
     lead: "Jyotisha is an ancient Indian system of astrology that explains how and when unfolding karma impacts life. Peak allows you to access the power of practicing Jyotishis through a truly personalized AI astrology app.",
     cards: [
       {
-        title: "Peak is based on thousands of real readings.",
+        title: "Peak has given thousands of readings.",
         body: "Peak follows the Jyotisha method shaped by our founder's training, lineage and experience as a Jyotishi.",
       },
       {
