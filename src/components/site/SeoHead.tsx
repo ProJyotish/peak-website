@@ -24,7 +24,7 @@ function upsertLink(rel: string, href: string) {
 }
 
 /** Updates document title + meta tags for the active route (SPA SEO). */
-export function SeoHead({ title, description, keywords, path, type = "website", image }: PageSeo) {
+export function SeoHead({ title, description, keywords, path, type = "website" }: PageSeo) {
   const keywordsCsv = keywordsToString(keywords);
 
   useEffect(() => {
@@ -37,16 +37,12 @@ export function SeoHead({ title, description, keywords, path, type = "website", 
     upsertMeta("property", "og:description", description);
     upsertMeta("property", "og:type", type);
     upsertMeta("property", "og:url", absoluteUrl(path));
-    if (image) {
-      upsertMeta("property", "og:image", absoluteUrl(image));
-      upsertMeta("name", "twitter:card", "summary_large_image");
-    }
     upsertLink("canonical", absoluteUrl(path));
 
     return () => {
       document.title = prevTitle;
     };
-  }, [title, description, keywordsCsv, path, type, image]);
+  }, [title, description, keywordsCsv, path, type]);
 
   return null;
 }
