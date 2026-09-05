@@ -294,7 +294,7 @@ export const HOME = {
       {
         question: "Is Peak an AI astrologer?",
         answer:
-          "Yes. You can ask Peak questions and instantly receive astrologically accurate answers that are personalized to your chart. Peak is not a general AI chatbot, it's built as a custom engine trained by thousands of real readings conducted by PeakLife's founder and his team of astrologers.",
+          "Yes. You can ask Peak questions and instantly receive astrologically accurate answers that are personalized to your chart. Peak is not a general AI chatbot, it's a custom engine based on systems built by PeakLife's founder, who has learnt from a centuries-old tradition.",
       },
       {
         question: "Does Peak use Vedic astrology or Western astrology?",
@@ -339,7 +339,7 @@ export const HOME = {
       {
         question: "How was Peak's AI astrologer trained?",
         answer:
-          "Peak is built on thousands of real astrology readings and the working knowledge of its astrologer-founder. That experience informs how Peak reads charts, connects different signals and turns them into relevant guidance.",
+          "Peak is built on years of real astrology experience and knowledge of its astrologer-founder. That experience informs how Peak reads charts, connects different signals and turns them into relevant guidance.",
       },
       {
         question: "How reliable is Peak's astrology?",
