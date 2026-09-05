@@ -1,0 +1,362 @@
+/* Peak homepage — design-system tokens + page styles.
+
+   Ported from the `redesign` branch's static build (index.html + assets/css/peak.css).
+   Values are untouched: every colour, size and space below is a Peak Design System
+   token, copied verbatim. Re-sync from claude.ai/design rather than editing values here.
+
+   One mechanical change was made on the way in: every selector is scoped under
+   `.peak-home`, and the token block that was `:root` now sits on `.peak-home` too.
+   The app's own `src/index.css` defines `--accent` as an HSL triplet for Tailwind
+   (`hsl(var(--accent))`), while the design system defines it as a hex colour. Left
+   both on `:root`, one would break the other across every shadcn component, so the
+   homepage carries its own token scope and the rest of the app is untouched.
+
+   `<div className="peak-home">` in src/pages/Index.tsx is what turns this on. */
+
+/* Peak — design tokens.
+   Copied verbatim from the Peak Design System (claude.ai/design, project
+   "Peak Design System"): tokens/colors.css, tokens/typography.css,
+   tokens/effects.css, tokens/typography-web.css.
+
+   DO NOT hand-edit values in this file. It is a build artifact of the design
+   system. Change a colour there and re-sync, or the site and the app drift.
+   Webfonts are loaded from Google Fonts in index.html rather than the
+   design system's local Fraunces TTFs, the only intentional difference. */
+
+/* ── colour ── */
+.peak-home {
+  --peak-gold: #C28D2A;
+  --peak-gold-bright: #C79A3B;
+  --peak-gold-deep: #A07C2C;
+  --peak-gold-soft: #D9B26A;
+  --peak-gold-tint: rgba(194,141,42,0.10);
+  --peak-gold-border: rgba(194,141,42,0.35);
+
+  --peak-cream: #F8EFDB;
+  --peak-bone: #F5ECD9;
+  --peak-bone-deep: #EDE3CC;
+  --peak-bone-darker: #E2D8C0;
+  --peak-parchment: #F3EAD8;
+  --peak-parchment-deep: #E9DFC9;
+
+  --peak-graphite: #2A2418;
+  --peak-ink: #0E1234;
+  --peak-ink-raised: #171E4C;
+  --peak-ink-elevated: #222A5C;
+  --peak-sky-top: #0B0E2A;
+  --peak-sky-mid: #0E1234;
+  --peak-sky-bot: #171E4C;
+  --peak-on-ink: #F1E7D0;
+
+  --peak-muted: #6F6350;
+  --peak-muted-light: #9A8C74;
+  --peak-rule: #CBBF9F;
+  --peak-rule-dark: rgba(255,255,255,0.08);
+
+  --peak-fav-good: #5E7C46;
+  --peak-fav-mixed: #A07C2C;
+  --peak-fav-caution: #B0554C;
+  --peak-fav-neutral: #7C7466;
+
+  --surface-body: var(--peak-cream);
+  --surface-canvas: var(--peak-bone);
+  --surface-card: var(--peak-parchment);
+  --surface-recessed: var(--peak-bone-deep);
+  --surface-ink: var(--peak-ink);
+  --text-primary: var(--peak-graphite);
+  --text-muted: var(--peak-muted);
+  --text-faint: var(--peak-muted-light);
+  --text-on-ink: var(--peak-on-ink);
+  --accent: var(--peak-gold);
+  --accent-hover: var(--peak-gold-soft);
+  --border-hairline: var(--peak-rule);
+}
+
+/* ── type ── */
+.peak-home {
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Lato", system-ui, -apple-system, sans-serif;
+  --fvs-display: "SOFT" 100, "opsz" 144;
+  --fvs-text: "SOFT" 100, "opsz" 36;
+  --fw-light: 300; --fw-regular: 400; --fw-bold: 700; --fw-black: 900;
+  --fs-display: 30px; --fs-heading: 22px; --fs-lede: 19px;
+  --fs-body: 14px; --fs-caption: 12px; --fs-eyebrow: 10px;
+  --lh-tight: 1.12; --lh-body: 1.55;
+  --tracking-eyebrow: 0.26em; --tracking-wordmark: 0.18em; --tracking-label: 0.18em;
+}
+
+/* ── radii, spacing, shadows, gradients ── */
+.peak-home {
+  --radius-sm: 6px; --radius-md: 18px; --radius-lg: 22px; --radius-sheet: 24px; --radius-pill: 999px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-5: 20px; --space-6: 24px; --space-8: 32px;
+  --shadow-card: 0 0 0 1px rgba(255,252,240,0.35) inset, 0 10px 26px rgba(59,44,14,0.10);
+  --shadow-card-glow: 0 0 0 1px rgba(255,252,240,0.35) inset, 0 14px 34px rgba(59,44,14,0.12), 0 0 46px rgba(255,243,214,0.5);
+  --shadow-sheet: 0 -16px 48px rgba(15,15,16,0.20);
+  --focus-ring: 0 0 0 3px rgba(194,141,42,0.12);
+  --gradient-sky: linear-gradient(180deg, #0B0E2A 0%, #0E1234 45%, #171E4C 100%);
+  --gradient-parchment: linear-gradient(180deg, #F3EAD8, #E9DFC9);
+  --gradient-dusk: linear-gradient(180deg, #1B2250 0px, #454A73 170px, #8B8494 250px, #CBB99E 340px, #F0E2C1 450px, #F8EFDB 570px);
+}
+
+/* ── web-only additions ── */
+.peak-home {
+  --fs-web-hero: clamp(2.5rem, 6.4vw, 4.75rem);
+  --fs-web-display: clamp(1.875rem, 3.9vw, 3rem);
+  --fs-web-heading: clamp(1.375rem, 2.1vw, 1.75rem);
+  --fs-web-lede: clamp(1.0625rem, 1.5vw, 1.3125rem);
+  --fs-web-body: 1.0625rem;
+  --fs-web-caption: 0.8125rem;
+  --fs-web-eyebrow: 0.6875rem;
+  --space-web-section: clamp(4.5rem, 9vw, 8.75rem);
+  --space-web-gutter: clamp(1.25rem, 4vw, 3rem);
+  --space-web-stack: clamp(1.25rem, 2.5vw, 2rem);
+  --measure-web: 60ch;
+  --container-web: 71.25rem;
+  --container-web-narrow: 48rem;
+}
+
+/* ══ Page styles ══ */
+/* ── Peak homepage. Every value below is a design-system token.
+      Sizes come from tokens/typography-web.css, everything else from styles.css. ── */
+
+.peak-home, .peak-home *, .peak-home::before, .peak-home *::before, .peak-home::after, .peak-home *::after { box-sizing: border-box; }
+html:has(.peak-home) { scroll-behavior: smooth; }
+.peak-home {
+  margin: 0;
+  background: var(--surface-body);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: var(--fs-web-body);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+}
+.peak-home img, .peak-home svg { display: block; max-width: 100%; }
+
+.peak-home .wrap { width: 100%; max-width: var(--container-web); margin-inline: auto; padding-inline: var(--space-web-gutter); }
+.peak-home .wrap--narrow { max-width: var(--container-web-narrow); }
+.peak-home .section { padding-block: var(--space-web-section); }
+.peak-home .section--rule { border-top: 1px solid var(--border-hairline); }
+
+/* ── Type ── */
+.peak-home h1, .peak-home h2, .peak-home h3 { margin: 0; font-family: var(--font-display); font-variation-settings: var(--fvs-display); font-weight: var(--fw-regular); line-height: var(--lh-tight); letter-spacing: -0.015em; }
+.peak-home h1 { font-size: var(--fs-web-hero); }
+.peak-home h2 { font-size: var(--fs-web-display); }
+.peak-home h3 { font-size: var(--fs-web-heading); }
+.peak-home p { margin: 0; }
+.peak-home .lede { font-size: var(--fs-web-lede); line-height: 1.5; color: var(--text-muted); max-width: var(--measure-web); }
+.peak-home .body { color: var(--text-muted); max-width: var(--measure-web); }
+.peak-home .stack > * + * { margin-top: var(--space-4); }
+.peak-home .stack-lg > * + * { margin-top: var(--space-web-stack); }
+.peak-home .serif-italic { font-family: var(--font-display); font-variation-settings: var(--fvs-text); font-style: italic; }
+
+.peak-home .eyebrow {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  font-size: var(--fs-web-eyebrow); font-weight: var(--fw-bold);
+  letter-spacing: var(--tracking-eyebrow); text-transform: uppercase;
+  color: var(--accent);
+}
+.peak-home .eyebrow--muted { color: var(--text-faint); }
+.peak-home .eyebrow .mark { width: 0.78em; height: auto; }
+
+/* ── The navigator mark ── */
+.peak-home .mark { display: inline-block; color: var(--accent); flex: none; aspect-ratio: 90.778 / 79.611; }
+.peak-home .mark svg { display: block; width: 100%; height: 100%; fill: currentColor; }
+
+/* ── Wordmark ── */
+.peak-home .wordmark { position: relative; display: block; width: clamp(6.5rem, 11vw, 8.25rem); line-height: 0; text-decoration: none; }
+.peak-home .wordmark__img { width: 100%; height: auto; transition: opacity .25s ease; }
+.peak-home .wordmark__img--ink { position: absolute; inset: 0; opacity: 0; }
+.peak-home .nav.is-stuck .wordmark__img--on-ink { opacity: 0; }
+.peak-home .nav.is-stuck .wordmark__img--ink { opacity: 1; }
+
+/* ── Buttons. Lowercase, per the design system. ── */
+.peak-home .btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+  font-family: var(--font-body); font-size: var(--fs-web-body); font-weight: var(--fw-bold);
+  text-transform: lowercase; text-decoration: none;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-pill); border: 1px solid transparent;
+  cursor: pointer; transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+.peak-home .btn--primary { background: var(--accent); color: var(--peak-cream); }
+.peak-home .btn--primary:hover { background: var(--accent-hover); }
+.peak-home .btn--ghost { background: transparent; color: var(--text-primary); border-color: var(--peak-gold-border); }
+.peak-home .btn--ghost:hover { background: var(--peak-gold-tint); }
+.peak-home .btn--on-ink { background: transparent; color: var(--text-on-ink); border-color: rgba(241,231,208,0.32); }
+.peak-home .btn--on-ink:hover { background: rgba(241,231,208,0.10); }
+.peak-home .btn--link { padding: 0; background: none; border: none; color: var(--accent); text-transform: lowercase; }
+.peak-home .btn--link:hover { color: var(--accent-hover); }
+.peak-home .btn:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+.peak-home .btn-row { display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; }
+
+/* ── Nav ── */
+.peak-home .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 40; background: transparent; border-bottom: 1px solid transparent; transition: background-color .25s ease, border-color .25s ease; }
+.peak-home .nav.is-stuck { background: color-mix(in srgb, var(--surface-body) 96%, transparent); backdrop-filter: blur(12px); border-bottom-color: var(--border-hairline); }
+.peak-home .nav .nav__links a { color: rgba(241,231,208,0.72); }
+.peak-home .nav .nav__links a:hover { color: var(--text-on-ink); }
+.peak-home .nav.is-stuck .nav__links a { color: var(--text-muted); }
+.peak-home .nav.is-stuck .nav__links a:hover { color: var(--text-primary); }
+.peak-home .nav__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); padding-block: var(--space-4); }
+.peak-home .nav__links { display: flex; gap: var(--space-6); align-items: center; }
+.peak-home .nav__links a { font-size: var(--fs-web-caption); font-weight: var(--fw-bold); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--text-muted); text-decoration: none; }
+@media (max-width: 46rem) { .peak-home .nav__links { display: none; } }
+
+/* ── Hero, dusk to parchment ── */
+.peak-home .hero {
+  position: relative; overflow: hidden;
+  /* Dusk-to-parchment, the system's signature, rebuilt in percentages so it scales
+     with a page-height hero instead of the fixed 570px app gradient. Content sits
+     in the dark half; the handoff to parchment happens in ::after. */
+  background: linear-gradient(180deg, var(--peak-sky-top) 0%, var(--peak-sky-mid) 55%, var(--peak-ink-raised) 100%);
+  padding-top: clamp(7.5rem, 11vw, 10rem);
+  padding-bottom: clamp(9rem, 17vw, 16rem);
+}
+.peak-home .hero::after {
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; pointer-events: none;
+  height: clamp(6.5rem, 13vw, 12rem);
+  background: linear-gradient(180deg, var(--peak-ink-raised) 0%, var(--peak-muted) 44%, var(--peak-bone-darker) 76%, var(--peak-cream) 100%);
+}
+.peak-home .hero__stars { position: absolute; inset: 0 0 auto 0; height: 60%; pointer-events: none; }
+.peak-home .hero__stars span { position: absolute; border-radius: var(--radius-pill); background: var(--peak-on-ink); }
+.peak-home .hero__inner { position: relative; z-index: 1; text-align: center; display: flex; flex-direction: column; align-items: center; gap: var(--space-6); }
+.peak-home .hero h1 { color: var(--text-on-ink); max-width: 18ch; }
+.peak-home .hero .lede { color: rgba(241,231,208,0.78); max-width: 54ch; margin-inline: auto; }
+.peak-home .hero__mark { width: clamp(2.75rem, 5vw, 3.75rem); height: auto; }
+.peak-home .trustbar { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--space-2) var(--space-5); font-size: var(--fs-web-caption); letter-spacing: var(--tracking-label); text-transform: uppercase; color: rgba(241,231,208,0.6); font-weight: var(--fw-bold); }
+.peak-home .trustbar .dot { color: var(--accent); }
+@media (max-width: 40rem) {
+  .peak-home .trustbar { flex-direction: column; gap: var(--space-2); }
+  .peak-home .trustbar .dot { display: none; }
+  .peak-home .hero .btn-row { flex-direction: column; align-items: stretch; width: 100%; max-width: 20rem; margin-inline: auto; }
+  .peak-home .hero .btn-row .btn { width: 100%; }
+}
+.peak-home .hero__note { font-size: var(--fs-web-caption); color: var(--text-muted); }
+
+/* ── Marquee band ── */
+.peak-home .band { border-block: 1px solid var(--border-hairline); background: var(--surface-recessed); }
+.peak-home .band__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-3) var(--space-6); padding-block: var(--space-5); font-size: var(--fs-web-eyebrow); font-weight: var(--fw-bold); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); text-align: center; }
+
+/* ── Positioning statement ── */
+.peak-home .statement { text-align: center; }
+.peak-home .statement h2 { max-width: 20ch; margin-inline: auto; }
+.peak-home .statement p { margin-inline: auto; margin-top: var(--space-5); max-width: 52ch; font-size: var(--fs-web-lede); color: var(--text-muted); }
+
+/* ── Feature rows ── */
+.peak-home .feature { display: grid; grid-template-columns: 1fr minmax(0, 20rem); gap: clamp(2rem, 6vw, 5rem); align-items: center; }
+.peak-home .feature--flip { grid-template-columns: minmax(0, 20rem) 1fr; }
+.peak-home .feature--flip .feature__copy { order: 2; }
+.peak-home .feature--flip .feature__device { order: 1; }
+@media (max-width: 56rem) {
+  .peak-home .feature, .peak-home .feature--flip { grid-template-columns: 1fr; }
+  .peak-home .feature--flip .feature__copy, .peak-home .feature--flip .feature__device { order: initial; }
+}
+
+/* Phone frame. The screen inside is the real app screen from ui_kits/peak-app,
+   not a picture of it, so it cannot go stale. */
+.peak-home .device { justify-self: center; width: 100%; max-width: 19.5rem; aspect-ratio: 9 / 19.5; border-radius: var(--radius-sheet); padding: var(--space-2); background: var(--surface-ink); box-shadow: var(--shadow-card-glow); }
+.peak-home .device__screen { position: relative; width: 100%; height: 100%; border-radius: var(--radius-lg); overflow: hidden; background: var(--surface-canvas); }
+.peak-home .device__screen img { position: absolute; top: 0; left: 0; width: 100%; height: auto; will-change: transform; }
+.peak-home .device__label { margin-top: var(--space-3); text-align: center; font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); font-weight: var(--fw-bold); }
+/* Small devices in the steps sequence */
+.peak-home .device--sm { max-width: 10.5rem; padding: var(--space-1); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); }
+.peak-home .device--sm .device__screen { border-radius: var(--radius-md); }
+.peak-home .step__shot { margin-top: var(--space-6); }
+@media (prefers-reduced-motion: reduce) { .peak-home .device__screen img { transform: none !important; } }
+
+/* ── Personalization radial ── */
+.peak-home .radial { display: grid; grid-template-columns: 1fr auto 1fr; gap: clamp(1rem, 3vw, 2.5rem); align-items: center; margin-top: clamp(2.5rem, 5vw, 4rem); }
+.peak-home .radial__hub { width: clamp(5rem, 11vw, 8rem); height: clamp(5rem, 11vw, 8rem); border-radius: var(--radius-pill); display: flex; align-items: center; justify-content: center; background: var(--gradient-parchment); box-shadow: var(--shadow-card); border: 1px solid var(--peak-gold-border); }
+.peak-home .radial__hub .mark { width: 46%; height: auto; }
+.peak-home .radial__col { display: grid; gap: clamp(1.25rem, 3vw, 2.25rem); }
+.peak-home .radial__col--right { text-align: left; }
+.peak-home .radial__col--left { text-align: right; }
+.peak-home .radial__col--left .radial__item { justify-items: end; }
+.peak-home .pill-item h3 { font-size: var(--fs-web-heading); }
+.peak-home .pill-item p { color: var(--text-muted); font-size: var(--fs-web-body); margin-top: var(--space-2); max-width: 34ch; }
+@media (max-width: 56rem) {
+  .peak-home .radial { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .peak-home .radial__col--left { text-align: center; } .peak-home .radial__col--left .radial__item { justify-items: center; }
+  .peak-home .pill-item p { margin-inline: auto; }
+}
+
+/* ── Steps ── */
+.peak-home .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 4vw, 3rem); margin-top: clamp(2.5rem, 5vw, 4rem); }
+@media (max-width: 56rem) { .peak-home .steps { grid-template-columns: 1fr; } }
+.peak-home .step__num { font-family: var(--font-display); font-variation-settings: var(--fvs-display); font-size: var(--fs-web-display); color: var(--accent); line-height: 1; }
+.peak-home .step h3 { margin-top: var(--space-4); }
+.peak-home .step p { margin-top: var(--space-3); color: var(--text-muted); }
+.peak-home .step { position: relative; padding-top: var(--space-5); border-top: 1px solid var(--border-hairline); }
+.peak-home .step + .step::before {
+  content: ""; position: absolute; top: calc(-1 * var(--space-2)); left: calc(-1 * clamp(1.5rem, 4vw, 3rem) / 2 - 0.4rem);
+  width: 0.8rem; height: 0.8rem; background: var(--accent);
+  -webkit-mask: url("/assets/img/nav-arrow.svg") center / contain no-repeat;
+          mask: url("/assets/img/nav-arrow.svg") center / contain no-repeat;
+  transform: rotate(90deg);
+}
+@media (max-width: 56rem) { .peak-home .step + .step::before { display: none; } }
+
+/* ── Cards ── */
+.peak-home .card { background: var(--surface-card); border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: clamp(1.5rem, 3vw, 2.25rem); box-shadow: var(--shadow-card); }
+.peak-home .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1.25rem, 3vw, 2rem); }
+.peak-home .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.25rem, 3vw, 2rem); }
+.peak-home .grid-4 { display: grid; grid-template-columns: repeat(2, 1fr); gap: clamp(1.25rem, 3vw, 2rem); }
+@media (max-width: 56rem) { .peak-home .grid-2, .peak-home .grid-3, .peak-home .grid-4 { grid-template-columns: 1fr; } }
+
+/* ── Founders ── */
+.peak-home .founder__role { font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--accent); font-weight: var(--fw-bold); }
+.peak-home .founder h3 { margin-top: var(--space-2); }
+.peak-home .founder p { margin-top: var(--space-4); color: var(--text-muted); font-size: var(--fs-web-body); }
+.peak-home .founder__portrait--photo { object-fit: cover; display: block; padding: 0; }
+.peak-home .founder__portrait { width: 4.5rem; height: 4.5rem; border-radius: var(--radius-pill); background: var(--gradient-parchment); border: 1px solid var(--peak-gold-border); display: grid; place-items: center; font-family: var(--font-display); font-size: var(--fs-heading); color: var(--accent); margin-bottom: var(--space-5); }
+
+/* ── Method cards ── */
+.peak-home .method__lead { max-width: 62ch; margin-top: var(--space-5); color: var(--text-muted); font-size: var(--fs-web-lede); }
+.peak-home .method-card strong { display: block; font-family: var(--font-display); font-variation-settings: var(--fvs-display); font-size: var(--fs-web-heading); font-weight: var(--fw-regular); line-height: var(--lh-tight); }
+.peak-home .method-card p { margin-top: var(--space-3); color: var(--text-muted); }
+
+/* ── Testimonials ── */
+.peak-home .quote { display: flex; flex-direction: column; justify-content: space-between; height: 100%; background: transparent; border: 1px solid var(--border-hairline); border-radius: var(--radius-md); padding: clamp(1.5rem, 3vw, 2rem); }
+.peak-home .quote p { font-family: var(--font-display); font-variation-settings: var(--fvs-text); font-style: italic; font-size: var(--fs-web-lede); line-height: 1.45; color: var(--text-primary); }
+.peak-home .quote footer { margin-top: var(--space-5); font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); font-weight: var(--fw-bold); }
+
+/* ── Dark band ── */
+.peak-home .dark-band { background: var(--gradient-sky); color: var(--text-on-ink); position: relative; overflow: hidden; }
+.peak-home .dark-band h2 { color: var(--text-on-ink); max-width: 22ch; }
+.peak-home .dark-band p { color: rgba(241,231,208,0.75); max-width: 58ch; margin-top: var(--space-5); font-size: var(--fs-web-lede); }
+.peak-home .dark-band .eyebrow { color: var(--peak-gold-soft); }
+
+/* ── Pricing ── */
+.peak-home .pricing { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+@media (max-width: 56rem) { .peak-home .pricing { grid-template-columns: 1fr; } }
+.peak-home .freelist { list-style: none; padding: 0; margin: var(--space-6) 0 0; display: grid; gap: var(--space-4); }
+.peak-home .freelist li { display: flex; align-items: baseline; gap: var(--space-3); font-size: var(--fs-web-lede); }
+.peak-home .freelist .mark { width: 0.78em; height: auto; align-self: center; }
+.peak-home .price { margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--border-hairline); color: var(--text-muted); }
+.peak-home .price b { color: var(--text-primary); font-weight: var(--fw-bold); }
+.peak-home .store-row { display: grid; gap: var(--space-3); margin-top: var(--space-6); }
+.peak-home .store-btn { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4) var(--space-5); border-radius: var(--radius-md); border: 1px solid var(--peak-gold-border); background: var(--surface-card); text-decoration: none; color: var(--text-primary); transition: background-color .18s ease; }
+.peak-home .store-btn:hover { background: var(--peak-gold-tint); }
+.peak-home .store-btn .mark { width: 1.5rem; height: auto; }
+.peak-home .store-btn__logo { width: 6.5rem; height: auto; flex: none; }
+.peak-home .store-btn span { display: block; }
+.peak-home .store-btn .k { font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: var(--text-faint); font-weight: var(--fw-bold); }
+.peak-home .store-btn .v { font-weight: var(--fw-bold); }
+
+/* ── FAQ ── */
+.peak-home .faq { margin-top: clamp(2rem, 4vw, 3rem); border-top: 1px solid var(--border-hairline); }
+.peak-home .faq details { border-bottom: 1px solid var(--border-hairline); }
+.peak-home .faq summary { display: flex; align-items: center; justify-content: space-between; gap: var(--space-5); padding-block: var(--space-5); cursor: pointer; list-style: none; font-family: var(--font-display); font-variation-settings: var(--fvs-text); font-size: var(--fs-web-heading); line-height: 1.3; }
+.peak-home .faq summary::-webkit-details-marker { display: none; }
+.peak-home .faq summary::after { content: ""; flex: none; width: 0.7rem; height: 0.7rem; border-right: 1.5px solid var(--accent); border-bottom: 1.5px solid var(--accent); transform: rotate(45deg); transition: transform .2s ease; }
+.peak-home .faq details[open] summary::after { transform: rotate(-135deg); }
+.peak-home .faq p { padding-bottom: var(--space-6); color: var(--text-muted); max-width: var(--measure-web); }
+
+/* ── Footer ── */
+.peak-home .footer { background: var(--surface-ink); color: var(--text-on-ink); padding-block: var(--space-web-section) var(--space-8); }
+.peak-home .footer__inner { display: flex; flex-wrap: wrap; gap: var(--space-8); justify-content: space-between; align-items: flex-start; }
+.peak-home .footer__links { display: flex; flex-wrap: wrap; gap: var(--space-6); }
+.peak-home .footer__links a { font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; color: rgba(241,231,208,0.62); text-decoration: none; font-weight: var(--fw-bold); }
+.peak-home .footer__links a:hover { color: var(--text-on-ink); }
+.peak-home .footer__legal { margin-top: var(--space-8); padding-top: var(--space-6); border-top: 1px solid var(--peak-rule-dark); font-size: var(--fs-web-caption); color: rgba(241,231,208,0.45); display: flex; flex-wrap: wrap; gap: var(--space-4) var(--space-6); justify-content: space-between; }
+.peak-home .footer__lockup { width: clamp(13rem, 24vw, 17.5rem); height: auto; }

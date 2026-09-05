@@ -24,6 +24,8 @@ export type PageSeo = {
   path: string;
   /** Open Graph type — defaults to website */
   type?: "website" | "article";
+  /** Absolute or root-relative og:image path. Omitted when a page has no card image. */
+  image?: string;
 };
 
 export function absoluteUrl(path: string): string {
