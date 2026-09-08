@@ -46,7 +46,7 @@ const PAYMENTS_REFUNDS_FAQS = [
   {
     question: "Refund policy",
     answer:
-      "We do not offer refunds once payment is made. We provide a free trial of 10 questions and 3 days of personalized reports so you can evaluate our service before subscribing.",
+      "We do not offer refunds once payment is made. We provide a free trial of 5 questions and 3 days of personalized reports so you can evaluate our service before subscribing.",
   },
 ];
 
