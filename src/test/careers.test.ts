@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { careersPage, loadCareers } from "../../scripts/careers.mjs";
-import { isReservedPagePath } from "../../scripts/cms-paths.mjs";
 import { buildSitemapXml } from "../../scripts/sitemap.mjs";
 
 const careers = loadCareers();
@@ -30,10 +29,8 @@ describe("careers data", () => {
       resolve(__dirname, "../../scripts/apps-script/peak-careers-form.gs"),
       "utf8",
     );
-    const cvMb = careers.maxCvBytes / 1048576;
-    const sampleMb = careers.maxSampleBytes / 1048576;
-    expect(gs).toContain(`maxCvBytes: ${cvMb} * 1024 * 1024`);
-    expect(gs).toContain(`maxSampleBytes: ${sampleMb} * 1024 * 1024`);
+    expect(gs).toContain(`maxCvBytes: ${careers.maxCvBytes / 1048576} * 1024 * 1024`);
+    expect(gs).toContain(`maxSampleBytes: ${careers.maxSampleBytes / 1048576} * 1024 * 1024`);
   });
 });
 
@@ -48,16 +45,37 @@ describe("careers page", () => {
   });
 
   it("emits one JobPosting per role", () => {
-    const types = [...page.extraHead.matchAll(/"@type":"(JobPosting)"/g)];
-    expect(types).toHaveLength(careers.roles.length);
+    expect([...page.extraHead.matchAll(/"@type":"JobPosting"/g)]).toHaveLength(
+      careers.roles.length,
+    );
   });
 
-  it("falls back to email when no apply endpoint is configured", () => {
-    expect(careers.applyEndpoint === "" ? page.content : "").not.toContain("<form");
+  it("renders the apply form once an endpoint is configured", () => {
+    expect(careers.applyEndpoint).toMatch(/^https:\/\/script\.google\.com\//);
+    expect(page.content).toContain('id="apply-form"');
+    expect(page.content).toContain('name="website"'); // spam honeypot
   });
 
-  it("keeps /careers out of the CMS and in the sitemap", () => {
-    expect(isReservedPagePath("/careers")).toBe(true);
+  // The homepage has its own inline footer and does not use SiteFooter, so a
+  // link added to one of them silently misses the other. Check every footer.
+  it("is linked from every footer nav in the app", () => {
+    const footers = ["src/pages/Index.tsx", "src/components/site/SiteFooter.tsx"];
+    for (const rel of footers) {
+      const source = readFileSync(resolve(__dirname, "../..", rel), "utf8");
+      expect(source, `${rel} lists Privacy but not Careers`).toContain("ROUTES.careers");
+    }
+  });
+
+  it("is linked from the generated static page footer, but not on horary", () => {
+    const postbuild = readFileSync(
+      resolve(__dirname, "../../scripts/postbuild.mjs"),
+      "utf8",
+    );
+    expect(postbuild).toContain('isHorary ? "" : \'<a href="/careers/">Careers</a>\'');
+  });
+
+  it("is in the peak sitemap and never the horary one", () => {
     expect(buildSitemapXml([])).toContain("https://peaklife.me/careers/");
+    expect(buildSitemapXml([], { site: "horary" })).not.toContain("/careers/");
   });
 });

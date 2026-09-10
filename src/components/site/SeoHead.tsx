@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import type { PageSeo } from "@/lib/seo";
-import { absoluteUrl, keywordsToString } from "@/lib/seo";
+import { absoluteImageUrl, absoluteUrl, keywordsToString } from "@/lib/seo";
 
 function upsertMeta(attr: "name" | "property", key: string, content: string) {
   const selector = `meta[${attr}="${key}"]`;
@@ -24,8 +24,17 @@ function upsertLink(rel: string, href: string) {
 }
 
 /** Updates document title + meta tags for the active route (SPA SEO). */
-export function SeoHead({ title, description, keywords, path, type = "website" }: PageSeo) {
+export function SeoHead({
+  title,
+  description,
+  keywords,
+  path,
+  type = "website",
+  image,
+}: PageSeo) {
   const keywordsCsv = keywordsToString(keywords);
+  const imageUrl = absoluteImageUrl(image);
+  const pageUrl = absoluteUrl(path);
 
   useEffect(() => {
     const prevTitle = document.title;
@@ -36,13 +45,18 @@ export function SeoHead({ title, description, keywords, path, type = "website" }
     upsertMeta("property", "og:title", title);
     upsertMeta("property", "og:description", description);
     upsertMeta("property", "og:type", type);
-    upsertMeta("property", "og:url", absoluteUrl(path));
-    upsertLink("canonical", absoluteUrl(path));
+    upsertMeta("property", "og:url", pageUrl);
+    upsertMeta("property", "og:image", imageUrl);
+    upsertMeta("name", "twitter:card", "summary_large_image");
+    upsertMeta("name", "twitter:title", title);
+    upsertMeta("name", "twitter:description", description);
+    upsertMeta("name", "twitter:image", imageUrl);
+    upsertLink("canonical", pageUrl);
 
     return () => {
       document.title = prevTitle;
     };
-  }, [title, description, keywordsCsv, path, type]);
+  }, [title, description, keywordsCsv, path, type, imageUrl, pageUrl]);
 
   return null;
 }

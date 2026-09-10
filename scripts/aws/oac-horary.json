@@ -1,0 +1,7 @@
+{
+  "Name": "peaklife-horary-website-oac",
+  "Description": "OAC for PeakLife Horary website S3",
+  "SigningProtocol": "sigv4",
+  "SigningBehavior": "always",
+  "OriginAccessControlOriginType": "s3"
+}

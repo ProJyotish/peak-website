@@ -1,16 +1,9 @@
 import { Link } from "react-router-dom";
 import { Instagram, Linkedin } from "lucide-react";
+import { isHorarySite } from "@/lib/siteMode";
 import { ROUTES } from "@/lib/routes";
 import { SITE } from "@/lib/site";
 import { Wordmark } from "./Wordmark";
-
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
 
 const socialLinks = [
   { label: "LinkedIn", href: SITE.social.linkedin, icon: Linkedin },
@@ -18,6 +11,8 @@ const socialLinks = [
 ] as const;
 
 export function SiteFooter() {
+  const brand = isHorarySite ? "PeakLife Horary" : "Peak";
+
   return (
     <footer className="border-t border-ink bg-ink py-10 text-parchment">
       <div className="container-peak flex flex-col gap-8">
@@ -27,9 +22,11 @@ export function SiteFooter() {
             className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/70"
             aria-label="Footer"
           >
-            <Link to={ROUTES.product} className="hover:text-gold transition-colors">
-              Product
-            </Link>
+            {!isHorarySite && (
+              <Link to={ROUTES.product} className="hover:text-gold transition-colors">
+                Product
+              </Link>
+            )}
             <Link to={ROUTES.contact} className="hover:text-gold transition-colors">
               Contact
             </Link>
@@ -44,24 +41,26 @@ export function SiteFooter() {
               Terms
             </Link>
           </nav>
-          <div className="flex items-center gap-4">
-            {socialLinks.map(({ label, href, icon: Icon }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noreferrer"
-                aria-label={`Peak on ${label}`}
-                className="text-parchment/70 hover:text-gold transition-colors"
-              >
-                <Icon className="h-4 w-4" />
-              </a>
-            ))}
-          </div>
+          {!isHorarySite && (
+            <div className="flex items-center gap-4">
+              {socialLinks.map(({ label, href, icon: Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={`${brand} on ${label}`}
+                  className="text-parchment/70 hover:text-gold transition-colors"
+                >
+                  <Icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
         <div className="text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/60">
-            © Peak {new Date().getFullYear()} · All rights reserved
+            © {brand} {new Date().getFullYear()} · All rights reserved
           </p>
           <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/60">
             Built and maintained by{" "}

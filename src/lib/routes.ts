@@ -1,4 +1,5 @@
 /** Client routes — keep in sync with `App.tsx` and `scripts/cms-paths.mjs` reserved paths. */
+/** Client routes — keep in sync with `App.tsx` and SPA `404.html` copy. */
 export const ROUTES = {
   home: "/",
   blog: "/blog",

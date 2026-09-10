@@ -1,0 +1,10 @@
+{
+  "CertificateArn": "arn:aws:acm:us-east-1:660878112326:certificate/d4f3ebd9-c9d4-48b8-bfe0-674fc07b66d1",
+  "Status": "ISSUED",
+  "CloudFrontDistributionId": "E2P0N7O9K9QVC1",
+  "CloudFrontDomain": "d3tqhwmwpt2bt7.cloudfront.net",
+  "Domains": [
+    "peaklifehorary.me"
+  ],
+  "Note": "Apex-only; www still needs separate cert/CNAME if desired"
+}
