@@ -13,62 +13,11 @@
 | Bucket (drafts) | `peaklife-website-drafts-ap-south-1` |
 | URL (drafts) | http://peaklife-website-drafts-ap-south-1.s3-website.ap-south-1.amazonaws.com |
 
-## PeakLife Horary (separate website at `/`)
-
-Same repo, separate build (`npm run build:horary`) and CloudFront distribution.
-Landing page is the site root; shared Contact / Privacy / Terms / account-deletion pages.
-
-| Resource | Value |
-|----------|-------|
-| Bucket | `peaklife-horary-website-ap-south-1` |
-| OAC | `E37PMMPSXXU48Y` |
-| CloudFront ID | `E2P0N7O9K9QVC1` |
-| URL (prod) | https://d3tqhwmwpt2bt7.cloudfront.net |
-| Custom domain | `peaklifehorary.me` |
-| ACM cert (us-east-1) | `arn:aws:acm:us-east-1:660878112326:certificate/d4f3ebd9-c9d4-48b8-bfe0-674fc07b66d1` (**ISSUED**, attached) |
-
-### Custom domain (`peaklifehorary.me`)
-
-CloudFront distribution `E2P0N7O9K9QVC1` already has alias `peaklifehorary.me` + ACM cert.
-
-Point apex DNS at CloudFront (if not already):
-
-| Name | Type | Value |
-|------|------|-------|
-| `peaklifehorary.me` | ALIAS / ANAME / CNAME | `d3tqhwmwpt2bt7.cloudfront.net` |
-
-Optional `www`: add validation CNAME from the older dual-SAN cert (or request a new cert including www), then re-run `attach-horary-domain.sh` with both aliases.
-
-Validation record archive: `scripts/aws/peaklifehorary-acm-validation.json`
-
-### One-time Horary CloudFront setup
-
-```bash
-chmod +x scripts/aws/setup-horary-cloudfront.sh
-AWS_PROFILE=Peak ./scripts/aws/setup-horary-cloudfront.sh
-```
-
-Then create a GitHub Environment `horary` with:
-
-- `S3_BUCKET` = `peaklife-horary-website-ap-south-1`
-- `CLOUDFRONT_DISTRIBUTION_ID` = *(printed by setup script)*
-- optional `VITE_SITE_DOMAIN`, store URL vars
-
-### Manual Horary deploy
-
-```bash
-chmod +x scripts/aws/deploy-horary.sh
-AWS_PROFILE=Peak ./scripts/aws/deploy-horary.sh
-```
-
-Or push to `main` → `.github/workflows/deploy-horary.yml` (environment `horary`).
-
 ## Deploy (Peak)
 
 | Branch | Pipeline | Target |
 |--------|----------|--------|
 | `main` | `.github/workflows/deploy.yml` | S3 + CloudFront (Peak prod) |
-| `main` | `.github/workflows/deploy-horary.yml` | S3 + CloudFront (Horary) |
 | `drafts` | `.github/workflows/deploy-drafts.yml` | S3 **website** only (Peak preview, no CloudFront) |
 
 CMS (peakcms) commits content to **`drafts`**. Promote to `main` for production.
@@ -112,8 +61,6 @@ CloudFront custom certs must be in **us-east-1** (AWS requirement), even when th
 2. Add alternate domain + cert on distribution `E3JRZB3NUFKIKH`
 3. Point DNS (Route 53 or registrar) CNAME/ALIAS → `dsdjkb0guxr1r.cloudfront.net`
 
-Same pattern for Horary (`peaklifehorary.me` → Horary distribution `d3tqhwmwpt2bt7.cloudfront.net`). See ACM + attach steps above.
-
 ## Directory URLs (`/blog/` → static HTML)
 
 S3 + OAC does **not** map `/blog/` to `blog/index.html`. Without a rewrite, CloudFront’s
@@ -127,4 +74,3 @@ AWS_PROFILE=Peak ./scripts/aws/attach-url-rewrite.sh
 ```
 
 Function source: `scripts/aws/cloudfront-url-rewrite.js` (viewer-request).
-Horary setup reuses the same function when it already exists.

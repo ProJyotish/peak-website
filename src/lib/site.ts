@@ -1,17 +1,12 @@
-import { isHorarySite } from "@/lib/siteMode";
-
 const peakDomain = "peaklife.me";
-const horaryDomainDefault = "peaklifehorary.me";
 const peakSupport = "support@peaklife.me";
-const horarySupport = "support@peaklifehorary.me";
-
 const envDomain = (import.meta.env.VITE_SITE_DOMAIN as string | undefined)?.trim();
-const supportEmail = isHorarySite ? horarySupport : peakSupport;
+const supportEmail = peakSupport;
 
 export const SITE = {
-  name: isHorarySite ? "PeakLife Horary" : "Peak",
+  name: "Peak",
   legalName: "Aryaman Knowledge Services Private Limited",
-  domain: envDomain || (isHorarySite ? horaryDomainDefault : peakDomain),
+  domain: envDomain || peakDomain,
   peakDomain,
   peakUrl: `https://${peakDomain}`,
   app: "https://app.peaklife.me",
@@ -26,12 +21,6 @@ export const SITE = {
   stores: {
     android: "https://play.google.com/store/apps/details?id=me.peaklife",
     ios: null as string | null,
-  },
-  horary: {
-    stores: {
-      android: "https://play.google.com/store/apps/details?id=me.peaklife.prashna",
-      ios: null as string | null,
-    },
   },
 } as const;
 
@@ -62,23 +51,5 @@ export const PAYMENTS_REFUNDS_FAQS = [
     question: "Refund policy",
     answer:
       "We do not offer refunds once payment is made. We provide a free trial of 5 questions and 3 days of personalized reports so you can evaluate our service before subscribing.",
-  },
-] as const;
-
-/** PeakLife Horary is pay-per-ask, not Peak subscriptions. */
-export const HORARY_PAYMENTS_FAQS = [
-  {
-    question: "How much does each question cost?",
-    answer:
-      "Each PeakLife Horary ask costs ₹51. You top up your balance in the app before asking.",
-  },
-  {
-    question: "Can I get a refund?",
-    answer:
-      "We do not offer refunds once payment is made for asks or top-ups. You can evaluate the product with the downloadable app experience before purchasing additional asks.",
-  },
-  {
-    question: "Who do I contact about billing?",
-    answer: `Email ${horarySupport} with your phone number and payment reference.`,
   },
 ] as const;

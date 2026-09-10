@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { Instagram, Linkedin } from "lucide-react";
-import { isHorarySite } from "@/lib/siteMode";
 import { ROUTES } from "@/lib/routes";
 import { SITE } from "@/lib/site";
 import { Wordmark } from "./Wordmark";
@@ -11,7 +10,7 @@ const socialLinks = [
 ] as const;
 
 export function SiteFooter() {
-  const brand = isHorarySite ? "PeakLife Horary" : "Peak";
+  const brand = "Peak";
 
   return (
     <footer className="border-t border-ink bg-ink py-10 text-parchment">
@@ -22,11 +21,9 @@ export function SiteFooter() {
             className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/70"
             aria-label="Footer"
           >
-            {!isHorarySite && (
-              <Link to={ROUTES.product} className="hover:text-gold transition-colors">
-                Product
-              </Link>
-            )}
+            <Link to={ROUTES.product} className="hover:text-gold transition-colors">
+              Product
+            </Link>
             <Link to={ROUTES.contact} className="hover:text-gold transition-colors">
               Contact
             </Link>
@@ -41,22 +38,20 @@ export function SiteFooter() {
               Terms
             </Link>
           </nav>
-          {!isHorarySite && (
-            <div className="flex items-center gap-4">
-              {socialLinks.map(({ label, href, icon: Icon }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`${brand} on ${label}`}
-                  className="text-parchment/70 hover:text-gold transition-colors"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
-            </div>
-          )}
+          <div className="flex items-center gap-4">
+            {socialLinks.map(({ label, href, icon: Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`${brand} on ${label}`}
+                className="text-parchment/70 hover:text-gold transition-colors"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
+          </div>
         </div>
         <div className="text-center">
           <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-parchment/60">

@@ -70,46 +70,34 @@ function loadBlogSlugs() {
 
 /**
  * @param {{ slug: string, date?: string }[]} [blogPosts]
- * @param {{ site?: "peak" | "horary", domain?: string }} [opts]
+ * @param {{ domain?: string }} [opts]
  */
 export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
-  const site = opts.site === "horary" ? "horary" : "peak";
-  const domain =
-    opts.domain ||
-    (site === "horary" ? "peaklifehorary.me" : "peaklife.me");
+  const domain = opts.domain || "peaklife.me";
 
   /** @type {{ loc: string, changefreq: string, priority: string, lastmod?: string }[]} */
-  const entries =
-    site === "horary"
-      ? [
-          { loc: "/", changefreq: "weekly", priority: "1.0" },
-          { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
-          { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
-          { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },
-          { loc: "/delete-my-account/", changefreq: "yearly", priority: "0.2" },
-        ]
-      : [
-          { loc: "/", changefreq: "weekly", priority: "1.0" },
-          { loc: "/product/", changefreq: "weekly", priority: "0.9" },
-          ...PRODUCT_SLUGS.map((slug) => ({
-            loc: `/product/${slug}/`,
-            changefreq: "weekly",
-            priority: "0.8",
-          })),
-          { loc: "/blog/", changefreq: "weekly", priority: "0.8" },
-          ...blogPosts.map((post) => ({
-            loc: `/blog/${post.slug}/`,
-            changefreq: "monthly",
-            priority: "0.7",
-            lastmod: toIsoDate(post.date),
-          })),
-          { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
-          { loc: "/careers/", changefreq: "weekly", priority: "0.6" },
-          { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
-          { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
-          { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },
-          { loc: "/delete-my-account/", changefreq: "yearly", priority: "0.2" },
-        ];
+  const entries = [
+    { loc: "/", changefreq: "weekly", priority: "1.0" },
+    { loc: "/product/", changefreq: "weekly", priority: "0.9" },
+    ...PRODUCT_SLUGS.map((slug) => ({
+      loc: `/product/${slug}/`,
+      changefreq: "weekly",
+      priority: "0.8",
+    })),
+    { loc: "/blog/", changefreq: "weekly", priority: "0.8" },
+    ...blogPosts.map((post) => ({
+      loc: `/blog/${post.slug}/`,
+      changefreq: "monthly",
+      priority: "0.7",
+      lastmod: toIsoDate(post.date),
+    })),
+    { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
+    { loc: "/careers/", changefreq: "weekly", priority: "0.6" },
+    { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
+    { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
+    { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },
+    { loc: "/delete-my-account/", changefreq: "yearly", priority: "0.2" },
+  ];
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -131,7 +119,7 @@ ${entries
 /**
  * @param {string} outPath
  * @param {{ slug: string, date?: string }[]} [blogPosts]
- * @param {{ site?: "peak" | "horary", domain?: string }} [opts]
+ * @param {{ domain?: string }} [opts]
  */
 export function writeSitemap(outPath, blogPosts, opts) {
   writeFileSync(outPath, buildSitemapXml(blogPosts, opts));
@@ -141,8 +129,7 @@ const isDirectRun =
   process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
 
 if (isDirectRun) {
-  const siteArg = process.argv[2] === "horary" ? "horary" : "peak";
   const out = resolve(root, "public", "sitemap.xml");
-  writeSitemap(out, undefined, { site: siteArg });
-  console.log(`✓ Wrote ${out} (${siteArg})`);
+  writeSitemap(out);
+  console.log(`✓ Wrote ${out}`);
 }

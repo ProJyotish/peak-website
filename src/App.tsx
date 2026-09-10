@@ -4,7 +4,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { GoogleAnalytics } from "@/components/site/GoogleAnalytics";
-import { isHorarySite } from "@/lib/siteMode";
 import { ROUTES } from "@/lib/routes";
 import Index from "./pages/Index.tsx";
 import Terms from "./pages/Terms.tsx";
@@ -20,46 +19,8 @@ import CmsPage from "./pages/CmsPage.tsx";
 import Astrocartography from "./pages/Astrocartography.tsx";
 import ProductIndex from "./pages/ProductIndex.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
-import Horary from "./pages/Horary.tsx";
-import NotFound from "./pages/NotFound.tsx";
+
 const queryClient = new QueryClient();
-
-const supportRouteElements = (
-  <>
-    <Route path={ROUTES.terms} element={<Terms />} />
-    <Route path={ROUTES.termsEmbed} element={<TermsEmbed />} />
-    <Route path={ROUTES.privacy} element={<Privacy />} />
-    <Route path={ROUTES.accountDeletion} element={<AccountDeletion />} />
-    <Route path={ROUTES.privacyEmbed} element={<PrivacyEmbed />} />
-    <Route path={ROUTES.contact} element={<Contact />} />
-  </>
-);
-
-function PeakRoutes() {
-  return (
-    <Routes>
-      <Route path={ROUTES.home} element={<Index />} />
-      <Route path={ROUTES.blog} element={<Blog />} />
-      <Route path="/blog/:slug" element={<BlogPost />} />
-      <Route path={ROUTES.product} element={<ProductIndex />} />
-      <Route path="/product/:slug" element={<ProductPage />} />
-      {supportRouteElements}
-      <Route path={ROUTES.checkout} element={<Checkout />} />
-      <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
-}
-
-function HoraryRoutes() {
-  return (
-    <Routes>
-      <Route path={ROUTES.home} element={<Horary />} />
-      {supportRouteElements}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  );
-}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -84,7 +45,6 @@ const App = () => (
           <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
           <Route path="*" element={<CmsPage />} />
         </Routes>
-        {isHorarySite ? <HoraryRoutes /> : <PeakRoutes />}
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

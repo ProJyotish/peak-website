@@ -5,10 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "dev:horary": "vite --mode horary",
     "build": "vite build && node scripts/postbuild.mjs",
-    "build:peak": "vite build --mode peak && node scripts/postbuild.mjs peak",
-    "build:horary": "vite build --mode horary && node scripts/postbuild.mjs horary",
+    "build:peak": "vite build --mode peak && node scripts/postbuild.mjs",
     "build:dev": "vite build --mode development",
     "sitemap": "node scripts/sitemap.mjs",
     "lint": "eslint .",

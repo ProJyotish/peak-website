@@ -4,9 +4,7 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  const isHorary = mode === "horary";
-  return {
+export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
@@ -14,25 +12,7 @@ export default defineConfig(({ mode }) => {
       overlay: false,
     },
   },
-  plugins: [
-    react(),
-    mode === "development" && componentTagger(),
-    {
-      name: "html-site-brand",
-      transformIndexHtml(html) {
-        if (!isHorary) return html;
-        return html
-          .replace(
-            "<title>Peak — Realise your Peak Potential</title>",
-            "<title>PeakLife Horary - One question. One number. A verdict.</title>",
-          )
-          .replace(
-            'content="Peak is an AI astrology platform built from India. Hour-by-hour guidance, long-term pattern mapping, and goal-bound advice grounded in jyotisha — not mysticism."',
-            'content="PeakLife Horary is a KP horary astrology app. No birth chart needed. Ask one question, pick a number from 1 to 249, and get a clear verdict."',
-          );
-      },
-    },
-  ].filter(Boolean),
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -46,5 +26,4 @@ export default defineConfig(({ mode }) => {
       },
     },
   },
-};
-});
+}));

@@ -66,16 +66,15 @@ describe("careers page", () => {
     }
   });
 
-  it("is linked from the generated static page footer, but not on horary", () => {
+  it("is linked from the generated static page footer", () => {
     const postbuild = readFileSync(
       resolve(__dirname, "../../scripts/postbuild.mjs"),
       "utf8",
     );
-    expect(postbuild).toContain('isHorary ? "" : \'<a href="/careers/">Careers</a>\'');
+    expect(postbuild).toContain('<a href="/careers/">Careers</a>');
   });
 
-  it("is in the peak sitemap and never the horary one", () => {
+  it("is in the Peak sitemap", () => {
     expect(buildSitemapXml([])).toContain("https://peaklife.me/careers/");
-    expect(buildSitemapXml([], { site: "horary" })).not.toContain("/careers/");
   });
 });
