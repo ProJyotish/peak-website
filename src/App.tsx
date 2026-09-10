@@ -21,7 +21,7 @@ import Astrocartography from "./pages/Astrocartography.tsx";
 import ProductIndex from "./pages/ProductIndex.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
 import Horary from "./pages/Horary.tsx";
-
+import NotFound from "./pages/NotFound.tsx";
 const queryClient = new QueryClient();
 
 const supportRouteElements = (
