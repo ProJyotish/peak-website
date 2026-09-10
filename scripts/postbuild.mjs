@@ -2,6 +2,7 @@ import { copyFileSync, mkdirSync, writeFileSync, readdirSync, readFileSync } fro
 import { resolve, dirname, join } from "node:path";
 import matter from "gray-matter";
 import { renderPostHtml } from "./markdown.mjs";
+import { careersPage } from "./careers.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
@@ -529,6 +530,7 @@ function htmlTemplate({
   metaLine,
   backHref = "/",
   backLabel = "Home",
+  extraHead = "",
   content,
 }) {
   const desc = escapeHtml(
@@ -560,7 +562,7 @@ function htmlTemplate({
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${desc}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+${extraHead}  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
@@ -866,6 +868,7 @@ function htmlTemplate({
     <footer class="site-footer">
       <nav aria-label="Footer">
         <a href="/">Home</a>
+        ${isHorary ? "" : '<a href="/careers/">Careers</a>'}
         <a href="/contact/">Contact</a>
         <a href="/privacy-policy/">Privacy</a>
         <a href="/terms/">Terms</a>
@@ -890,6 +893,7 @@ function writePage(page) {
       : page.metaLine,
     backHref: page.backHref ?? "/",
     backLabel: page.backLabel ?? "Home",
+    extraHead: page.extraHead ?? "",
     content: page.content,
   });
   writeFileSync(filePath, html);
@@ -1022,6 +1026,8 @@ for (const page of pages) {
 const { writeSitemap } = await import("./sitemap.mjs");
 
 if (!isHorary) {
+  writePage(careersPage());
+
   const blogPosts = loadBlogPosts();
 
   const blogListingContent = blogPosts.length

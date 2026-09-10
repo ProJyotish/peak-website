@@ -1,0 +1,92 @@
+{
+  "applyEndpoint": "https://script.google.com/macros/s/AKfycbylykVLKH6qpxZj4pU8CVYuugwNXsY97rUOLrxRfSVvke7870oV639tQYyBr9ap67GDMA/exec",
+  "applyFallbackEmail": "support@peaklife.me",
+  "maxCvBytes": 5242880,
+  "maxSampleBytes": 10485760,
+  "roles": [
+    {
+      "id": "PEAK-INT-01",
+      "slug": "community-outreach-associate",
+      "title": "Community & Outreach Associate",
+      "status": "Open",
+      "commitment": "15 hours/week",
+      "employmentType": "PART_TIME",
+      "location": "Remote",
+      "compensation": "Paid",
+      "summary": "Grow Peak's presence across the internet, and set up collaborations with media and influencers.",
+      "responsibilities": [
+        "Post about Peak across X, Reddit and Facebook.",
+        "Respond to queries and reviews across platforms.",
+        "Track trends in the astrology world and feed them back into what we publish.",
+        "Reach out to traditional and social media outlets, and to influencers, to set up collaborations and interactions on their platforms or on Peak's."
+      ],
+      "lookingFor": [
+        "Good written communication.",
+        "A mature approach to public conversations, including critical ones.",
+        "Initiative: much of this role is outreach you start yourself.",
+        "Comfortable on X, Reddit and Facebook as a participant, not just a reader."
+      ],
+      "whatYouGet": [
+        "Paid role.",
+        "Ownership of Peak's public voice across platforms.",
+        "Direct working relationship with the founders."
+      ],
+      "sampleHint": "A thread, post or campaign you wrote and shipped."
+    },
+    {
+      "id": "PEAK-INT-02",
+      "slug": "campaign-creatives-associate",
+      "title": "Campaign Creatives Associate",
+      "status": "Open",
+      "commitment": "15 hours/week or full time",
+      "employmentType": "PART_TIME",
+      "location": "Remote",
+      "compensation": "Paid",
+      "summary": "Build Peak's bank of campaign creative: images, video and collateral used across campaigns.",
+      "responsibilities": [
+        "Create image and video collateral for Peak campaigns.",
+        "Build and maintain a reusable creative bank.",
+        "Work assets to the Peak brand system (type, colour, mark).",
+        "Turn campaign briefs into finished pieces."
+      ],
+      "lookingFor": [
+        "Strong hands-on skill with Canva, Higgsfield or comparable image and video tools.",
+        "An eye for restraint: Peak is warm and spare, not busy.",
+        "Speed without sloppiness."
+      ],
+      "whatYouGet": [
+        "Paid role.",
+        "A portfolio of shipped campaign work.",
+        "Direct working relationship with the founders."
+      ],
+      "sampleHint": "A portfolio link works, or attach two or three finished pieces."
+    },
+    {
+      "id": "PEAK-INT-03",
+      "slug": "writer-articles-research",
+      "title": "Writer, Articles & Research",
+      "status": "Open",
+      "commitment": "15 hours/week or full time",
+      "employmentType": "PART_TIME",
+      "location": "Remote",
+      "compensation": "Paid",
+      "summary": "Write researched articles for the Peak website, published under your own name.",
+      "responsibilities": [
+        "Write articles for peaklife.me.",
+        "Research your subject properly before you write.",
+        "Work from your own reading and knowledge."
+      ],
+      "lookingFor": [
+        "Relevant cultural background and real familiarity with the subject matter.",
+        "A passion for writing, and work that shows it.",
+        "Writers who write themselves. We do not accept AI-generated copy."
+      ],
+      "whatYouGet": [
+        "Paid role.",
+        "A byline on every article you write, credited on the website.",
+        "Published credentials you keep and can point to."
+      ],
+      "sampleHint": "One piece you wrote yourself, published or not."
+    }
+  ]
+}

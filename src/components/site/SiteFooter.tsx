@@ -30,6 +30,10 @@ export function SiteFooter() {
             <Link to={ROUTES.contact} className="hover:text-gold transition-colors">
               Contact
             </Link>
+            {/* Static page (scripts/careers.mjs) — plain anchor, not a router Link. */}
+            <a href={`${ROUTES.careers}/`} className="hover:text-gold transition-colors">
+              Careers
+            </a>
             <Link to={ROUTES.privacy} className="hover:text-gold transition-colors">
               Privacy
             </Link>
