@@ -27,9 +27,11 @@ function todayIso() {
 /**
  * Normalize to W3C date (YYYY-MM-DD) for sitemap lastmod.
  * Returns "" if the value cannot be made valid (Google rejects locale dates).
+ * Pass the raw frontmatter value: gray-matter parses unquoted YAML dates into
+ * `Date` objects, and their stringified form is a rejected locale date.
  * @param {unknown} value
  */
-function toIsoDate(value) {
+export function toIsoDate(value) {
   if (value == null || value === "") return "";
 
   let iso = "";

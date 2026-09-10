@@ -2,6 +2,8 @@ import { copyFileSync, existsSync, mkdirSync, writeFileSync, readdirSync, readFi
 import { resolve, dirname, join } from "node:path";
 import matter from "gray-matter";
 import { renderPostHtml } from "./markdown.mjs";
+import { blogSitemapEntries, loadBlogPosts } from "./blog-posts.mjs";
+import { writeSitemap } from "./sitemap.mjs";
 import { isReservedPagePath, urlPathFromPageRel } from "./cms-paths.mjs";
 import {
   SITE_ORIGIN,
@@ -18,7 +20,6 @@ import {
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
-const postsDir = resolve(root, "posts");
 const pagesDir = resolve(root, "site-pages");
 
 // Copy index.html to 404.html for client-side routing fallback
@@ -1042,26 +1043,6 @@ function loadCmsPages() {
   });
 }
 
-function loadBlogPosts() {
-  const fileNames = readdirSync(postsDir).filter((f) => f.endsWith(".md"));
-  return fileNames
-    .map((fileName) => {
-      const slug = fileName.replace(/\.md$/, "");
-      const raw = readFileSync(join(postsDir, fileName), "utf8");
-      const { data, content } = matter(raw);
-      return {
-        slug,
-        title: String(data.title ?? slug),
-        date: String(data.date ?? ""),
-        category: String(data.category ?? ""),
-        excerpt: String(data.excerpt ?? ""),
-        content,
-        html: renderPostHtml(content),
-      };
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
-
 for (const page of pages) {
   writePage(page);
 }
@@ -1120,12 +1101,9 @@ for (const post of blogPosts) {
   });
 }
 
-const { writeSitemap } = await import("./sitemap.mjs");
-writeSitemap(
-  resolve(dist, "sitemap.xml"),
-  blogPosts.map((post) => ({ slug: post.slug, date: post.date })),
-);
-writeSitemap(resolve(root, "public", "sitemap.xml"), blogPosts.map((post) => ({ slug: post.slug, date: post.date })));
+const sitemapBlogEntries = blogSitemapEntries(blogPosts);
+writeSitemap(resolve(dist, "sitemap.xml"), sitemapBlogEntries);
+writeSitemap(resolve(root, "public", "sitemap.xml"), sitemapBlogEntries);
 console.log("✓ Generated sitemap.xml");
 
 console.log("\n✓ Static HTML pages generated successfully!");
