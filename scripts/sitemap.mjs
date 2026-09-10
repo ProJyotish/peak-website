@@ -87,6 +87,7 @@ export function buildSitemapXml(blogPosts = loadBlogSlugs()) {
       lastmod: toIsoDate(post.date),
     })),
     { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
+    { loc: "/careers/", changefreq: "weekly", priority: "0.6" },
     { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
     { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
     { loc: "/privacy-policy/", changefreq: "yearly", priority: "0.3" },

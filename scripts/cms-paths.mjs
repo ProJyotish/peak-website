@@ -12,6 +12,7 @@ export const RESERVED_PAGE_PATHS = new Set([
   "/embed/privacy",
   "/delete-my-account",
   "/contact",
+  "/careers",
   "/checkout",
   "/tools/astrocartography",
 ]);

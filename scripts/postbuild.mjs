@@ -5,6 +5,7 @@ import { renderPostHtml } from "./markdown.mjs";
 import { blogSitemapEntries, loadBlogPosts } from "./blog-posts.mjs";
 import { writeSitemap } from "./sitemap.mjs";
 import { isReservedPagePath, urlPathFromPageRel } from "./cms-paths.mjs";
+import { careersPage } from "./careers.mjs";
 import {
   SITE_ORIGIN,
   STATIC_PATH_LABELS,
@@ -531,6 +532,7 @@ function formatPostDate(date) {
  *   metaLine?: string;
  *   backHref?: string;
  *   backLabel?: string;
+ *   extraHead?: string;
  *   content: string;
  * }} opts
  */
@@ -545,6 +547,7 @@ function htmlTemplate({
   breadcrumbs = [],
   noindex = false,
   canonical = "",
+  extraHead = "",
   content,
 }) {
   const desc = escapeHtml(
@@ -584,7 +587,7 @@ function htmlTemplate({
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${desc}">
-${robots}${canonicalTag}${crumbJson}
+${robots}${canonicalTag}${crumbJson}${extraHead}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -920,6 +923,7 @@ ${robots}${canonicalTag}${crumbJson}
     <footer class="site-footer">
       <nav aria-label="Footer">
         <a href="/">Home</a>
+        <a href="/careers/">Careers</a>
         <a href="/contact/">Contact</a>
         <a href="/privacy-policy/">Privacy</a>
         <a href="/terms/">Terms</a>
@@ -1011,6 +1015,7 @@ function writePage(page) {
     breadcrumbs: page.breadcrumbs ?? crumbsForPath(urlPath, TITLE_BY_PATH),
     noindex: Boolean(page.noindex),
     canonical: page.canonical || publicUrl(urlPath),
+    extraHead: page.extraHead ?? "",
     content: page.content,
   });
   writeFileSync(filePath, html);
@@ -1046,6 +1051,8 @@ function loadCmsPages() {
 for (const page of pages) {
   writePage(page);
 }
+
+writePage(careersPage());
 
 const blogPosts = loadBlogPosts();
 for (const post of blogPosts) {

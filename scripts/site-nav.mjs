@@ -17,6 +17,7 @@ export const STATIC_PATH_LABELS = {
   "/privacy-policy": "Privacy",
   "/delete-my-account": "Delete your account",
   "/contact": "Contact",
+  "/careers": "Careers",
   "/tools/astrocartography": "Astrocartography",
 };
 
