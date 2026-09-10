@@ -35,6 +35,13 @@ function esc(text) {
     .replaceAll('"', "&quot;");
 }
 
+const COUNT_WORDS = ["no", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"];
+
+/** "Three" for 3. Falls back to digits past nine, which we will never hit. */
+function countWord(n) {
+  return COUNT_WORDS[n] ?? String(n);
+}
+
 function bulletList(items) {
   return `<ul class="role-list">${items
     .map((item) => `<li>${esc(item)}</li>`)
@@ -563,8 +570,9 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
       what you build ships in days rather than quarters. It also means nobody is
       going to hand you a brief and a process. You will be writing both.</p>
 
-      <p>Three roles are open. All remote. All paid. Read the one you want, then
-      use the single form at the bottom of this page.</p>
+      <p>${countWord(careers.roles.length)} roles are open. All remote. All
+      paid. Read the one you want, then use the single form at the bottom of
+      this page.</p>
 
       ${careers.roles.map(roleSection).join("\n")}
 
