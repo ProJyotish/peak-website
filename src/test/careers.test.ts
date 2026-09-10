@@ -56,6 +56,24 @@ describe("careers page", () => {
     expect(page.content).toContain('name="website"'); // spam honeypot
   });
 
+  // The homepage has its own inline footer and does not use SiteFooter, so a
+  // link added to one of them silently misses the other. Check every footer.
+  it("is linked from every footer nav in the app", () => {
+    const footers = ["src/pages/Index.tsx", "src/components/site/SiteFooter.tsx"];
+    for (const rel of footers) {
+      const source = readFileSync(resolve(__dirname, "../..", rel), "utf8");
+      expect(source, `${rel} lists Privacy but not Careers`).toContain("ROUTES.careers");
+    }
+  });
+
+  it("is linked from the generated static page footer, but not on horary", () => {
+    const postbuild = readFileSync(
+      resolve(__dirname, "../../scripts/postbuild.mjs"),
+      "utf8",
+    );
+    expect(postbuild).toContain('isHorary ? "" : \'<a href="/careers/">Careers</a>\'');
+  });
+
   it("is in the peak sitemap and never the horary one", () => {
     expect(buildSitemapXml([])).toContain("https://peaklife.me/careers/");
     expect(buildSitemapXml([], { site: "horary" })).not.toContain("/careers/");
