@@ -317,9 +317,9 @@ function applyFormHtml(careers) {
       <section class="apply" id="apply">
         <h2>Apply</h2>
         <div class="noscript-note">
-          <p style="margin:0">The application form is being switched on. In the
-          meantime, email <a href="${mailto}">${esc(careers.applyFallbackEmail)}</a>
-          with the role you want, your CV, and a hundred words on why you fit it.</p>
+          <p style="margin:0">The form is being switched on. Until it is, email
+          <a href="${mailto}">${esc(careers.applyFallbackEmail)}</a> with the role
+          you want, your CV, and a hundred words on why you fit it.</p>
         </div>
       </section>`;
   }
@@ -327,15 +327,15 @@ function applyFormHtml(careers) {
   return `
       <section class="apply" id="apply">
         <h2>Apply</h2>
-        <p class="form-note">One form for every role. Everything marked
-          <span class="req">*</span> is required. Your files go straight to us and
-          are not published anywhere.</p>
+        <p class="form-note">One form, every role. Everything marked
+          <span class="req">*</span> is required. Your files come to us and go
+          nowhere else.</p>
 
         <noscript>
           <div class="noscript-note">
             <p style="margin:0">This form needs JavaScript to send your files.
-            With it switched off, email <a href="${mailto}">${esc(careers.applyFallbackEmail)}</a>
-            instead.</p>
+            With it switched off, email
+            <a href="${mailto}">${esc(careers.applyFallbackEmail)}</a> instead.</p>
           </div>
         </noscript>
 
@@ -358,7 +358,7 @@ function applyFormHtml(careers) {
 
           <div class="field">
             <label>Your profiles <span style="text-transform:none;letter-spacing:0;font-family:Inter,system-ui,sans-serif">(optional)</span></label>
-            <span class="hint" style="margin-top:0;margin-bottom:0.75rem">Share whichever you use. Leave the rest blank.</span>
+            <span class="hint" style="margin-top:0;margin-bottom:0.75rem">Share whichever you actually use. Leave the rest blank.</span>
           </div>
 
           <div class="field-grid">
@@ -386,8 +386,9 @@ function applyFormHtml(careers) {
               <span class="wordcount" id="wordcount">0 / 100 words</span>
             </label>
             <textarea id="about" name="about" required maxlength="1400"></textarea>
-            <span class="hint">Roughly a hundred words. Not a cover letter, just
-              why you and why this role.</span>
+            <span class="hint">Roughly a hundred words. Not a cover letter. Why
+              you, and why this role. We read every one ourselves, which is the
+              reason for the hundred.</span>
           </div>
 
           <div class="field">
@@ -400,7 +401,7 @@ function applyFormHtml(careers) {
           <div class="field">
             <label for="sample">Work sample <span style="text-transform:none;letter-spacing:0;font-family:Inter,system-ui,sans-serif">(optional)</span></label>
             <input type="file" id="sample" name="sample">
-            <span class="hint">If it is relevant, up to ${Math.round(careers.maxSampleBytes / 1048576)} MB.
+            <span class="hint">Only if it is relevant. Up to ${Math.round(careers.maxSampleBytes / 1048576)} MB.
               ${esc(sampleHints)}</span>
           </div>
 
@@ -497,7 +498,7 @@ function applyScript(careers) {
     if (sampleFile && sampleFile.size > MAX_SAMPLE) return say('Your work sample is larger than ' + Math.round(MAX_SAMPLE / 1048576) + ' MB. Please attach a smaller file or send a link instead.', 'err');
 
     submit.disabled = true;
-    say('Sending your application. Large files can take a moment.', 'ok');
+    say('Sending. Large files take a moment.', 'ok');
 
     Promise.all([readFile(cvFile), sampleFile ? readFile(sampleFile) : null])
       .then(function (files) {
@@ -526,7 +527,7 @@ function applyScript(careers) {
       .then(function (result) {
         if (!result || !result.ok) throw new Error((result && result.error) || 'Unknown error');
         form.style.display = 'none';
-        say('Thank you. Your application for ' + (ROLES[roleSelect.value] || 'this role') + ' is in. We read every one, and we will write back if there is a fit.', 'ok');
+        say('Your application for ' + (ROLES[roleSelect.value] || 'this role') + ' is in. We read every one ourselves. If there is a fit, you will hear from us.', 'ok');
         status.style.display = 'block';
         if (window.dataLayer) window.dataLayer.push({ event: 'career_application', role: roleSelect.value });
       })
@@ -552,12 +553,18 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
     .join("\n");
 
   const content = `
-      <p class="careers-intro">Peak is a small team building a user manual for
-      your life: jyotisha put to work on real decisions, in an app people open
-      every morning. These roles are remote, paid, and report to the founder.
-      There is no layer between you and the work.</p>
+      <p class="careers-intro"><strong>Small team. Paid work. No layer between
+      you and the founders.</strong></p>
 
-      <p>Read the role, then use the one form at the bottom of this page.</p>
+      <p>That is the short version.</p>
+
+      <p>Peak is a user manual for your life: jyotisha put to work on real
+      decisions, in an app people open every morning. We are early. That means
+      what you build ships in days rather than quarters. It also means nobody is
+      going to hand you a brief and a process. You will be writing both.</p>
+
+      <p>Three roles are open. All remote. All paid. Read the one you want, then
+      use the single form at the bottom of this page.</p>
 
       ${careers.roles.map(roleSection).join("\n")}
 
@@ -568,7 +575,7 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
     path: "careers/index.html",
     title: "Careers - Peak",
     description:
-      "Open roles at Peak: remote, paid, working directly with the founder on jyotisha built for real decisions.",
+      "Open roles at Peak: remote, paid, working directly with the founders on jyotisha built for real decisions.",
     eyebrow: "Careers",
     heading: "Work at Peak.",
     metaLine: `${careers.roles.length} open roles · Remote`,
