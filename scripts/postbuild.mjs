@@ -18,7 +18,6 @@ import {
   titleFromSlug,
   urlFromDistPath,
 } from "./site-nav.mjs";
-import { careersPage } from "./careers.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
