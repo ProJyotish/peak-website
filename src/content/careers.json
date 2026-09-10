@@ -5,6 +5,37 @@
   "maxSampleBytes": 10485760,
   "roles": [
     {
+      "id": "PEAK-FT-01",
+      "slug": "performance-creative-associate",
+      "title": "Performance Creative Associate",
+      "status": "Open",
+      "commitment": "Full time",
+      "employmentType": "FULL_TIME",
+      "location": "Remote",
+      "compensation": "Paid",
+      "summary": "Produce Peak's advertising creative at volume, working directly with the founders across campaigns.",
+      "responsibilities": [
+        "Produce ad creative, image and video, at the pace campaigns need.",
+        "Build variations for testing, and iterate on what performs.",
+        "Work directly with the founders, from brief to finished asset.",
+        "Keep the creative bank organised and current.",
+        "Work every asset to the Peak brand system."
+      ],
+      "lookingFor": [
+        "6 months to 2 years of experience producing marketing or advertising creative. This role is about proven output, not potential.",
+        "Very strong with Canva.",
+        "Fluent with AI generative image and video tools.",
+        "Good communication: you will work with the founders daily, and need to take a brief, ask the right question, and come back with the right thing.",
+        "A portfolio of ads you actually made."
+      ],
+      "whatYouGet": [
+        "Paid, full time.",
+        "Direct working relationship with the founders.",
+        "Ownership of Peak's advertising creative output."
+      ],
+      "sampleHint": "Ads you actually made. A portfolio link works, or attach two or three."
+    },
+    {
       "id": "PEAK-INT-01",
       "slug": "community-outreach-associate",
       "title": "Community & Outreach Associate",
@@ -50,7 +81,9 @@
         "Turn campaign briefs into finished pieces."
       ],
       "lookingFor": [
-        "Strong hands-on skill with Canva, Higgsfield or comparable image and video tools.",
+        "Experience is optional. We are hiring on skill and portfolio.",
+        "Strong hands-on skill with Canva.",
+        "Fluent with AI generative image and video tools (Higgsfield or comparable).",
         "An eye for restraint: Peak is warm and spare, not busy.",
         "Speed without sloppiness."
       ],

@@ -19,6 +19,19 @@ describe("careers data", () => {
     }
   });
 
+  it("leads with the full-time role", () => {
+    expect(careers.roles[0].id).toBe("PEAK-FT-01");
+    expect(careers.roles[0].employmentType).toBe("FULL_TIME");
+  });
+
+  it("uses employment types Google Jobs understands", () => {
+    for (const role of careers.roles) {
+      expect(["FULL_TIME", "PART_TIME", "CONTRACTOR", "INTERN"]).toContain(
+        role.employmentType,
+      );
+    }
+  });
+
   it("keeps role ids and slugs unique", () => {
     expect(new Set(careers.roles.map((r) => r.id)).size).toBe(careers.roles.length);
     expect(new Set(careers.roles.map((r) => r.slug)).size).toBe(careers.roles.length);
