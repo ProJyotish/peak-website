@@ -11,7 +11,8 @@
       "status": "Open",
       "commitment": "Full time",
       "employmentType": "FULL_TIME",
-      "location": "Remote",
+      "location": "Hybrid / In-office",
+      "remote": false,
       "compensation": "Paid",
       "summary": "Produce Peak's advertising creative at volume, working directly with the founders across campaigns.",
       "responsibilities": [
@@ -43,6 +44,7 @@
       "commitment": "15 hours/week",
       "employmentType": "PART_TIME",
       "location": "Remote",
+      "remote": true,
       "compensation": "Paid",
       "summary": "Grow Peak's presence across the internet, and set up collaborations with media and influencers.",
       "responsibilities": [
@@ -72,6 +74,7 @@
       "commitment": "15 hours/week or full time",
       "employmentType": "PART_TIME",
       "location": "Remote",
+      "remote": true,
       "compensation": "Paid",
       "summary": "Build Peak's bank of campaign creative: images, video and collateral used across campaigns.",
       "responsibilities": [
@@ -102,6 +105,7 @@
       "commitment": "15 hours/week or full time",
       "employmentType": "PART_TIME",
       "location": "Remote",
+      "remote": true,
       "compensation": "Paid",
       "summary": "Write researched articles for the Peak website, published under your own name.",
       "responsibilities": [
