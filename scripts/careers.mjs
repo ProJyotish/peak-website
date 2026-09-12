@@ -91,6 +91,14 @@ function jobPostingJsonLd(roles, origin, datePosted) {
       `<p><strong>What you get</strong></p><ul>${role.whatYouGet.map((r) => `<li>${r}</li>`).join("")}</ul>`,
     ].join("");
 
+    // Google Jobs treats jobLocationType: TELECOMMUTE as a promise that the
+    // applicant never needs to be physically present. True for our remote
+    // roles; false for a hybrid/in-office one, which instead needs a real
+    // jobLocation. We don't have a specific office address on file, so this
+    // falls back to a country-level Place rather than mis-declaring it as
+    // fully remote.
+    const isRemote = role.remote !== false;
+
     return {
       "@context": "https://schema.org",
       "@type": "JobPosting",
@@ -109,8 +117,17 @@ function jobPostingJsonLd(roles, origin, datePosted) {
         sameAs: origin,
         logo: `${origin}/android-chrome-512x512.png`,
       },
-      jobLocationType: "TELECOMMUTE",
-      applicantLocationRequirements: { "@type": "Country", name: "India" },
+      ...(isRemote
+        ? {
+            jobLocationType: "TELECOMMUTE",
+            applicantLocationRequirements: { "@type": "Country", name: "India" },
+          }
+        : {
+            jobLocation: {
+              "@type": "Place",
+              address: { "@type": "PostalAddress", addressCountry: "IN" },
+            },
+          }),
       directApply: true,
       url: `${origin}${CAREERS_PATH}/#${role.slug}`,
     };

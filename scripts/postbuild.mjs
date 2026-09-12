@@ -1053,6 +1053,8 @@ for (const page of pages) {
   writePage(page);
 }
 
+writePage(careersPage());
+
 const blogPosts = loadBlogPosts();
 for (const post of blogPosts) {
   TITLE_BY_PATH[`/blog/${post.slug}`] = post.title;
