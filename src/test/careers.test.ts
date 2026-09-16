@@ -63,6 +63,20 @@ describe("careers page", () => {
     );
   });
 
+  it("never tells Google Jobs a non-remote role is fully telecommute", () => {
+    const jobPostings = [...page.extraHead.matchAll(/{"@context".*?}(?=\s*<\/script>)/g)]
+      .map((m) => JSON.parse(m[0]));
+    for (const role of careers.roles) {
+      const posting = jobPostings.find((p) => p.identifier.value === role.id);
+      if (role.remote === false) {
+        expect(posting.jobLocationType).toBeUndefined();
+        expect(posting.jobLocation).toBeDefined();
+      } else {
+        expect(posting.jobLocationType).toBe("TELECOMMUTE");
+      }
+    }
+  });
+
   it("renders the apply form once an endpoint is configured", () => {
     expect(careers.applyEndpoint).toMatch(/^https:\/\/script\.google\.com\//);
     expect(page.content).toContain('id="apply-form"');
@@ -85,6 +99,18 @@ describe("careers page", () => {
       "utf8",
     );
     expect(postbuild).toContain('<a href="/careers/">Careers</a>');
+  });
+
+  // The unit tests above only exercise careersPage() in isolation. postbuild
+  // must actually call it, or `npm run build` silently stops emitting
+  // dist/careers/index.html — which is exactly what a branch merge did once
+  // already, without failing a single test.
+  it("is actually written by postbuild, not just importable", () => {
+    const postbuild = readFileSync(
+      resolve(__dirname, "../../scripts/postbuild.mjs"),
+      "utf8",
+    );
+    expect(postbuild).toContain("writePage(careersPage())");
   });
 
   it("is in the Peak sitemap", () => {
