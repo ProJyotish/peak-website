@@ -101,10 +101,9 @@ describe("careers page", () => {
     expect(postbuild).toContain('<a href="/careers/">Careers</a>');
   });
 
-  // The unit tests above only exercise careersPage() in isolation. postbuild
-  // must actually call it, or `npm run build` silently stops emitting
-  // dist/careers/index.html — which is exactly what a branch merge did once
-  // already, without failing a single test.
+  // The tests above only exercise careersPage() in isolation. postbuild must
+  // actually call it, or `npm run build` silently stops emitting
+  // dist/careers/index.html with nothing failing.
   it("is actually written by postbuild, not just importable", () => {
     const postbuild = readFileSync(
       resolve(__dirname, "../../scripts/postbuild.mjs"),
@@ -113,7 +112,7 @@ describe("careers page", () => {
     expect(postbuild).toContain("writePage(careersPage())");
   });
 
-  it("is in the Peak sitemap", () => {
+  it("is in the peak sitemap and never the horary one", () => {
     expect(buildSitemapXml([])).toContain("https://peaklife.me/careers/");
   });
 });
