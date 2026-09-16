@@ -13,11 +13,13 @@ export const SITE_ORIGIN = "https://peaklife.me";
 export const STATIC_PATH_LABELS = {
   "/": "Home",
   "/blog": "Blog",
+  "/product": "Product",
   "/terms": "Terms",
   "/privacy-policy": "Privacy",
   "/delete-my-account": "Delete your account",
   "/contact": "Contact",
   "/careers": "Careers",
+  "/checkout": "Checkout",
   "/tools/astrocartography": "Astrocartography",
 };
 

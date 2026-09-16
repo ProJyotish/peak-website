@@ -64,7 +64,7 @@ CloudFront custom certs must be in **us-east-1** (AWS requirement), even when th
 ## Directory URLs (`/blog/` → static HTML)
 
 S3 + OAC does **not** map `/blog/` to `blog/index.html`. Without a rewrite, CloudFront’s
-403/404 → `/index.html` SPA fallback runs — you see an empty `<div id="root">`.
+403/404 error page runs instead of the prerendered route HTML.
 
 `/blog/index.html` works; `/blog/` does not, until the CloudFront Function is attached:
 
@@ -74,3 +74,7 @@ AWS_PROFILE=Peak ./scripts/aws/attach-url-rewrite.sh
 ```
 
 Function source: `scripts/aws/cloudfront-url-rewrite.js` (viewer-request).
+
+Unknown URLs should serve `404.html` (not the homepage). The distribution template in
+`cloudfront-distribution.json` maps 403/404 there; apply that on the live
+distribution if it still returns `/index.html` with HTTP 200.

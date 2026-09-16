@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { BlogPostView } from "@/components/site/BlogPostView";
 import { PageList } from "@/components/site/PageList";
+import { SeoHead } from "@/components/site/SeoHead";
 import { SiteBreadcrumbs } from "@/components/site/SiteBreadcrumbs";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
@@ -12,6 +13,7 @@ import {
   getPageByPath,
 } from "@/lib/pages";
 import { ROUTES } from "@/lib/routes";
+import { productSeoKeywords } from "@/lib/seo";
 import NotFound from "./NotFound";
 
 const CmsPage = () => {
@@ -42,6 +44,13 @@ const CmsPage = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <SeoHead
+        title={`${title} - Peak`}
+        description={description || title}
+        keywords={productSeoKeywords(eyebrow)}
+        path={pathname}
+        noindex={page ? !page.indexed : false}
+      />
       <header className="border-b border-border">
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />

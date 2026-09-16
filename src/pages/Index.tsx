@@ -105,36 +105,6 @@ const Index = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const faqLd = {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      mainEntity: HOME.faqs.map((item) => ({
-        "@type": "Question",
-        name: item.q,
-        acceptedAnswer: { "@type": "Answer", text: item.a },
-      })),
-    };
-    const appLd = {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      name: "Peak",
-      applicationCategory: "LifestyleApplication",
-      operatingSystem: "Android, Web",
-      url: SITE.peakUrl + "/",
-      publisher: { "@type": "Organization", name: SITE.legalName },
-    };
-    const scripts = [faqLd, appLd].map((data, i) => {
-      const el = document.createElement("script");
-      el.type = "application/ld+json";
-      el.id = `peak-home-ld-${i}`;
-      el.text = JSON.stringify(data);
-      document.head.appendChild(el);
-      return el;
-    });
-    return () => scripts.forEach((el) => el.remove());
-  }, []);
-
   const androidNav = withUtm(SITE.stores.android, "nav");
   const androidHero = withUtm(SITE.stores.android, "hero_android");
   const webHero = withUtm(SITE.app, "hero_web");
@@ -154,6 +124,26 @@ const Index = () => {
           "personalized daily horoscope",
         )}
         path={ROUTES.home}
+        jsonLd={[
+          {
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: HOME.faqs.map((item) => ({
+              "@type": "Question",
+              name: item.q,
+              acceptedAnswer: { "@type": "Answer", text: item.a },
+            })),
+          },
+          {
+            "@context": "https://schema.org",
+            "@type": "SoftwareApplication",
+            name: "Peak",
+            applicationCategory: "LifestyleApplication",
+            operatingSystem: "Android, Web",
+            url: SITE.peakUrl + "/",
+            publisher: { "@type": "Organization", name: SITE.legalName },
+          },
+        ]}
       />
       <header className={navStuck ? "nav is-stuck" : "nav"}>
         <div className="wrap nav__inner">

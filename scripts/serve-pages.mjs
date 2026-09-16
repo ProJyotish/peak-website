@@ -1,7 +1,7 @@
 /**
- * Serve `dist/` like GitHub Pages:
+ * Serve `dist/` like S3 + CloudFront:
  * - directory URLs resolve to index.html
- * - missing paths fall back to 404.html (SPA shell)
+ * - missing paths fall back to 404.html
  */
 import { createServer } from "node:http";
 import { readFileSync, existsSync, statSync } from "node:fs";

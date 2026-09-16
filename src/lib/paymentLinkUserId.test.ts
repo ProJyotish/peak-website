@@ -35,4 +35,11 @@ describe("paymentLinkUserId", () => {
       }
     }
   });
+
+  it("treats a missing pid as empty", () => {
+    expect(decodePaymentLinkUserId(null)).toEqual({
+      userId: "",
+      region: "international",
+    });
+  });
 });

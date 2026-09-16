@@ -2,22 +2,32 @@ import { Link, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { breadcrumbsForPath } from "@/lib/pages";
 import { ROUTES } from "@/lib/routes";
+import { productSeoKeywords } from "@/lib/seo";
 import { LEGAL_LAST_UPDATED } from "@/lib/site";
+import { SeoHead } from "./SeoHead";
 import { SiteBreadcrumbs } from "./SiteBreadcrumbs";
 import { SiteFooter } from "./SiteFooter";
 import { Wordmark } from "./Wordmark";
 
 type LegalLayoutProps = {
   title: string;
+  description?: string;
   children: React.ReactNode;
 };
 
-export function LegalLayout({ title, children }: LegalLayoutProps) {
+export function LegalLayout({ title, description, children }: LegalLayoutProps) {
   const { pathname } = useLocation();
   const crumbs = breadcrumbsForPath(pathname, title);
+  const desc = description ?? `${title} for Peak - AI-powered Vedic astrology`;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <SeoHead
+        title={`${title} - Peak`}
+        description={desc}
+        keywords={productSeoKeywords("legal")}
+        path={pathname}
+      />
       <header className="border-b border-border">
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />

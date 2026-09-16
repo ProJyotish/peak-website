@@ -25,6 +25,8 @@ describe("isReservedPagePath", () => {
   it("blocks app-owned routes", () => {
     expect(isReservedPagePath("/blog")).toBe(true);
     expect(isReservedPagePath("/blog/mars")).toBe(true);
+    expect(isReservedPagePath("/product")).toBe(true);
+    expect(isReservedPagePath("/product/ask")).toBe(true);
     expect(isReservedPagePath("/checkout")).toBe(true);
     expect(isReservedPagePath("/tools/astrocartography")).toBe(true);
   });

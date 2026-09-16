@@ -1,29 +1,13 @@
-import { useEffect } from "react";
+import { Helmet } from "react-helmet-async";
 import type { PageSeo } from "@/lib/seo";
 import { absoluteImageUrl, absoluteUrl, keywordsToString } from "@/lib/seo";
 
-function upsertMeta(attr: "name" | "property", key: string, content: string) {
-  const selector = `meta[${attr}="${key}"]`;
-  let el = document.head.querySelector<HTMLMetaElement>(selector);
-  if (!el) {
-    el = document.createElement("meta");
-    el.setAttribute(attr, key);
-    document.head.appendChild(el);
-  }
-  el.setAttribute("content", content);
-}
+export type SeoHeadProps = PageSeo & {
+  noindex?: boolean;
+  jsonLd?: unknown[];
+};
 
-function upsertLink(rel: string, href: string) {
-  let el = document.head.querySelector<HTMLLinkElement>(`link[rel="${rel}"]`);
-  if (!el) {
-    el = document.createElement("link");
-    el.setAttribute("rel", rel);
-    document.head.appendChild(el);
-  }
-  el.setAttribute("href", href);
-}
-
-/** Updates document title + meta tags for the active route (SPA SEO). */
+/** Title, canonical, Open Graph, and optional JSON-LD — works in SSR and the client. */
 export function SeoHead({
   title,
   description,
@@ -31,32 +15,38 @@ export function SeoHead({
   path,
   type = "website",
   image,
-}: PageSeo) {
+  noindex = false,
+  jsonLd,
+}: SeoHeadProps) {
   const keywordsCsv = keywordsToString(keywords);
   const imageUrl = absoluteImageUrl(image);
   const pageUrl = absoluteUrl(path);
 
-  useEffect(() => {
-    const prevTitle = document.title;
-    document.title = title;
-
-    upsertMeta("name", "description", description);
-    upsertMeta("name", "keywords", keywordsCsv);
-    upsertMeta("property", "og:title", title);
-    upsertMeta("property", "og:description", description);
-    upsertMeta("property", "og:type", type);
-    upsertMeta("property", "og:url", pageUrl);
-    upsertMeta("property", "og:image", imageUrl);
-    upsertMeta("name", "twitter:card", "summary_large_image");
-    upsertMeta("name", "twitter:title", title);
-    upsertMeta("name", "twitter:description", description);
-    upsertMeta("name", "twitter:image", imageUrl);
-    upsertLink("canonical", pageUrl);
-
-    return () => {
-      document.title = prevTitle;
-    };
-  }, [title, description, keywordsCsv, path, type, imageUrl, pageUrl]);
-
-  return null;
+  return (
+    <>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        {keywordsCsv ? <meta name="keywords" content={keywordsCsv} /> : null}
+        {noindex ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow" />}
+        {noindex ? null : <link rel="canonical" href={pageUrl} />}
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content={type} />
+        <meta property="og:url" content={pageUrl} />
+        <meta property="og:image" content={imageUrl} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={imageUrl} />
+      </Helmet>
+      {jsonLd?.map((data, index) => (
+        <script
+          key={index}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+        />
+      ))}
+    </>
+  );
 }

@@ -1,11 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import { BlogPostView } from "@/components/site/BlogPostView";
+import { SeoHead } from "@/components/site/SeoHead";
 import { SiteBreadcrumbs } from "@/components/site/SiteBreadcrumbs";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import { getPostBySlug } from "@/lib/blog";
 import { breadcrumbsForPath } from "@/lib/pages";
 import { ROUTES } from "@/lib/routes";
+import { productSeoKeywords } from "@/lib/seo";
 import { ArrowLeft } from "lucide-react";
 import NotFound from "./NotFound";
 
@@ -19,6 +21,13 @@ const BlogPost = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <SeoHead
+        title={`${post.title} - Peak`}
+        description={post.excerpt || post.title}
+        keywords={productSeoKeywords(post.category, "vedic blog")}
+        path={ROUTES.blogPost(post.slug)}
+        type="article"
+      />
       <header className="border-b border-border">
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />

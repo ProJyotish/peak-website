@@ -12,6 +12,7 @@ import {
   PreferredPlacesField,
 } from "@/components/astrocartography/LocationAutocomplete";
 import { SiteBreadcrumbs } from "@/components/site/SiteBreadcrumbs";
+import { SeoHead } from "@/components/site/SeoHead";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import { Calendar } from "@/components/ui/calendar";
@@ -33,6 +34,7 @@ import {
 } from "@/lib/astroApi";
 import { ROUTES } from "@/lib/routes";
 import { breadcrumbsForPath } from "@/lib/pages";
+import { productSeoKeywords } from "@/lib/seo";
 import { trackEvent } from "@/lib/tracking";
 import { cn } from "@/lib/utils";
 
@@ -100,8 +102,8 @@ const initialForm: FormState = {
   birthTime: "12:00",
   birthCity: "",
   purposeId: "short_break",
-  travelStart: todayIso(),
-  travelEnd: plusMonthsIso(1),
+  travelStart: "",
+  travelEnd: "",
   preferredPlaceList: [],
   countries: "",
 };
@@ -199,6 +201,11 @@ export default function Astrocartography() {
   const [result, setResult] = useState<LayAdviseData | null>(null);
 
   useEffect(() => {
+    setForm((current) => ({
+      ...current,
+      travelStart: current.travelStart || todayIso(),
+      travelEnd: current.travelEnd || plusMonthsIso(1),
+    }));
     trackEvent("astro_travel_view", {
       page: "astrocartography",
     });
@@ -276,6 +283,12 @@ export default function Astrocartography() {
 
   return (
     <div className="min-h-screen bg-parchment text-ink">
+      <SeoHead
+        title="Astrocartography Travel Map | Peak"
+        description="Find favourable places for a trip from your birth chart. Peak maps travel windows to cities that fit the purpose and dates."
+        keywords={productSeoKeywords("astrocartography", "vedic travel timing")}
+        path={ROUTES.astrocartography}
+      />
       <header className="border-b border-border/60 bg-parchment/90 backdrop-blur">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
           <Link

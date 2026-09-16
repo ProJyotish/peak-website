@@ -38,8 +38,8 @@ export function encodePaymentLinkUserId(
   return `${userId}${regionDigit}`;
 }
 
-export function decodePaymentLinkUserId(raw: string): DecodedPaymentLinkUserId {
-  const trimmed = raw.trim();
+export function decodePaymentLinkUserId(raw: string | null | undefined): DecodedPaymentLinkUserId {
+  const trimmed = String(raw ?? "").trim();
   if (!trimmed) {
     return { userId: "", region: "international" };
   }

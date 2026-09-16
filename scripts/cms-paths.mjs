@@ -6,6 +6,7 @@
 export const RESERVED_PAGE_PATHS = new Set([
   "/",
   "/blog",
+  "/product",
   "/terms",
   "/embed/terms",
   "/privacy-policy",
@@ -18,7 +19,7 @@ export const RESERVED_PAGE_PATHS = new Set([
 ]);
 
 /** Children of these prefixes are owned by the app, not CMS pages. */
-export const RESERVED_PAGE_PREFIXES = ["/blog/", "/embed/"];
+export const RESERVED_PAGE_PREFIXES = ["/blog/", "/product/", "/embed/"];
 
 export function normalizePagePath(pathname) {
   const raw = String(pathname ?? "").replaceAll("\\", "/").trim();

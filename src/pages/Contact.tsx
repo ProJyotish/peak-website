@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Mail, MessageCircle } from "lucide-react";
+import { SeoHead } from "@/components/site/SeoHead";
 import { SiteBreadcrumbs } from "@/components/site/SiteBreadcrumbs";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { Wordmark } from "@/components/site/Wordmark";
 import { breadcrumbsForPath } from "@/lib/pages";
 import { SITE } from "@/lib/site";
 import { ROUTES } from "@/lib/routes";
+import { productSeoKeywords } from "@/lib/seo";
 
 const Contact = () => {
   const whatsappUrl = import.meta.env.VITE_WHATSAPP_URL || "https://wa.me/919560057789?text=Hi";
@@ -14,6 +16,12 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <SeoHead
+        title="Contact Us - Peak"
+        description="Contact Peak - AI-powered Vedic astrology"
+        keywords={productSeoKeywords("contact")}
+        path={ROUTES.contact}
+      />
       <header className="border-b border-border">
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />

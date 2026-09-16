@@ -29,6 +29,7 @@ export type PageSeo = {
   type?: "website" | "article";
   /** Absolute or site-relative image URL for og/twitter cards */
   image?: string;
+  noindex?: boolean;
 };
 
 export function absoluteUrl(path: string): string {

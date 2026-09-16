@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { SeoHead } from "@/components/site/SeoHead";
 import { ROUTES } from "@/lib/routes";
 import { SITE } from "@/lib/site";
 import { Wordmark } from "@/components/site/Wordmark";
@@ -13,6 +14,13 @@ const NotFound = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6">
+      <SeoHead
+        title="Page not found - Peak"
+        description={`That route does not exist on ${SITE.domain}.`}
+        keywords={[]}
+        path={location.pathname}
+        noindex
+      />
       <Wordmark className="mb-12" />
       <div className="text-center">
         <p className="eyebrow mb-4">404</p>

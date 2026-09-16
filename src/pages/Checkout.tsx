@@ -3,9 +3,10 @@ import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check, Crown, Sparkles, Star, Users, Quote, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/peak-logo.png";
 import { SUBSCRIPTION_API_URL } from "@/lib/api";
 import { decodePaymentLinkUserId } from "@/lib/paymentLinkUserId";
+import { SeoHead } from "@/components/site/SeoHead";
+import { ROUTES } from "@/lib/routes";
 
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   crown: Crown,
@@ -271,6 +272,13 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream via-bone to-clay/5">
+      <SeoHead
+        title="Checkout - Peak"
+        description="Subscribe to Peak — AI-powered Vedic astrology for daily guidance, Ask, and goals."
+        keywords={[]}
+        path={ROUTES.checkout}
+        noindex
+      />
       <div
         role="banner"
         className="w-full border-b border-gold/20 bg-gold/10 text-ink shadow-sm"
@@ -294,7 +302,7 @@ const Checkout = () => {
             >
               <div className="flex justify-center mb-3">
                 <img
-                  src={logo}
+                  src="/peak-logo.png"
                   alt="Peak Logo"
                   className="w-20 h-20 md:w-28 md:h-28 mx-auto"
                 />
