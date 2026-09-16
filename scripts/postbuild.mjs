@@ -504,63 +504,7 @@ function writePage(page) {
 
 writePage(careersPage());
 
-writePage(careersPage());
-
-const blogPosts = loadBlogPosts();
-for (const post of blogPosts) {
-  TITLE_BY_PATH[`/blog/${post.slug}`] = post.title;
-}
-
-const blogListingContent = blogPosts.length
-  ? blogPosts
-      .map(
-        (post) => `
-      <a class="post-card" href="/blog/${escapeHtml(post.slug)}/">
-        <div class="row-meta">
-          ${post.category ? `<span class="chip">${escapeHtml(post.category)}</span>` : ""}
-          <span class="meta">${escapeHtml(formatPostDate(post.date))}</span>
-        </div>
-        <h2>${escapeHtml(post.title)}</h2>
-        <p>${escapeHtml(post.excerpt)}</p>
-        <p class="read">Read →</p>
-      </a>`,
-      )
-      .join("\n")
-  : `<p>No posts yet.</p>`;
-
-writePage({
-  path: "blog/index.html",
-  title: "Blog - Peak",
-  description: "Vedic insights from Peak — planetary wisdom and timing for real decisions.",
-  eyebrow: "Blog",
-  heading: "Vedic Insights",
-  metaLine: "Explore planetary wisdom",
-  backHref: "/",
-  backLabel: "Home",
-  content: `
-    <p style="margin-bottom: 2rem;">Explore planetary wisdom, timing, and how Peak reads the chart for real decisions.</p>
-    ${blogListingContent}
-  `,
-});
-
-for (const post of blogPosts) {
-  const categoryMeta = post.category
-    ? `${escapeHtml(post.category)} · ${escapeHtml(formatPostDate(post.date))}`
-    : escapeHtml(formatPostDate(post.date));
-  writePage({
-    path: `blog/${post.slug}/index.html`,
-    title: `${post.title} - Peak`,
-    description: post.excerpt || post.title,
-    eyebrow: "Blog",
-    heading: post.title,
-    metaLine: categoryMeta,
-    backHref: "/blog/",
-    backLabel: "Blog",
-    content: post.html,
-  });
-}
-
-const sitemapBlogEntries = blogSitemapEntries(blogPosts);
+const sitemapBlogEntries = blogSitemapEntries();
 writeSitemap(resolve(dist, "sitemap.xml"), sitemapBlogEntries, { domain: SITE.domain });
 writeSitemap(resolve(root, "public", "sitemap.xml"), sitemapBlogEntries, { domain: SITE.domain });
 console.log("✓ Generated sitemap.xml");
