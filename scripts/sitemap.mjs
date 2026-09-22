@@ -1,10 +1,13 @@
 import { readdirSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import matter from "gray-matter";
+import { isReservedPagePath, urlPathFromPageRel } from "./cms-paths.mjs";
+import { collectFolderPaths, pageIsIndexed } from "./site-nav.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const postsDir = resolve(root, "posts");
+const sitePagesDir = resolve(root, "site-pages");
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -68,12 +71,56 @@ function loadBlogSlugs() {
     });
 }
 
+function walkMarkdownFiles(dir) {
+  const files = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    if (entry.name.startsWith(".")) continue;
+    const full = join(dir, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...walkMarkdownFiles(full));
+    } else if (entry.isFile() && entry.name.endsWith(".md")) {
+      files.push(full);
+    }
+  }
+  return files;
+}
+
+/**
+ * CMS page + folder-listing routes under `site-pages/` (the astrology/jyotish
+ * decision pages), mirroring `src/lib/pages.ts`'s `getAllPages()` /
+ * `getFolderPaths()` without Vite's `import.meta.glob`, which plain Node
+ * can't load.
+ *
+ * A folder is only unconditionally indexed when it has no `index.md` of its
+ * own — that's `CmsPage.tsx`'s `noindex={page ? !page.indexed : false}`: no
+ * page at that path means noindex is always false. A folder that *does* have
+ * an `index.md` is a normal page and follows that page's own `indexed` flag
+ * instead, so it's handled by the indexed-pages filter below, not treated as
+ * an always-on folder route.
+ */
+function loadSitePageRoutes() {
+  const pages = walkMarkdownFiles(sitePagesDir)
+    .map((filePath) => {
+      const path = urlPathFromPageRel(relative(sitePagesDir, filePath));
+      const { data } = matter(readFileSync(filePath, "utf8"));
+      return { path, indexed: pageIsIndexed(data) };
+    })
+    .filter((page) => !isReservedPagePath(page.path));
+
+  const pagePaths = new Set(pages.map((page) => page.path));
+  const indexedPaths = pages.filter((page) => page.indexed).map((page) => page.path);
+  const pureFolderPaths = collectFolderPaths(pages).filter((path) => !pagePaths.has(path));
+
+  return [...indexedPaths, ...pureFolderPaths].sort();
+}
+
 /**
  * @param {{ slug: string, date?: string }[]} [blogPosts]
- * @param {{ domain?: string }} [opts]
+ * @param {{ domain?: string, sitePageRoutes?: string[] }} [opts]
  */
 export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
   const domain = opts.domain || "peaklife.me";
+  const sitePageRoutes = opts.sitePageRoutes ?? loadSitePageRoutes();
 
   /** @type {{ loc: string, changefreq: string, priority: string, lastmod?: string }[]} */
   const entries = [
@@ -90,6 +137,11 @@ export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
       changefreq: "monthly",
       priority: "0.7",
       lastmod: toIsoDate(post.date),
+    })),
+    ...sitePageRoutes.map((path) => ({
+      loc: `${path}/`,
+      changefreq: "monthly",
+      priority: "0.6",
     })),
     { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
     { loc: "/careers/", changefreq: "weekly", priority: "0.6" },
@@ -119,7 +171,7 @@ ${entries
 /**
  * @param {string} outPath
  * @param {{ slug: string, date?: string }[]} [blogPosts]
- * @param {{ domain?: string }} [opts]
+ * @param {{ domain?: string, sitePageRoutes?: string[] }} [opts]
  */
 export function writeSitemap(outPath, blogPosts, opts) {
   writeFileSync(outPath, buildSitemapXml(blogPosts, opts));

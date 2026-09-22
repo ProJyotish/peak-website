@@ -7,6 +7,13 @@ import { buildSitemapXml, toIsoDate } from "../../scripts/sitemap.mjs";
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const postsDir = resolve(__dirname, "../../posts");
+const jyotishDir = resolve(__dirname, "../../site-pages/jyotish");
+
+/** Exact <loc> values from the sitemap XML, so a check on `/jyotish/` can't
+ * false-positive by matching as a substring of `/jyotish/aries-ascendant/`. */
+function locs(xml: string): Set<string> {
+  return new Set([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
+}
 
 /** loc -> lastmod ("" when the entry has none), for the /blog/<slug>/ urls only. */
 function blogLastmods(xml: string) {
@@ -40,6 +47,38 @@ describe("blog sitemap lastmod", () => {
     for (const post of loadBlogPosts()) {
       expect(post.isoDate, `${post.slug} has no ISO date`).toMatch(ISO_DATE);
     }
+  });
+});
+
+describe("site-pages sitemap entries", () => {
+  it("includes every jyotish page plus its /jyotish/ folder listing", () => {
+    const found = locs(buildSitemapXml());
+    // "index.md" is the folder's own page (-> /jyotish/, not /jyotish/index/),
+    // same convention as urlPathFromPageRel; check it via the folder assertion below.
+    const slugs = readdirSync(jyotishDir)
+      .filter((f) => f.endsWith(".md") && f !== "index.md")
+      .map((f) => f.replace(/\.md$/, ""));
+    // All jyotish pages ship indexed today; if one goes noindex later,
+    // update this instead of assuming the count.
+    expect(slugs.length).toBeGreaterThan(0);
+    for (const slug of slugs) {
+      expect(found.has(`https://peaklife.me/jyotish/${slug}/`), `${slug} missing`).toBe(true);
+    }
+    expect(found.has("https://peaklife.me/jyotish/")).toBe(true);
+  });
+
+  it("excludes a noindex CMS page, e.g. an astrology decision page pending review", () => {
+    const found = locs(buildSitemapXml());
+    expect(found.has("https://peaklife.me/astrology/career/change-jobs/")).toBe(false);
+  });
+
+  it("excludes a folder whose own index.md is noindex, rather than always indexing folders", () => {
+    // astrology/index.md and astrology/career/index.md are both `index: false` —
+    // unlike /jyotish/ (no index.md), these folders are real noindex pages, not
+    // bare listings, so they must not sneak into the sitemap as "always indexed".
+    const found = locs(buildSitemapXml());
+    expect(found.has("https://peaklife.me/astrology/")).toBe(false);
+    expect(found.has("https://peaklife.me/astrology/career/")).toBe(false);
   });
 });
 
