@@ -1,9 +1,10 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 import matter from "gray-matter";
-import { readFileSync, readdirSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { tmpdir } from "node:os";
 import { blogSitemapEntries, loadBlogPosts } from "../../scripts/blog-posts.mjs";
-import { buildSitemapXml, toIsoDate } from "../../scripts/sitemap.mjs";
+import { buildSitemapXml, loadSitePageRoutes, toIsoDate } from "../../scripts/sitemap.mjs";
 
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const postsDir = resolve(__dirname, "../../posts");
@@ -67,18 +68,51 @@ describe("site-pages sitemap entries", () => {
     expect(found.has("https://peaklife.me/jyotish/")).toBe(true);
   });
 
-  it("excludes a noindex CMS page, e.g. an astrology decision page pending review", () => {
-    const found = locs(buildSitemapXml());
-    expect(found.has("https://peaklife.me/astrology/career/change-jobs/")).toBe(false);
-  });
+  describe("indexed/folder rules, against a throwaway fixture directory", () => {
+    // Real site-pages/ content gets added, edited, and deleted mid-session by
+    // CMS editors, so pinning these rules to it (as earlier drafts of this
+    // file did, against astrology/* before that section was deleted) is
+    // flaky. A synthetic fixture keeps this deterministic.
+    let fixtureDir: string;
 
-  it("excludes a folder whose own index.md is noindex, rather than always indexing folders", () => {
-    // astrology/index.md and astrology/career/index.md are both `index: false` —
-    // unlike /jyotish/ (no index.md), these folders are real noindex pages, not
-    // bare listings, so they must not sneak into the sitemap as "always indexed".
-    const found = locs(buildSitemapXml());
-    expect(found.has("https://peaklife.me/astrology/")).toBe(false);
-    expect(found.has("https://peaklife.me/astrology/career/")).toBe(false);
+    afterEach(() => {
+      if (fixtureDir) rmSync(fixtureDir, { recursive: true, force: true });
+    });
+
+    function writePage(rel: string, frontmatter: Record<string, unknown>, body = "Body.") {
+      const filePath = join(fixtureDir, rel);
+      mkdirSync(join(filePath, ".."), { recursive: true });
+      const yaml = Object.entries(frontmatter)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join("\n");
+      writeFileSync(filePath, `---\n${yaml}\n---\n\n${body}\n`);
+    }
+
+    it("includes an indexed page and a pure folder with no index.md of its own", () => {
+      fixtureDir = mkdtempSync(join(tmpdir(), "sitemap-fixture-"));
+      writePage("guides/saturn.md", { title: "Saturn" });
+      const routes = loadSitePageRoutes(fixtureDir);
+      expect(routes).toContain("/guides/saturn");
+      expect(routes).toContain("/guides"); // pure folder: no guides/index.md
+    });
+
+    it("excludes a noindex page", () => {
+      fixtureDir = mkdtempSync(join(tmpdir(), "sitemap-fixture-"));
+      writePage("draft.md", { title: "Draft", index: false });
+      expect(loadSitePageRoutes(fixtureDir)).not.toContain("/draft");
+    });
+
+    it("excludes a folder whose own index.md is noindex, rather than always indexing folders", () => {
+      // A folder with an index.md is a real page following its own `indexed`
+      // flag (CmsPage.tsx: noindex={page ? !page.indexed : false}), not an
+      // always-on listing — unlike the pure-folder case above.
+      fixtureDir = mkdtempSync(join(tmpdir(), "sitemap-fixture-"));
+      writePage("guides/index.md", { title: "Guides", index: false });
+      writePage("guides/saturn.md", { title: "Saturn" });
+      const routes = loadSitePageRoutes(fixtureDir);
+      expect(routes).not.toContain("/guides");
+      expect(routes).toContain("/guides/saturn");
+    });
   });
 });
 

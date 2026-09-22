@@ -86,7 +86,7 @@ function walkMarkdownFiles(dir) {
 }
 
 /**
- * CMS page + folder-listing routes under `site-pages/` (the astrology/jyotish
+ * CMS page + folder-listing routes under `site-pages/` (e.g. the jyotish
  * decision pages), mirroring `src/lib/pages.ts`'s `getAllPages()` /
  * `getFolderPaths()` without Vite's `import.meta.glob`, which plain Node
  * can't load.
@@ -97,11 +97,14 @@ function walkMarkdownFiles(dir) {
  * an `index.md` is a normal page and follows that page's own `indexed` flag
  * instead, so it's handled by the indexed-pages filter below, not treated as
  * an always-on folder route.
+ *
+ * @param {string} [dir] Exposed for tests, which point this at a throwaway
+ * fixture directory rather than the real (frequently-edited) site-pages/.
  */
-function loadSitePageRoutes() {
-  const pages = walkMarkdownFiles(sitePagesDir)
+export function loadSitePageRoutes(dir = sitePagesDir) {
+  const pages = walkMarkdownFiles(dir)
     .map((filePath) => {
-      const path = urlPathFromPageRel(relative(sitePagesDir, filePath));
+      const path = urlPathFromPageRel(relative(dir, filePath));
       const { data } = matter(readFileSync(filePath, "utf8"));
       return { path, indexed: pageIsIndexed(data) };
     })
