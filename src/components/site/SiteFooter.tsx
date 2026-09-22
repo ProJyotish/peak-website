@@ -24,6 +24,9 @@ export function SiteFooter() {
             <Link to={ROUTES.product} className="hover:text-gold transition-colors">
               Product
             </Link>
+            <Link to="/jyotish" className="hover:text-gold transition-colors">
+              Jyotisha
+            </Link>
             <Link to={ROUTES.contact} className="hover:text-gold transition-colors">
               Contact
             </Link>

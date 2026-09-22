@@ -457,6 +457,7 @@ const Index = () => {
             </div>
             <nav className="footer__links">
               <Link to={ROUTES.product}>Product</Link>
+              <Link to="/jyotish">Jyotisha</Link>
               <Link to={ROUTES.contact}>Contact</Link>
               {/* Static page (scripts/careers.mjs) — plain anchor, not a router Link. */}
               <a href={`${ROUTES.careers}/`}>Careers</a>
