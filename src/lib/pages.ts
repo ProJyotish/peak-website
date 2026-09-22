@@ -22,6 +22,10 @@ export interface CmsPage {
   description: string;
   content: string;
   indexed: boolean;
+  /** Longer keyword-rich title for <title>/SERP snippet; falls back to `title` when absent. */
+  seoTitle?: string;
+  /** Primary SEO keyword this page targets, folded into the keywords meta tag. */
+  targetKeyword?: string;
 }
 
 export type FolderListItem = {
@@ -66,6 +70,8 @@ function parsePage(rel: string, raw: string): CmsPage | null {
     description: String(data.description ?? ""),
     content: content.trim(),
     indexed: pageIsIndexed(data),
+    seoTitle: data.seo_title || undefined,
+    targetKeyword: data.target_keyword || undefined,
   };
 }
 

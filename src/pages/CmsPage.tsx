@@ -34,6 +34,7 @@ const CmsPage = () => {
   const title = page?.title ?? folderTitle(pathname);
   const eyebrow = page?.eyebrow || "Peak";
   const description = page?.description;
+  const seoTitle = page?.seoTitle ?? `${title} - Peak`;
   const crumbs = breadcrumbsForPath(pathname, title);
   const listItems = items.map((item) => ({
     href: item.path,
@@ -45,9 +46,9 @@ const CmsPage = () => {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <SeoHead
-        title={`${title} - Peak`}
+        title={seoTitle}
         description={description || title}
-        keywords={productSeoKeywords(eyebrow)}
+        keywords={productSeoKeywords(eyebrow, page?.targetKeyword ?? "")}
         path={pathname}
         noindex={page ? !page.indexed : false}
       />
