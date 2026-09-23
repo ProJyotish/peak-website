@@ -36,6 +36,7 @@ const CmsPage = () => {
   const description = page?.description;
   const seoTitle = page?.seoTitle ?? `${title} - Peak`;
   const crumbs = breadcrumbsForPath(pathname, title);
+  const showListing = items.length > 0 && !page?.hideListing;
   const listItems = items.map((item) => ({
     href: item.path,
     title: item.title,
@@ -65,7 +66,7 @@ const CmsPage = () => {
         </div>
       </header>
       <main className="flex-1 py-16 md:py-20">
-        <div className={`container-peak ${listItems.length ? "max-w-4xl" : "max-w-3xl"}`}>
+        <div className={`container-peak ${showListing ? "max-w-4xl" : "max-w-3xl"}`}>
           <SiteBreadcrumbs crumbs={crumbs} />
           {page?.content ? (
             <BlogPostView title={title} content={page.content} category={eyebrow} />
@@ -78,7 +79,7 @@ const CmsPage = () => {
               ) : null}
             </>
           )}
-          {listItems.length ? (
+          {showListing ? (
             <div className="mt-12">
               <PageList items={listItems} />
             </div>
