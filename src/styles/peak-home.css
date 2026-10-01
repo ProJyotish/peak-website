@@ -101,10 +101,11 @@
        with a page-height hero instead of the fixed 570px app gradient. Content sits
        in the dark half; the handoff to parchment happens in ::after. */
     background: linear-gradient(180deg, var(--peak-sky-top) 0%, var(--peak-sky-mid) 55%, var(--peak-ink-raised) 100%);
-    /* Extra 2.5rem clears the announcement bar inside the fixed nav. */
-    padding-top: calc(clamp(7.5rem, 11vw, 10rem) + 2.5rem);
+    padding-top: clamp(7.5rem, 11vw, 10rem);
     padding-bottom: clamp(9rem, 17vw, 16rem);
   }
+  /* Clears the announcement bar inside the fixed nav. */
+  &.has-announce .hero { padding-top: calc(clamp(7.5rem, 11vw, 10rem) + 2.5rem); }
   .hero::after {
     content: ""; position: absolute; left: 0; right: 0; bottom: 0; pointer-events: none;
     height: clamp(6.5rem, 13vw, 12rem);

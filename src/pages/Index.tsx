@@ -112,7 +112,7 @@ const Index = () => {
   const webGet = withUtm(SITE.app, "get_web");
 
   return (
-    <div className="peak-home" ref={rootRef}>
+    <div className={HOME.announcement.enabled ? "peak-home has-announce" : "peak-home"} ref={rootRef}>
       <SeoHead
         title={HOME.seo.title}
         description={HOME.seo.description}
@@ -146,12 +146,14 @@ const Index = () => {
         ]}
       />
       <header className={navStuck ? "nav is-stuck" : "nav"}>
-        <div className="announce" role="region" aria-label="Announcement">
-          <div className="wrap announce__inner">
-            <span className="announce__label">{HOME.announcement.label}</span>
-            <span>{HOME.announcement.text}</span>
+        {HOME.announcement.enabled ? (
+          <div className="announce" role="region" aria-label="Announcement">
+            <div className="wrap announce__inner">
+              <span className="announce__label">{HOME.announcement.label}</span>
+              <span>{HOME.announcement.text}</span>
+            </div>
           </div>
-        </div>
+        ) : null}
         <div className="wrap nav__inner">
           <a className="wordmark" href="#top" aria-label="Peak, home">
             <img

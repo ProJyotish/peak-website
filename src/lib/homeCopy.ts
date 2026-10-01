@@ -13,6 +13,7 @@ export const HOME = {
     navCta: "try the app free",
   },
   announcement: {
+    enabled: false,
     label: "News",
     text: "Peak raises funding from Xeed VC to make expert astrology personal for everyone.",
   },
