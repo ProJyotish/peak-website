@@ -146,6 +146,12 @@ const Index = () => {
         ]}
       />
       <header className={navStuck ? "nav is-stuck" : "nav"}>
+        <div className="announce" role="region" aria-label="Announcement">
+          <div className="wrap announce__inner">
+            <span className="announce__label">{HOME.announcement.label}</span>
+            <span>{HOME.announcement.text}</span>
+          </div>
+        </div>
         <div className="wrap nav__inner">
           <a className="wordmark" href="#top" aria-label="Peak, home">
             <img

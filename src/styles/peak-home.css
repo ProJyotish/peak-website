@@ -89,6 +89,11 @@
   .nav__links a { font-size: var(--fs-web-caption); font-weight: var(--fw-bold); letter-spacing: var(--tracking-label); text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color .18s ease; }
   @media (max-width: 46rem) { .nav__links { display: none; } }
 
+  /* ── Announcement bar, pinned above the nav ── */
+  .announce { background: var(--peak-gold); color: var(--peak-ink); border-bottom: 1px solid var(--peak-ink); }
+  .announce__inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--space-2) var(--space-3); padding-block: var(--space-2); font-size: var(--fs-web-caption); font-weight: var(--fw-bold); text-align: center; }
+  .announce__label { padding: 0 var(--space-2); background: var(--peak-ink); color: var(--peak-gold); border-radius: var(--radius-pill); font-size: var(--fs-web-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+
   /* ── Hero, dusk to parchment ── */
   .hero {
     position: relative; overflow: hidden;
@@ -96,7 +101,8 @@
        with a page-height hero instead of the fixed 570px app gradient. Content sits
        in the dark half; the handoff to parchment happens in ::after. */
     background: linear-gradient(180deg, var(--peak-sky-top) 0%, var(--peak-sky-mid) 55%, var(--peak-ink-raised) 100%);
-    padding-top: clamp(7.5rem, 11vw, 10rem);
+    /* Extra 2.5rem clears the announcement bar inside the fixed nav. */
+    padding-top: calc(clamp(7.5rem, 11vw, 10rem) + 2.5rem);
     padding-bottom: clamp(9rem, 17vw, 16rem);
   }
   .hero::after {

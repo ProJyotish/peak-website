@@ -12,6 +12,10 @@ export const HOME = {
     ctaWeb: "open peak in your browser",
     navCta: "try the app free",
   },
+  announcement: {
+    label: "News",
+    text: "Peak raises funding from Xeed VC to make expert astrology personal for everyone.",
+  },
   band: ["Work", "Relationships", "Health", "Money", "Timing", "The next move"],
   statement: {
     title: "Find out what is meant for you, and what isn't.",
