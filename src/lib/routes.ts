@@ -16,4 +16,7 @@ export const ROUTES = {
   careers: "/careers",
   checkout: "/checkout",
   astrocartography: "/tools/astrocartography",
+  pooja: "/pooja",
+  poojaPage: (slug: string) => `/pooja/${slug}` as const,
+  poojaDetails: (token: string) => `/pooja/details/${token}` as const,
 } as const;

@@ -26,3 +26,6 @@ export const SUBSCRIPTION_API_URL = API_BASE_URL
 
 /** Unauthenticated public astro tools (travel-fit advise + legacy helpers). */
 export const PUBLIC_ASTRO_API_URL = API_BASE_URL ? apiUrl("/public/astro") : "";
+
+/** Pooja catalog, slots, Shopify pre-checkout and post-purchase details. */
+export const POOJA_API_URL = API_BASE_URL ? apiUrl("/public/pooja") : "";

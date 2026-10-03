@@ -26,7 +26,7 @@ export type PageSeo = {
   keywords: string[];
   path: string;
   /** Open Graph type — defaults to website */
-  type?: "website" | "article";
+  type?: "website" | "article" | "product";
   /** Absolute or site-relative image URL for og/twitter cards */
   image?: string;
   noindex?: boolean;

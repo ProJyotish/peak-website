@@ -40,4 +40,12 @@ describe("collectPrerenderRoutes", () => {
   it("does not prerender careers (static form page)", () => {
     expect(routes).not.toContain(ROUTES.careers);
   });
+
+  it("adds a page per Shopify pooja slug", () => {
+    const withPoojas = collectPrerenderRoutes(["mundan-sanskar-puja", "durga-saptashati-9-paath"]);
+    expect(withPoojas).toContain(ROUTES.pooja);
+    expect(withPoojas).toContain("/pooja/mundan-sanskar-puja");
+    expect(withPoojas).toContain("/pooja/durga-saptashati-9-paath");
+    expect(routes.filter((r) => r.startsWith("/pooja/"))).toEqual([]);
+  });
 });

@@ -70,10 +70,11 @@ function loadBlogSlugs() {
 
 /**
  * @param {{ slug: string, date?: string }[]} [blogPosts]
- * @param {{ domain?: string }} [opts]
+ * @param {{ domain?: string, poojas?: { slug: string, lastmod?: string }[] }} [opts]
  */
 export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
   const domain = opts.domain || "peaklife.me";
+  const poojas = opts.poojas ?? [];
 
   /** @type {{ loc: string, changefreq: string, priority: string, lastmod?: string }[]} */
   const entries = [
@@ -92,6 +93,13 @@ export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
       lastmod: toIsoDate(post.date),
     })),
     { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
+    { loc: "/pooja/", changefreq: "weekly", priority: "0.7" },
+    ...poojas.map((pooja) => ({
+      loc: `/pooja/${pooja.slug}/`,
+      changefreq: "weekly",
+      priority: "0.7",
+      lastmod: toIsoDate(pooja.lastmod),
+    })),
     { loc: "/careers/", changefreq: "weekly", priority: "0.6" },
     { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
     { loc: "/terms/", changefreq: "yearly", priority: "0.3" },
@@ -119,7 +127,7 @@ ${entries
 /**
  * @param {string} outPath
  * @param {{ slug: string, date?: string }[]} [blogPosts]
- * @param {{ domain?: string }} [opts]
+ * @param {{ domain?: string, poojas?: { slug: string, lastmod?: string }[] }} [opts]
  */
 export function writeSitemap(outPath, blogPosts, opts) {
   writeFileSync(outPath, buildSitemapXml(blogPosts, opts));

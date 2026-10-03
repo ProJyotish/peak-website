@@ -3,6 +3,10 @@ name: Deploy to S3 / CloudFront
 on:
   push:
     branches: [main]
+  # Peak API sends this when the Shopify pooja catalog changes (new/edited/removed products).
+  repository_dispatch:
+    types: [shopify-catalog-changed]
+  workflow_dispatch:
 
 # One deploy at a time; newer pushes cancel older in-progress runs (batch to latest)
 concurrency:
@@ -41,6 +45,8 @@ jobs:
           VITE_RAZORPAY_KEY_ID: ${{ vars.VITE_RAZORPAY_KEY_ID }}
           VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
           VITE_WHATSAPP_URL: ${{ vars.VITE_WHATSAPP_URL }}
+          # s3 sync --delete would drop every pooja page if the catalog fetch failed.
+          POOJA_CATALOG_REQUIRED: "1"
         run: npm run build
 
       - name: Sync to S3
