@@ -6,8 +6,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import App from "./App.tsx";
 import "./index.css";
 import { initializeTracking } from "./lib/tracking";
+import { captureLandingAttribution, installAttributionLinks } from "./lib/utm";
 
 initializeTracking();
+captureLandingAttribution();
+installAttributionLinks();
 
 if (typeof window !== "undefined") {
   const { pathname, search, hash } = window.location;

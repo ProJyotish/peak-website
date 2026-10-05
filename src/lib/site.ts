@@ -21,6 +21,8 @@ export const SITE = {
   stores: {
     android: "https://play.google.com/store/apps/details?id=me.peaklife",
     ios: null as string | null,
+    /** AppsFlyer OneLink template (long-link base, not a short link — short links drop their preset params when overridden). */
+    onelink: "https://link.peaklife.me/28F6",
   },
 } as const;
 
