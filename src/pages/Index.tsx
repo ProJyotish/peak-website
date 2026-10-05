@@ -6,7 +6,7 @@ import { HOME } from "@/lib/homeCopy";
 import { ROUTES } from "@/lib/routes";
 import { productSeoKeywords } from "@/lib/seo";
 import { SITE } from "@/lib/site";
-import { withUtm } from "@/lib/utm";
+import { androidLink, withUtm } from "@/lib/utm";
 import "@/styles/peak-home.css";
 
 const NAV_SECTIONS = [
@@ -105,10 +105,10 @@ const Index = () => {
     };
   }, []);
 
-  const androidNav = withUtm(SITE.stores.android, "nav");
-  const androidHero = withUtm(SITE.stores.android, "hero_android");
+  const androidNav = androidLink("nav");
+  const androidHero = androidLink("hero_android");
   const webHero = withUtm(SITE.app, "hero_web");
-  const androidGet = withUtm(SITE.stores.android, "get_android");
+  const androidGet = androidLink("get_android");
   const webGet = withUtm(SITE.app, "get_web");
 
   return (
