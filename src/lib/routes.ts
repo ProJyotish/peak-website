@@ -19,4 +19,6 @@ export const ROUTES = {
   pooja: "/pooja",
   poojaPage: (slug: string) => `/pooja/${slug}` as const,
   poojaDetails: (token: string) => `/pooja/details/${token}` as const,
+  poojaTask: (token: string) => `/pooja/task/${token}` as const,
+  poojaJoin: (token: string) => `/pooja/join/${token}` as const,
 } as const;

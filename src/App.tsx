@@ -20,6 +20,8 @@ import ProductPage from "./pages/ProductPage.tsx";
 import PoojaIndex from "./pages/pooja/PoojaIndex.tsx";
 import PoojaDetail from "./pages/pooja/PoojaDetail.tsx";
 import PoojaDetailsForm from "./pages/pooja/PoojaDetailsForm.tsx";
+import PoojaTask from "./pages/pooja/PoojaTask.tsx";
+import PoojaJoin from "./pages/pooja/PoojaJoin.tsx";
 
 const App = () => (
   <>
@@ -42,6 +44,8 @@ const App = () => (
       <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
       <Route path={ROUTES.pooja} element={<PoojaIndex />} />
       <Route path="/pooja/details/:token" element={<PoojaDetailsForm />} />
+      <Route path="/pooja/task/:token" element={<PoojaTask />} />
+      <Route path="/pooja/join/:token" element={<PoojaJoin />} />
       <Route path="/pooja/:slug" element={<PoojaDetail />} />
       <Route path="*" element={<CmsPage />} />
     </Routes>

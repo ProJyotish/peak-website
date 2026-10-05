@@ -67,7 +67,7 @@ export function BookingSummary({ puja, addons, selectedAddons, schedule, code = 
     mutationFn: () =>
       createPoojaCheckout({
         slug: puja.slug,
-        ...(schedule?.mode === "appointo" ? { startTime: schedule.startTime } : {}),
+        ...(schedule?.mode === "slot" ? { startTime: schedule.startTime } : {}),
         ...(schedule?.mode === "manual"
           ? { preferredDate: schedule.preferredDate, preferredWindow: schedule.preferredWindow }
           : {}),

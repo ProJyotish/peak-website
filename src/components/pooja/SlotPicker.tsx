@@ -61,7 +61,7 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
   return <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.18em] text-clay">{children}</p>;
 }
 
-/** Live Appointo slots when the puja is bookable; otherwise a preferred date + time window. */
+/** Live pandit slots when the puja is bookable; otherwise a preferred date + time window. */
 export function SlotPicker({ slug, code = null, panditName = null, value, onChange }: SlotPickerProps) {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["pooja-slots", slug, code],
@@ -154,7 +154,7 @@ export function SlotPicker({ slug, code = null, panditName = null, value, onChan
   }
 
   const openDates = new Set(days.map((d) => d.date));
-  const selectedStart = value?.mode === "appointo" ? value.startTime : null;
+  const selectedStart = value?.mode === "slot" ? value.startTime : null;
   const slots = days.find((d) => d.date === activeDay)?.slots ?? [];
   const first = toPickerDate(days[0].date);
   const last = toPickerDate(days[days.length - 1].date);
@@ -185,7 +185,7 @@ export function SlotPicker({ slug, code = null, panditName = null, value, onChan
               key={s.startTime}
               disabled={!s.available}
               selected={selectedStart === s.startTime}
-              onClick={() => onChange({ mode: "appointo", startTime: s.startTime })}
+              onClick={() => onChange({ mode: "slot", startTime: s.startTime })}
             >
               {timeLabel(s.startTime, IST)}
             </Chip>
