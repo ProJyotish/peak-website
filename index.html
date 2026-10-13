@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Peak app WebView (?embed=app, see src/lib/embed.ts): flags <html> before first paint so CSS
+         drops the site header/footer with no flash. Remembered for the tab's session because SPA links
+         and reloads lose the query. -->
+    <script>
+      (function () {
+        try {
+          var on = new URLSearchParams(location.search).get("embed") === "app";
+          if (on) sessionStorage.setItem("peak_embed", "app");
+          else on = sessionStorage.getItem("peak_embed") === "app";
+          if (on) document.documentElement.setAttribute("data-embed", "app");
+        } catch (e) {}
+      })();
+    </script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-0E72R2MF9P"></script>
     <script>
@@ -26,6 +39,7 @@
           defaults: '2026-05-30',
           person_profiles: 'always', // or 'always' to create profiles for anonymous users as well
       })
+      if (document.documentElement.getAttribute('data-embed') === 'app') posthog.register({ surface: 'app_webview' })
   </script>
 
     <meta charset="UTF-8" />

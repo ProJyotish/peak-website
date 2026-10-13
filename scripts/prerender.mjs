@@ -9,6 +9,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { createServer } from "vite";
+import { fetchPoojaCatalog } from "./pooja-catalog.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
@@ -25,6 +26,13 @@ function applyHead(template, head) {
   html = html.replace(/<meta\s+property="og:[^"]+"[^>]*>\s*/gi, "");
   html = html.replace(/<meta\s+name="twitter:[^"]+"[^>]*>\s*/gi, "");
   return html.replace("<!--app-head-->", head);
+}
+
+/** Query cache the page was rendered with, so the client hydrates without a loading flash. */
+function stateScript(state) {
+  if (!state) return "";
+  const json = JSON.stringify(state).replace(/</g, "\\u003c");
+  return `<script>window.__REACT_QUERY_STATE__=${json}</script>`;
 }
 
 function distFileForRoute(url) {
@@ -48,14 +56,15 @@ const vite = await createServer({
 });
 
 try {
+  const poojaCatalog = await fetchPoojaCatalog();
   const { render, collectPrerenderRoutes } = await vite.ssrLoadModule("/src/entry-server.tsx");
-  const routes = collectPrerenderRoutes();
+  const routes = collectPrerenderRoutes(poojaCatalog.pujas.map((p) => p.slug));
 
   for (const url of routes) {
-    const { html, head } = render(url);
+    const { html, head, state } = render(url, { poojaCatalog });
     const page = applyHead(template, head).replace(
       '<div id="root"></div>',
-      `<div id="root">${html}</div>`,
+      `<div id="root">${html}</div>${stateScript(state)}`,
     );
     const file = distFileForRoute(url);
     mkdirSync(dirname(file), { recursive: true });

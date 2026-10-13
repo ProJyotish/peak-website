@@ -3,6 +3,7 @@ import { resolve, dirname } from "node:path";
 import { blogSitemapEntries } from "./blog-posts.mjs";
 import { writeSitemap } from "./sitemap.mjs";
 import { careersPage } from "./careers.mjs";
+import { poojaSitemapEntries } from "./pooja-catalog.mjs";
 import {
   STATIC_PATH_LABELS,
   crumbsForPath,
@@ -505,7 +506,8 @@ function writePage(page) {
 writePage(careersPage());
 
 const sitemapBlogEntries = blogSitemapEntries();
-writeSitemap(resolve(dist, "sitemap.xml"), sitemapBlogEntries, { domain: SITE.domain });
-writeSitemap(resolve(root, "public", "sitemap.xml"), sitemapBlogEntries, { domain: SITE.domain });
+const sitemapOpts = { domain: SITE.domain, poojas: poojaSitemapEntries() };
+writeSitemap(resolve(dist, "sitemap.xml"), sitemapBlogEntries, sitemapOpts);
+writeSitemap(resolve(root, "public", "sitemap.xml"), sitemapBlogEntries, sitemapOpts);
 console.log("✓ Generated sitemap.xml");
 console.log("\n✓ Postbuild complete (careers + sitemap). React routes were prerendered.");

@@ -1,6 +1,6 @@
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { HelmetProvider } from "react-helmet-async";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { hydrate, QueryClient, QueryClientProvider, type DehydratedState } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import App from "./App.tsx";
@@ -16,7 +16,16 @@ if (typeof window !== "undefined") {
   }
 }
 
+declare global {
+  interface Window {
+    __REACT_QUERY_STATE__?: DehydratedState;
+  }
+}
+
 const queryClient = new QueryClient();
+// Prerendered pages embed the build-time data they were rendered with; it is older than
+// staleTime, so queries still refetch on mount and pick up Shopify edits since the build.
+if (window.__REACT_QUERY_STATE__) hydrate(queryClient, window.__REACT_QUERY_STATE__);
 
 const app = (
   <HelmetProvider>

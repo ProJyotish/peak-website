@@ -28,7 +28,8 @@ export function SitePageLayout({
 }: SitePageLayoutProps) {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="border-b border-border">
+      {/* In the app's WebView the app owns navigation chrome. */}
+      <header className="border-b border-border app:hidden">
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />
           <Link
@@ -40,15 +41,19 @@ export function SitePageLayout({
           </Link>
         </div>
       </header>
-      <main className="flex-1 py-16 md:py-20">
+      <main className="flex-1 py-16 md:py-20 app:py-6">
         <div className={`container-peak ${wide ? "max-w-4xl" : "max-w-3xl"}`}>
-          {breadcrumbs ? <SiteBreadcrumbs crumbs={breadcrumbs} /> : null}
-          <p className="eyebrow mb-4">{eyebrow}</p>
-          <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink">{title}</h1>
-          {description ? (
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground">{description}</p>
+          {breadcrumbs ? (
+            <div className="app:hidden">
+              <SiteBreadcrumbs crumbs={breadcrumbs} />
+            </div>
           ) : null}
-          <div className="mt-12">{children}</div>
+          <p className="eyebrow mb-4 app:mb-2">{eyebrow}</p>
+          <h1 className="font-display text-4xl md:text-5xl leading-tight text-ink app:text-3xl">{title}</h1>
+          {description ? (
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground app:mt-3">{description}</p>
+          ) : null}
+          <div className="mt-12 app:mt-8">{children}</div>
         </div>
       </main>
       <SiteFooter />

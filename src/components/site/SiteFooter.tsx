@@ -13,7 +13,7 @@ export function SiteFooter() {
   const brand = "Peak";
 
   return (
-    <footer className="border-t border-ink bg-ink py-10 text-parchment">
+    <footer className="border-t border-ink bg-ink py-10 text-parchment app:hidden">
       <div className="container-peak flex flex-col gap-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <Wordmark className="brightness-0 invert" />
