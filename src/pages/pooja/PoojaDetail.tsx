@@ -67,7 +67,7 @@ const PoojaDetail = () => {
         noindex={!isLoading && !puja}
         jsonLd={puja ? poojaJsonLd(puja) : undefined}
       />
-      <header className="border-b border-border">
+      <header className="border-b border-border app:hidden">
         <div className="container-peak flex items-center justify-between py-6">
           <Wordmark />
           <Link
@@ -80,8 +80,16 @@ const PoojaDetail = () => {
         </div>
       </header>
 
-      <main className="flex-1 py-12 md:py-16">
+      <main className="flex-1 py-12 md:py-16 app:py-5">
         <div className="container-peak">
+          {/* The header and its back link are hidden in the app, and iOS has no system back button. */}
+          <Link
+            to={ROUTES.pooja}
+            className="mb-5 hidden items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-clay transition-colors hover:text-ink app:inline-flex"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            All poojas
+          </Link>
           {isLoading ? (
             <p className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" /> Loading…
@@ -103,7 +111,7 @@ const PoojaDetail = () => {
                   <p className="eyebrow mb-4">
                     Pooja{puja.brahmins ? ` · ${puja.brahmins} Brahmin${puja.brahmins > 1 ? "s" : ""}` : ""}
                   </p>
-                  <h1 className="font-display text-4xl leading-tight text-ink md:text-5xl">{puja.title}</h1>
+                  <h1 className="font-display text-4xl leading-tight text-ink md:text-5xl app:text-3xl">{puja.title}</h1>
                   {puja.titleHi ? <p className="mt-3 text-lg text-clay">{puja.titleHi}</p> : null}
                   <p className="mt-4 font-mono text-lg text-ink">{formatMoney(puja.price, puja.currency)}</p>
                 </div>

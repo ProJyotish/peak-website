@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 export default {
   darkMode: ["class"],
@@ -67,5 +68,9 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    // `app:` — inside the Peak app's WebView (see src/lib/embed.ts).
+    plugin(({ addVariant }) => addVariant("app", 'html[data-embed="app"] &')),
+  ],
 } satisfies Config;
