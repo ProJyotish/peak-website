@@ -45,8 +45,8 @@ jobs:
           VITE_RAZORPAY_KEY_ID: ${{ vars.VITE_RAZORPAY_KEY_ID }}
           VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
           VITE_WHATSAPP_URL: ${{ vars.VITE_WHATSAPP_URL }}
-          # s3 sync --delete would drop every pooja page if the catalog fetch failed.
-          POOJA_CATALOG_REQUIRED: "1"
+          # Re-enable once pooja is live: s3 sync --delete would drop every pooja page if the catalog fetch failed.
+          # POOJA_CATALOG_REQUIRED: "1"
         run: npm run build
 
       - name: Sync to S3
