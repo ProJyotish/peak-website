@@ -3,7 +3,7 @@ import { resolve, dirname } from "node:path";
 import { blogSitemapEntries } from "./blog-posts.mjs";
 import { writeSitemap } from "./sitemap.mjs";
 import { careersPage } from "./careers.mjs";
-import { poojaSitemapEntries } from "./pooja-catalog.mjs";
+import { poojaEnabled, poojaSitemapEntries } from "./pooja-catalog.mjs";
 import {
   STATIC_PATH_LABELS,
   crumbsForPath,
@@ -506,7 +506,7 @@ function writePage(page) {
 writePage(careersPage());
 
 const sitemapBlogEntries = blogSitemapEntries();
-const sitemapOpts = { domain: SITE.domain, poojas: poojaSitemapEntries() };
+const sitemapOpts = { domain: SITE.domain, poojas: poojaEnabled() ? poojaSitemapEntries() : null };
 writeSitemap(resolve(dist, "sitemap.xml"), sitemapBlogEntries, sitemapOpts);
 writeSitemap(resolve(root, "public", "sitemap.xml"), sitemapBlogEntries, sitemapOpts);
 console.log("✓ Generated sitemap.xml");

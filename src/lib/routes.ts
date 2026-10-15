@@ -22,3 +22,6 @@ export const ROUTES = {
   poojaTask: (token: string) => `/pooja/task/${token}` as const,
   poojaJoin: (token: string) => `/pooja/join/${token}` as const,
 } as const;
+
+/** Pooja is off until launch; build scripts read the same var via `scripts/pooja-catalog.mjs`. */
+export const POOJA_ENABLED = import.meta.env.VITE_POOJA_ENABLED === "true";

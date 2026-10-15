@@ -118,12 +118,15 @@ export function loadSitePageRoutes(dir = sitePagesDir) {
 }
 
 /**
+ * Omit `poojas` (or pass `null`) while pooja is disabled to leave `/pooja/` out.
+ *
  * @param {{ slug: string, date?: string }[]} [blogPosts]
- * @param {{ domain?: string, sitePageRoutes?: string[] }} [opts]
+ * @param {{ domain?: string, sitePageRoutes?: string[], poojas?: { slug: string, lastmod?: string }[] | null }} [opts]
  */
 export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
   const domain = opts.domain || "peaklife.me";
   const sitePageRoutes = opts.sitePageRoutes ?? loadSitePageRoutes();
+  const poojas = opts.poojas ?? null;
 
   /** @type {{ loc: string, changefreq: string, priority: string, lastmod?: string }[]} */
   const entries = [
@@ -147,13 +150,17 @@ export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
       priority: "0.6",
     })),
     { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
-    { loc: "/pooja/", changefreq: "weekly", priority: "0.7" },
-    ...poojas.map((pooja) => ({
-      loc: `/pooja/${pooja.slug}/`,
-      changefreq: "weekly",
-      priority: "0.7",
-      lastmod: toIsoDate(pooja.lastmod),
-    })),
+    ...(poojas
+      ? [
+          { loc: "/pooja/", changefreq: "weekly", priority: "0.7" },
+          ...poojas.map((pooja) => ({
+            loc: `/pooja/${pooja.slug}/`,
+            changefreq: "weekly",
+            priority: "0.7",
+            lastmod: toIsoDate(pooja.lastmod),
+          })),
+        ]
+      : []),
     { loc: "/careers/", changefreq: "weekly", priority: "0.6" },
     { loc: "/contact/", changefreq: "yearly", priority: "0.5" },
     { loc: "/terms/", changefreq: "yearly", priority: "0.3" },

@@ -9,7 +9,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { createServer } from "vite";
-import { fetchPoojaCatalog } from "./pooja-catalog.mjs";
+import { fetchPoojaCatalog, poojaEnabled } from "./pooja-catalog.mjs";
 
 const root = resolve(import.meta.dirname, "..");
 const dist = resolve(root, "dist");
@@ -56,9 +56,9 @@ const vite = await createServer({
 });
 
 try {
-  const poojaCatalog = await fetchPoojaCatalog();
+  const poojaCatalog = poojaEnabled() ? await fetchPoojaCatalog() : undefined;
   const { render, collectPrerenderRoutes } = await vite.ssrLoadModule("/src/entry-server.tsx");
-  const routes = collectPrerenderRoutes(poojaCatalog.pujas.map((p) => p.slug));
+  const routes = collectPrerenderRoutes(poojaCatalog ? poojaCatalog.pujas.map((p) => p.slug) : null);
 
   for (const url of routes) {
     const { html, head, state } = render(url, { poojaCatalog });

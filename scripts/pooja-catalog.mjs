@@ -14,9 +14,17 @@ const SNAPSHOT = resolve(root, "node_modules/.cache/peak/pooja-catalog.json");
 const EMPTY = { pujas: [], addons: [], generatedAt: null };
 const TIMEOUT_MS = 90_000;
 
+function buildEnv() {
+  return { ...loadEnv("production", root, "VITE_"), ...process.env };
+}
+
 function apiBase() {
-  const env = { ...loadEnv("production", root, "VITE_"), ...process.env };
-  return String(env.VITE_API_BASE_URL ?? "").trim().replace(/\/+$/, "");
+  return String(buildEnv().VITE_API_BASE_URL ?? "").trim().replace(/\/+$/, "");
+}
+
+/** Mirrors `POOJA_ENABLED` in `src/lib/routes.ts`. */
+export function poojaEnabled() {
+  return buildEnv().VITE_POOJA_ENABLED === "true";
 }
 
 function writeSnapshot(catalog) {

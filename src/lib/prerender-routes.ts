@@ -15,19 +15,22 @@ const STATIC_ROUTES = [
   ROUTES.contact,
   ROUTES.checkout,
   ROUTES.astrocartography,
-  ROUTES.pooja,
 ] as const;
 
 /**
  * Every React route written as `dist/<path>/index.html` for S3 + CloudFront.
  * `/careers` is generated separately (Apps Script form, no React route).
- * Pooja slugs come from the build-time Shopify catalog snapshot.
+ * Pooja slugs come from the build-time Shopify catalog snapshot; `null` means
+ * pooja is disabled and no `/pooja` pages are written.
  */
-export function collectPrerenderRoutes(poojaSlugs: string[] = []): string[] {
+export function collectPrerenderRoutes(poojaSlugs: string[] | null = null): string[] {
   const routes = new Set<string>(STATIC_ROUTES);
 
-  for (const slug of poojaSlugs) {
-    routes.add(ROUTES.poojaPage(slug));
+  if (poojaSlugs) {
+    routes.add(ROUTES.pooja);
+    for (const slug of poojaSlugs) {
+      routes.add(ROUTES.poojaPage(slug));
+    }
   }
 
   for (const slug of getAllSlugs()) {

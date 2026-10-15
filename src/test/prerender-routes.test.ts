@@ -46,6 +46,9 @@ describe("collectPrerenderRoutes", () => {
     expect(withPoojas).toContain(ROUTES.pooja);
     expect(withPoojas).toContain("/pooja/mundan-sanskar-puja");
     expect(withPoojas).toContain("/pooja/durga-saptashati-9-paath");
-    expect(routes.filter((r) => r.startsWith("/pooja/"))).toEqual([]);
+  });
+
+  it("leaves pooja out entirely when it is disabled", () => {
+    expect(routes.filter((r) => r.startsWith(ROUTES.pooja))).toEqual([]);
   });
 });

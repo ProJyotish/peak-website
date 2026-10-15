@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { GoogleAnalytics } from "@/components/site/GoogleAnalytics";
-import { ROUTES } from "@/lib/routes";
+import { POOJA_ENABLED, ROUTES } from "@/lib/routes";
 import Index from "./pages/Index.tsx";
 import Terms from "./pages/Terms.tsx";
 import Privacy from "./pages/Privacy.tsx";
@@ -42,11 +42,15 @@ const App = () => (
       <Route path={ROUTES.contact} element={<Contact />} />
       <Route path={ROUTES.checkout} element={<Checkout />} />
       <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
-      <Route path={ROUTES.pooja} element={<PoojaIndex />} />
-      <Route path="/pooja/details/:token" element={<PoojaDetailsForm />} />
-      <Route path="/pooja/task/:token" element={<PoojaTask />} />
-      <Route path="/pooja/join/:token" element={<PoojaJoin />} />
-      <Route path="/pooja/:slug" element={<PoojaDetail />} />
+      {POOJA_ENABLED && (
+        <>
+          <Route path={ROUTES.pooja} element={<PoojaIndex />} />
+          <Route path="/pooja/details/:token" element={<PoojaDetailsForm />} />
+          <Route path="/pooja/task/:token" element={<PoojaTask />} />
+          <Route path="/pooja/join/:token" element={<PoojaJoin />} />
+          <Route path="/pooja/:slug" element={<PoojaDetail />} />
+        </>
+      )}
       <Route path="*" element={<CmsPage />} />
     </Routes>
   </>
