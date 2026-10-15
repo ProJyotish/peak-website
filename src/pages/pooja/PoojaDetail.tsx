@@ -1,17 +1,21 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { ArrowLeft, Loader2 } from "lucide-react";
-import { SiteFooter } from "@/components/site/SiteFooter";
-import { Wordmark } from "@/components/site/Wordmark";
+import { Loader2, MessageCircle, Users, Video } from "lucide-react";
 import { SeoHead } from "@/components/site/SeoHead";
+import { useAppTitle } from "@/components/site/AppBridge";
 import { AddonPicker } from "@/components/pooja/AddonPicker";
 import { BookingSummary } from "@/components/pooja/BookingSummary";
 import { CodeField } from "@/components/pooja/CodeField";
 import { SlotPicker } from "@/components/pooja/SlotPicker";
+import { ProductGallery } from "@/components/store/ProductGallery";
+import { ProductSection } from "@/components/store/ProductSection";
+import { StickyBuyBar } from "@/components/store/StickyBuyBar";
+import { StoreShell } from "@/components/store/StoreShell";
 import {
   fetchPooja,
   formatMoney,
+  occasionTags,
   poojaJsonLd,
   poojaKeys,
   poojaSeoDescription,
@@ -21,15 +25,30 @@ import {
   type SelectedAddon,
 } from "@/lib/pooja";
 import { ROUTES } from "@/lib/routes";
+import { tagLabel } from "@/lib/store";
 import { usePoojaCode } from "./usePoojaCode";
 
-function Step({ n, title, children }: { n: number; title: string; children: React.ReactNode }) {
+const BOOKING_ID = "book";
+const SCHEDULE_ID = "schedule";
+
+function Step({ id, n, title, children }: { id?: string; n: number; title: string; children: React.ReactNode }) {
   return (
-    <section className="border-t border-border pt-8">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-gold">{String(n).padStart(2, "0")}</p>
-      <h2 className="mt-2 mb-6 font-display text-2xl text-ink">{title}</h2>
+    <section id={id} className="scroll-mt-4 rounded-lg border border-border bg-card p-4 sm:p-5">
+      <h2 className="mb-4 flex items-baseline gap-2 text-base font-semibold text-ink">
+        <span className="text-xs font-medium text-gold">Step {n}</span>
+        {title}
+      </h2>
       {children}
     </section>
+  );
+}
+
+function Highlight({ icon: Icon, children }: { icon: typeof Users; children: React.ReactNode }) {
+  return (
+    <li className="flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs text-ink">
+      <Icon className="h-3.5 w-3.5 text-gold" />
+      {children}
+    </li>
   );
 }
 
@@ -49,6 +68,7 @@ const PoojaDetail = () => {
   }, [data?.puja, slug]);
 
   const puja = data?.puja;
+  useAppTitle(puja?.title);
   const panditCode = usePoojaCode(slug, selectedAddons, Boolean(puja));
   const appliedCode = panditCode.applied?.code ?? null;
 
@@ -56,7 +76,7 @@ const PoojaDetail = () => {
   useEffect(() => setSchedule(null), [appliedCode]);
 
   return (
-    <div className="flex min-h-screen flex-col bg-background text-foreground">
+    <>
       <SeoHead
         title={puja ? poojaSeoTitle(puja) : "Book a Pooja · Peak"}
         description={puja ? poojaSeoDescription(puja) : "Book a Vedic pooja online."}
@@ -67,35 +87,24 @@ const PoojaDetail = () => {
         noindex={!isLoading && !puja}
         jsonLd={puja ? poojaJsonLd(puja) : undefined}
       />
-      <header className="border-b border-border app:hidden">
-        <div className="container-peak flex items-center justify-between py-6">
-          <Wordmark />
-          <Link
-            to={ROUTES.pooja}
-            className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-clay transition-colors hover:text-ink"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            All poojas
-          </Link>
-        </div>
-      </header>
+      <StoreShell backTo={{ href: ROUTES.pooja, label: "All poojas" }} bottomBarSpace={Boolean(puja)}>
+        <div className="container-peak px-4 pb-12 sm:px-6 sm:pt-6 md:px-10 lg:pt-10">
+          <nav className="mb-4 hidden gap-2 text-xs text-muted-foreground sm:flex app:hidden" aria-label="Breadcrumb">
+            <Link to={ROUTES.store} className="hover:text-ink">
+              Store
+            </Link>
+            <span>/</span>
+            <Link to={ROUTES.pooja} className="hover:text-ink">
+              Pooja
+            </Link>
+          </nav>
 
-      <main className="flex-1 py-12 md:py-16 app:py-5">
-        <div className="container-peak">
-          {/* The header and its back link are hidden in the app, and iOS has no system back button. */}
-          <Link
-            to={ROUTES.pooja}
-            className="mb-5 hidden items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-clay transition-colors hover:text-ink app:inline-flex"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            All poojas
-          </Link>
           {isLoading ? (
-            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <p className="flex items-center gap-2 py-10 text-sm text-muted-foreground">
               <Loader2 className="h-4 w-4 animate-spin" /> Loading…
             </p>
           ) : isError || !puja || !data ? (
-            <div className="max-w-xl">
+            <div className="max-w-xl py-10">
               <h1 className="font-display text-3xl text-ink">Pooja not found</h1>
               <p className="mt-4 text-muted-foreground">
                 It may no longer be available.{" "}
@@ -105,35 +114,61 @@ const PoojaDetail = () => {
               </p>
             </div>
           ) : (
-            <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-              <div className="space-y-10 lg:col-span-7">
+            // Phones stack gallery → buy box → details; desktop puts details under the gallery.
+            <div className="flex flex-col gap-6 lg:grid lg:grid-cols-12 lg:items-start lg:gap-12">
+              <div className="contents lg:col-span-7 lg:block lg:space-y-8">
+                <div className="order-1 pt-4 sm:pt-0">
+                  <ProductGallery images={puja.images} title={puja.title} subtitle={puja.titleHi} />
+                </div>
+                {puja.descriptionHtml ? (
+                  <div className="order-3 border-t border-border lg:border-t-0">
+                    <ProductSection title="About this pooja" defaultOpen>
+                      <div
+                        className="blog-prose"
+                        // Product copy authored by the team in Shopify admin.
+                        dangerouslySetInnerHTML={{ __html: puja.descriptionHtml }}
+                      />
+                    </ProductSection>
+                    <ProductSection title="After you book">
+                      <p className="text-sm leading-relaxed text-muted-foreground">
+                        You'll get a WhatsApp message to share the devotee's name, gotra, place and purpose
+                        (sankalp). The video link and instructions follow before your pooja, and you can watch it
+                        live.
+                      </p>
+                    </ProductSection>
+                  </div>
+                ) : null}
+              </div>
+
+              <div className="order-2 space-y-5 lg:col-span-5">
                 <div>
-                  <p className="eyebrow mb-4">
-                    Pooja{puja.brahmins ? ` · ${puja.brahmins} Brahmin${puja.brahmins > 1 ? "s" : ""}` : ""}
-                  </p>
-                  <h1 className="font-display text-4xl leading-tight text-ink md:text-5xl app:text-3xl">{puja.title}</h1>
-                  {puja.titleHi ? <p className="mt-3 text-lg text-clay">{puja.titleHi}</p> : null}
-                  <p className="mt-4 font-mono text-lg text-ink">{formatMoney(puja.price, puja.currency)}</p>
+                  <p className="text-xl font-semibold text-ink">{formatMoney(puja.price, puja.currency)}</p>
+                  <ul className="mt-4 flex flex-wrap gap-2">
+                    {puja.brahmins ? (
+                      <Highlight icon={Users}>
+                        {puja.brahmins} Brahmin{puja.brahmins > 1 ? "s" : ""}
+                      </Highlight>
+                    ) : null}
+                    <Highlight icon={Video}>Live on video</Highlight>
+                    <Highlight icon={MessageCircle}>WhatsApp updates</Highlight>
+                  </ul>
+                  {occasionTags(puja).length ? (
+                    <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-xs">
+                      {occasionTags(puja).map((t) => (
+                        <Link
+                          key={t}
+                          to={`${ROUTES.pooja}?tag=${encodeURIComponent(t)}`}
+                          className="capitalize text-gold underline-offset-2 hover:underline"
+                        >
+                          #{tagLabel(t)}
+                        </Link>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
 
-                {puja.images[0] ? (
-                  <img
-                    src={puja.images[0].url}
-                    alt={puja.images[0].altText ?? puja.title}
-                    className="aspect-[4/3] w-full object-cover"
-                  />
-                ) : null}
-
-                {puja.descriptionHtml ? (
-                  <div
-                    className="blog-prose"
-                    // Product copy authored by the team in Shopify admin.
-                    dangerouslySetInnerHTML={{ __html: puja.descriptionHtml }}
-                  />
-                ) : null}
-
-                <Step n={1} title="Choose date & time">
-                  <div className="mb-6">
+                <Step id={SCHEDULE_ID} n={1} title="Choose date & time">
+                  <div className="mb-5">
                     <CodeField
                       code={panditCode.code}
                       result={panditCode.applied ?? undefined}
@@ -163,10 +198,8 @@ const PoojaDetail = () => {
                     />
                   </Step>
                 ) : null}
-              </div>
 
-              <aside className="lg:col-span-5">
-                <div className="lg:sticky lg:top-8">
+                <div id={BOOKING_ID} className="scroll-mt-4">
                   <BookingSummary
                     puja={puja}
                     addons={data.addons}
@@ -174,18 +207,20 @@ const PoojaDetail = () => {
                     schedule={schedule}
                     code={panditCode.applied}
                   />
-                  <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
-                    After payment you'll get a WhatsApp message to share the devotee's name, gotra, place and
-                    purpose (sankalp). The video link and instructions follow before your pooja.
-                  </p>
                 </div>
-              </aside>
+              </div>
             </div>
           )}
         </div>
-      </main>
-      <SiteFooter />
-    </div>
+      </StoreShell>
+      {puja ? (
+        <StickyBuyBar
+          price={formatMoney(puja.price, puja.currency)}
+          label={schedule ? "Book now" : "Choose date & time"}
+          targetId={schedule ? BOOKING_ID : SCHEDULE_ID}
+        />
+      ) : null}
+    </>
   );
 };
 

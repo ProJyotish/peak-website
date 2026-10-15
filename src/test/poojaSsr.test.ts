@@ -31,18 +31,18 @@ const catalog: PoojaCatalog = { pujas: [puja], addons: [], generatedAt: "2026-10
 describe("pooja SSR seeding", () => {
   it("seeds the detail query for a pooja page and the catalog for the index", () => {
     const detail = new QueryClient();
-    seedPoojaQueries(detail, catalog, "/pooja/mundan-sanskar-puja/");
+    seedPoojaQueries(detail, catalog, "/store/pooja/mundan-sanskar-puja/");
     expect(detail.getQueryData(poojaKeys.detail(puja.slug))).toEqual({ puja, addons: [] });
     expect(detail.getQueryData(poojaKeys.catalog)).toBeUndefined();
 
     const index = new QueryClient();
-    seedPoojaQueries(index, catalog, "/pooja");
+    seedPoojaQueries(index, catalog, "/store/pooja");
     expect(index.getQueryData(poojaKeys.catalog)).toEqual(catalog);
   });
 
   it("marks seeded data with the catalog time so the client refetches it", () => {
     const client = new QueryClient();
-    seedPoojaQueries(client, catalog, "/pooja/mundan-sanskar-puja");
+    seedPoojaQueries(client, catalog, "/store/pooja/mundan-sanskar-puja");
     const state = client.getQueryState(poojaKeys.detail(puja.slug));
     expect(state?.dataUpdatedAt).toBe(Date.parse(catalog.generatedAt));
   });
@@ -57,7 +57,7 @@ describe("pooja SSR seeding", () => {
 describe("pooja sitemap entries", () => {
   it("lists each pooja with its Shopify updatedAt as lastmod", () => {
     const xml = buildSitemapXml([], { poojas: [{ slug: puja.slug, lastmod: puja.updatedAt }] });
-    expect(xml).toContain("<loc>https://peaklife.me/pooja/mundan-sanskar-puja/</loc>");
+    expect(xml).toContain("<loc>https://peaklife.me/store/pooja/mundan-sanskar-puja/</loc>");
     expect(xml).toMatch(/pooja\/mundan-sanskar-puja\/<\/loc>\s*<lastmod>2026-09-30<\/lastmod>/);
   });
 });

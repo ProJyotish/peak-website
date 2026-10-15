@@ -60,21 +60,6 @@ const Contact = () => {
                 Send →
               </p>
             </a>
-
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-6 border border-border rounded-sm hover:border-gold transition-colors group"
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gold/10 text-gold group-hover:bg-gold group-hover:text-ink transition-colors">
-                <MessageCircle className="h-6 w-6" />
-              </div>
-              <div className="flex-1">
-                <p className="font-mono text-xs uppercase tracking-[0.18em] text-clay mb-1">WhatsApp</p>
-                <p className="text-ink">Chat with us instantly</p>
-              </div>
-            </a>
           </div>
         </div>
       </main>

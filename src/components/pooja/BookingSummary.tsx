@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { appContact } from "@/lib/embed";
 import {
   createPoojaCheckout,
   formatMoney,
@@ -46,6 +47,14 @@ export function BookingSummary({ puja, addons, selectedAddons, schedule, code = 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+
+  // After mount, not in the initial state: the page is prerendered without it.
+  useEffect(() => {
+    const contact = appContact();
+    if (!contact) return;
+    if (contact.name) setName((v) => v || contact.name);
+    if (contact.phone) setPhone((v) => v || contact.phone);
+  }, []);
 
   const lines = selectedAddons.flatMap((s) => {
     const addon = addons.find((a) => a.id === s.addonId);

@@ -2,15 +2,34 @@
 <html lang="en">
   <head>
     <!-- Peak app WebView (?embed=app, see src/lib/embed.ts): flags <html> before first paint so CSS
-         drops the site header/footer with no flash. Remembered for the tab's session because SPA links
-         and reloads lose the query. -->
+         drops the site header/footer with no flash. `?theme=dark` follows the app's dark mode, as the
+         paywall does. Both are remembered for the tab's session because SPA links and reloads lose the query.
+         `#peak_name=…&peak_phone=…` is the app user's checkout contact: stored, then stripped from the url
+         before GA / PostHog below can record it. Keep in sync with `appContact` in src/lib/embed.ts. -->
     <script>
       (function () {
         try {
-          var on = new URLSearchParams(location.search).get("embed") === "app";
+          var hash = new URLSearchParams(location.hash.slice(1));
+          if (hash.has("peak_name") || hash.has("peak_phone")) {
+            sessionStorage.setItem(
+              "peak_contact",
+              JSON.stringify({ name: hash.get("peak_name") || "", phone: hash.get("peak_phone") || "" })
+            );
+            history.replaceState(history.state, "", location.pathname + location.search);
+          }
+        } catch (e) {}
+        try {
+          var params = new URLSearchParams(location.search);
+          var root = document.documentElement;
+          var on = params.get("embed") === "app";
           if (on) sessionStorage.setItem("peak_embed", "app");
           else on = sessionStorage.getItem("peak_embed") === "app";
-          if (on) document.documentElement.setAttribute("data-embed", "app");
+          if (!on) return;
+          root.setAttribute("data-embed", "app");
+          var theme = params.get("theme");
+          if (theme) sessionStorage.setItem("peak_theme", theme);
+          else theme = sessionStorage.getItem("peak_theme");
+          if (theme === "dark") root.classList.add("dark");
         } catch (e) {}
       })();
     </script>
@@ -55,7 +74,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,0..100;1,9..144,300..900,0..100&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <meta property="og:title" content="Peak: Realise your Peak Potential" />
     <meta property="og:description" content="Jyotisha, made practical. Hour-by-hour guidance and pattern-aware goal coaching from India." />
