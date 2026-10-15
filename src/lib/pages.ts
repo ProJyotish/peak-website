@@ -22,6 +22,12 @@ export interface CmsPage {
   description: string;
   content: string;
   indexed: boolean;
+  /** Longer keyword-rich title for <title>/SERP snippet; falls back to `title` when absent. */
+  seoTitle?: string;
+  /** Primary SEO keyword this page targets, folded into the keywords meta tag. */
+  targetKeyword?: string;
+  /** Suppresses the automatic child-page card grid, for a page whose own content already links to its children. */
+  hideListing?: boolean;
 }
 
 export type FolderListItem = {
@@ -66,6 +72,9 @@ function parsePage(rel: string, raw: string): CmsPage | null {
     description: String(data.description ?? ""),
     content: content.trim(),
     indexed: pageIsIndexed(data),
+    seoTitle: data.seo_title || undefined,
+    targetKeyword: data.target_keyword || undefined,
+    hideListing: data.hide_listing === true || data.hide_listing === "true",
   };
 }
 
