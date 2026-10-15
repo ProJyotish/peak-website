@@ -93,9 +93,10 @@ export function buildSitemapXml(blogPosts = loadBlogSlugs(), opts = {}) {
       lastmod: toIsoDate(post.date),
     })),
     { loc: "/tools/astrocartography/", changefreq: "monthly", priority: "0.6" },
-    { loc: "/pooja/", changefreq: "weekly", priority: "0.7" },
+    { loc: "/store/", changefreq: "weekly", priority: "0.7" },
+    { loc: "/store/pooja/", changefreq: "weekly", priority: "0.7" },
     ...poojas.map((pooja) => ({
-      loc: `/pooja/${pooja.slug}/`,
+      loc: `/store/pooja/${pooja.slug}/`,
       changefreq: "weekly",
       priority: "0.7",
       lastmod: toIsoDate(pooja.lastmod),

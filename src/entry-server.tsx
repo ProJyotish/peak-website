@@ -11,7 +11,7 @@ export { collectPrerenderRoutes } from "@/lib/prerender-routes";
 type HelmetContext = { helmet?: HelmetServerState };
 
 export type RenderData = {
-  /** Build-time Shopify catalog snapshot; seeds `/pooja` and `/pooja/:slug`. */
+  /** Build-time Shopify catalog snapshot; seeds the store grids and `/store/pooja/:slug`. */
   poojaCatalog?: PoojaCatalog;
 };
 

@@ -1,7 +1,7 @@
 /**
  * Build-time snapshot of the Shopify pooja catalog (served by the Peak API).
  *
- * prerender.mjs fetches it once and renders `/pooja` + one page per puja from it;
+ * prerender.mjs fetches it once and renders the store + one page per puja from it;
  * postbuild.mjs reads the same snapshot for sitemap entries. The API triggers a
  * redeploy (repository_dispatch `shopify-catalog-changed`) when the catalog changes.
  */

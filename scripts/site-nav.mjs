@@ -21,7 +21,8 @@ export const STATIC_PATH_LABELS = {
   "/careers": "Careers",
   "/checkout": "Checkout",
   "/tools/astrocartography": "Astrocartography",
-  "/pooja": "Pooja",
+  "/store": "Store",
+  "/store/pooja": "Pooja",
 };
 
 export function parentPath(pathname) {

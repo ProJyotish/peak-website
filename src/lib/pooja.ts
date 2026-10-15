@@ -49,14 +49,14 @@ export type PoojaCatalog = { pujas: Pooja[]; addons: PoojaAddon[]; generatedAt: 
 
 export type PoojaSlot = { startTime: string; durationMinutes: number; available: boolean };
 export type PoojaSlotDay = { date: string; slots: PoojaSlot[] };
-export type PoojaSlots = { mode: "appointo" | "manual"; timezone: string; days: PoojaSlotDay[] };
+export type PoojaSlots = { mode: "slot" | "manual"; timezone: string; days: PoojaSlotDay[] };
 
 export const PREFERRED_WINDOWS = ["Morning", "Afternoon", "Evening"] as const;
 export type PreferredWindow = (typeof PREFERRED_WINDOWS)[number];
 
 /** What the visitor picked; exactly one of startTime / preferred* is set. */
 export type PoojaSchedule =
-  | { mode: "appointo"; startTime: string }
+  | { mode: "slot"; startTime: string }
   | { mode: "manual"; preferredDate: string; preferredWindow: PreferredWindow };
 
 export type SelectedAddon = { addonId: string; variantId: string; quantity: number };
@@ -106,10 +106,53 @@ export type PoojaOrderDetails = {
   orderName: string;
   pujaTitle: string;
   slotLabel: string | null;
-  scheduleMode: "appointo" | "manual";
+  scheduleMode: "slot" | "manual";
   addons: Array<{ title: string; variantTitle: string | null; quantity: number; price: string }>;
   detailsStatus: "pending" | "submitted";
   details: { [K in keyof PoojaDetailsFields]: string | null };
+};
+
+export type PoojaTaskStatus =
+  | "needs-assignment"
+  | "assigned"
+  | "scheduled"
+  | "awaiting-completion"
+  | "done"
+  | "cancelled";
+
+/** The pandit's view of one booking, from their WhatsApp task link. */
+export type PoojaTaskView = {
+  orderName: string;
+  pujaTitle: string;
+  status: PoojaTaskStatus;
+  slotStart: string | null;
+  slotLabel: string | null;
+  durationMinutes: number;
+  needsStartTime: boolean;
+  customerName: string | null;
+  detailsStatus: "pending" | "submitted";
+  details: PoojaOrderDetails["details"];
+  addons: PoojaOrderDetails["addons"];
+  joinToken: string | null;
+  recordingUrl: string | null;
+  completedAt: string | null;
+  canAccept: boolean;
+  canDecline: boolean;
+  canComplete: boolean;
+};
+
+export type PoojaJoinState = "unscheduled" | "early" | "open" | "ended" | "cancelled";
+
+export type PoojaJoinView = {
+  role: "devotee" | "pandit";
+  orderName: string;
+  pujaTitle: string;
+  startsAt: string | null;
+  opensAt: string | null;
+  endsAt: string | null;
+  state: PoojaJoinState;
+  url: string | null;
+  recordingUrl: string | null;
 };
 
 type Envelope<T> = { success: boolean; data?: T; message?: string | string[] };
@@ -133,11 +176,11 @@ export const poojaKeys = {
   detail: (slug: string) => ["pooja", slug] as const,
 };
 
-/** Prerender: put the build-time catalog where `/pooja` and `/pooja/:slug` read it. */
+/** Prerender: put the build-time catalog where the store grids and `/store/pooja/:slug` read it. */
 export function seedPoojaQueries(client: QueryClient, catalog: PoojaCatalog, url: string) {
   const updatedAt = Date.parse(catalog.generatedAt) || Date.now();
   const path = url.replace(/\/+$/, "") || "/";
-  if (path === ROUTES.pooja) {
+  if (path === ROUTES.store || path === ROUTES.pooja) {
     client.setQueryData(poojaKeys.catalog, catalog, { updatedAt });
     return;
   }
@@ -150,7 +193,7 @@ export const fetchPoojaCatalog = () => request<PoojaCatalog>("/catalog");
 export const fetchPooja = (slug: string) =>
   request<{ puja: Pooja; addons: PoojaAddon[] }>(`/${encodeURIComponent(slug)}`);
 
-/** With a pandit code, only that pandit's Appointo slots are returned. */
+/** With a pandit code, only that pandit's slots are returned. */
 export const fetchPoojaSlots = (slug: string, code?: string | null) =>
   request<PoojaSlots>(`/${encodeURIComponent(slug)}/slots${code ? `?code=${encodeURIComponent(code)}` : ""}`);
 
@@ -195,6 +238,42 @@ export const submitPoojaDetails = (token: string, fields: PoojaDetailsFields) =>
     method: "POST",
     body: JSON.stringify(fields),
   });
+
+const taskPath = (token: string) => `/task/${encodeURIComponent(token)}`;
+
+export const fetchPoojaTask = (token: string) => request<PoojaTaskView>(taskPath(token));
+
+/** `startTime` (ISO) is required when the booking had no fixed slot. */
+export const acceptPoojaTask = (token: string, startTime?: string) =>
+  request<PoojaTaskView>(`${taskPath(token)}/accept`, {
+    method: "POST",
+    body: JSON.stringify(startTime ? { startTime } : {}),
+  });
+
+export const declinePoojaTask = (token: string, note?: string) =>
+  request<{ declined: boolean }>(`${taskPath(token)}/decline`, {
+    method: "POST",
+    body: JSON.stringify(note ? { note } : {}),
+  });
+
+export const completePoojaTask = (token: string, note?: string) =>
+  request<PoojaTaskView>(`${taskPath(token)}/complete`, {
+    method: "POST",
+    body: JSON.stringify(note ? { note } : {}),
+  });
+
+export const fetchPoojaJoin = (token: string) => request<PoojaJoinView>(`/join/${encodeURIComponent(token)}`);
+
+export function formatIstDateTime(iso: string): string {
+  return new Intl.DateTimeFormat("en-IN", {
+    timeZone: "Asia/Kolkata",
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(iso));
+}
 
 export function formatMoney(amount: number, currency = "INR"): string {
   return new Intl.NumberFormat("en-IN", {
@@ -261,8 +340,9 @@ export function poojaJsonLd(puja: Pooja): unknown[] {
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl(ROUTES.home) },
-        { "@type": "ListItem", position: 2, name: "Pooja", item: absoluteUrl(ROUTES.pooja) },
-        { "@type": "ListItem", position: 3, name: puja.title, item: url },
+        { "@type": "ListItem", position: 2, name: "Store", item: absoluteUrl(ROUTES.store) },
+        { "@type": "ListItem", position: 3, name: "Pooja", item: absoluteUrl(ROUTES.pooja) },
+        { "@type": "ListItem", position: 4, name: puja.title, item: url },
       ],
     },
   ];
