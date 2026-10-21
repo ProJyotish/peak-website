@@ -54,7 +54,6 @@ const App = () => (
       <Route path={ROUTES.legacyPooja} element={<LegacyPoojaRedirect />} />
       {POOJA_ENABLED && (
         <>
-          <Route path={ROUTES.pooja} element={<PoojaIndex />} />
           <Route path="/pooja/details/:token" element={<PoojaDetailsForm />} />
           <Route path="/pooja/task/:token" element={<PoojaTask />} />
           <Route path="/pooja/join/:token" element={<PoojaJoin />} />
