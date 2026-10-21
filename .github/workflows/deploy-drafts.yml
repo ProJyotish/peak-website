@@ -1,10 +1,10 @@
-name: Deploy drafts preview (S3 website)
+name: Deploy drafts preview (S3 / CloudFront)
 
 on:
   push:
     branches: [drafts]
 
-# Parallel to main → CloudFront prod. Preview uses S3 website hosting only.
+# Parallel to main → CloudFront prod. Staging uses S3 + CloudFront (HTTPS).
 concurrency:
   group: peak-website-drafts-deploy
   cancel-in-progress: true
@@ -37,11 +37,27 @@ jobs:
           VITE_WHATSAPP_URL: ${{ vars.VITE_WHATSAPP_URL }}
         run: npm run build
 
-      - name: Sync to S3 website bucket
+      - name: Sync to S3 / invalidate CloudFront
         env:
           AWS_DEFAULT_REGION: ap-south-1
           S3_BUCKET: ${{ vars.S3_BUCKET }}
+          CLOUDFRONT_DISTRIBUTION_ID: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
           set -euo pipefail
+          if [[ -z "${S3_BUCKET:-}" ]]; then
+            echo "Missing staging var S3_BUCKET" >&2
+            exit 1
+          fi
+          if [[ -z "${CLOUDFRONT_DISTRIBUTION_ID:-}" ]]; then
+            echo "Missing staging var CLOUDFRONT_DISTRIBUTION_ID (run scripts/aws/setup-drafts-cloudfront.sh)" >&2
+            exit 1
+          fi
           aws s3 sync dist/ "s3://${S3_BUCKET}/" --delete --region ap-south-1
-          echo "Drafts preview → http://${S3_BUCKET}.s3-website.ap-south-1.amazonaws.com"
+          aws cloudfront create-invalidation \
+            --distribution-id "${CLOUDFRONT_DISTRIBUTION_ID}" \
+            --paths "/*"
+          DOMAIN=$(aws cloudfront get-distribution \
+            --id "${CLOUDFRONT_DISTRIBUTION_ID}" \
+            --query 'Distribution.DomainName' \
+            --output text)
+          echo "Drafts preview → https://${DOMAIN}"

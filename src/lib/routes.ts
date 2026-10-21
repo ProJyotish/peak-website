@@ -22,7 +22,10 @@ export const ROUTES = {
   poojaPage: (slug: string) => `/store/pooja/${slug}` as const,
   /** Pre-store pooja URLs, still linked from WhatsApp and ads; redirect into the store. */
   legacyPooja: "/pooja",
-  poojaDetails: (token: string) => `/pooja/details/${token}` as const,
+  /** Canonical post-checkout details URL (Shopify thank-you extension links here). */
+  poojaDetails: (token: string) => `/store/pooja/details/${token}` as const,
+  /** Older WhatsApp / email links; still served. */
+  legacyPoojaDetails: (token: string) => `/pooja/details/${token}` as const,
   poojaTask: (token: string) => `/pooja/task/${token}` as const,
   poojaJoin: (token: string) => `/pooja/join/${token}` as const,
 } as const;

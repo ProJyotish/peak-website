@@ -1,0 +1,7 @@
+{
+  "Name": "peaklife-website-drafts-oac",
+  "Description": "OAC for peaklife website drafts S3",
+  "SigningProtocol": "sigv4",
+  "SigningBehavior": "always",
+  "OriginAccessControlOriginType": "s3"
+}

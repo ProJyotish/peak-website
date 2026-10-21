@@ -46,6 +46,7 @@ const App = () => (
       <Route path={ROUTES.checkout} element={<Checkout />} />
       <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
       <Route path={ROUTES.store} element={<StoreIndex />} />
+      <Route path="/store/pooja/details/:token" element={<PoojaDetailsForm />} />
       <Route path="/store/pooja/:slug" element={<PoojaDetail />} />
       <Route path="/store/:category" element={<StoreIndex />} />
       <Route path={ROUTES.legacyPooja} element={<LegacyPoojaRedirect />} />
