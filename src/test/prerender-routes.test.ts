@@ -44,11 +44,11 @@ describe("collectPrerenderRoutes", () => {
   it("adds a page per Shopify pooja slug", () => {
     const withPoojas = collectPrerenderRoutes(["mundan-sanskar-puja", "durga-saptashati-9-paath"]);
     expect(withPoojas).toContain(ROUTES.pooja);
-    expect(withPoojas).toContain("/pooja/mundan-sanskar-puja");
-    expect(withPoojas).toContain("/pooja/durga-saptashati-9-paath");
+    expect(withPoojas).toContain(ROUTES.poojaPage("mundan-sanskar-puja"));
+    expect(withPoojas).toContain(ROUTES.poojaPage("durga-saptashati-9-paath"));
   });
 
-  it("leaves pooja out entirely when it is disabled", () => {
-    expect(routes.filter((r) => r.startsWith(ROUTES.pooja))).toEqual([]);
+  it("skips pooja detail pages when the catalog is disabled (null)", () => {
+    expect(collectPrerenderRoutes(null).filter((r) => r.startsWith(`${ROUTES.pooja}/`))).toEqual([]);
   });
 });

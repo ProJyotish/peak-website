@@ -30,7 +30,7 @@ export function collectPrerenderRoutes(poojaSlugs: string[] | null = null): stri
   for (const category of STORE_CATEGORIES) {
     routes.add(ROUTES.storeCategory(category.slug));
   }
-  for (const slug of poojaSlugs) {
+  for (const slug of poojaSlugs ?? []) {
     routes.add(ROUTES.poojaPage(slug));
   }
 

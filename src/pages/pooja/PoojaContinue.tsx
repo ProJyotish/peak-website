@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-import { SitePageLayout } from "@/components/site/SitePageLayout";
 import { SeoHead } from "@/components/site/SeoHead";
 import { fetchPoojaDetailsLink } from "@/lib/pooja";
 import { ROUTES } from "@/lib/routes";
 
-/**
- * Thank-you / invoice handoff: Shopify only has the order id at payment time.
- * We exchange it for a signed details token, then land on the form.
- */
+/** Shopify thank-you handoff: exchange order id → signed details URL, then redirect. */
 const PoojaContinue = () => {
   const { orderId = "" } = useParams<{ orderId: string }>();
   const [token, setToken] = useState<string | null>(null);
@@ -39,26 +35,14 @@ const PoojaContinue = () => {
 
   return (
     <>
-      <SeoHead
-        title="Pooja details · Peak"
-        description="Opening your pooja details form."
-        keywords={[]}
-        path={ROUTES.poojaContinue(orderId)}
-        noindex
-      />
-      <SitePageLayout
-        eyebrow="Pooja"
-        title="Pooja details"
-        backTo={{ href: ROUTES.pooja, label: "Poojas" }}
-      >
+      <SeoHead title="Peak" description="" keywords={[]} path={ROUTES.poojaContinue(orderId)} noindex />
+      <div className="flex min-h-dvh items-center justify-center bg-parchment px-6">
         {error ? (
           <p className="text-sm text-muted-foreground">{error}</p>
         ) : (
-          <p className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin" /> Opening your booking…
-          </p>
+          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" aria-label="Loading" />
         )}
-      </SitePageLayout>
+      </div>
     </>
   );
 };
