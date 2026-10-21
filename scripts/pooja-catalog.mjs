@@ -59,8 +59,3 @@ export async function fetchPoojaCatalog() {
 export function readPoojaCatalog() {
   return existsSync(SNAPSHOT) ? JSON.parse(readFileSync(SNAPSHOT, "utf8")) : EMPTY;
 }
-
-/** @returns {{ slug: string, lastmod?: string }[]} */
-export function poojaSitemapEntries(catalog = readPoojaCatalog()) {
-  return catalog.pujas.map((p) => ({ slug: p.slug, lastmod: p.updatedAt }));
-}

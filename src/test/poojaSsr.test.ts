@@ -55,9 +55,9 @@ describe("pooja SSR seeding", () => {
 });
 
 describe("pooja sitemap entries", () => {
-  it("lists each pooja with its Shopify updatedAt as lastmod", () => {
-    const xml = buildSitemapXml([], { poojas: [{ slug: puja.slug, lastmod: puja.updatedAt }] });
-    expect(xml).toContain("<loc>https://peaklife.me/store/pooja/mundan-sanskar-puja/</loc>");
-    expect(xml).toMatch(/pooja\/mundan-sanskar-puja\/<\/loc>\s*<lastmod>2026-09-30<\/lastmod>/);
+  it("omits store / pooja catalog URLs from the sitemap", () => {
+    const xml = buildSitemapXml([]);
+    expect(xml).not.toContain("/store/");
+    expect(xml).not.toContain("/pooja/");
   });
 });
