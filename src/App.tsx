@@ -22,6 +22,7 @@ import StoreIndex from "./pages/store/StoreIndex.tsx";
 import LegacyPoojaRedirect from "./pages/store/LegacyPoojaRedirect.tsx";
 import PoojaDetail from "./pages/pooja/PoojaDetail.tsx";
 import PoojaDetailsForm from "./pages/pooja/PoojaDetailsForm.tsx";
+import PoojaContinue from "./pages/pooja/PoojaContinue.tsx";
 import PoojaTask from "./pages/pooja/PoojaTask.tsx";
 import PoojaJoin from "./pages/pooja/PoojaJoin.tsx";
 
@@ -47,6 +48,7 @@ const App = () => (
       <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
       <Route path={ROUTES.store} element={<StoreIndex />} />
       <Route path="/store/pooja/details/:token" element={<PoojaDetailsForm />} />
+      <Route path="/store/pooja/continue/:orderId" element={<PoojaContinue />} />
       <Route path="/store/pooja/:slug" element={<PoojaDetail />} />
       <Route path="/store/:category" element={<StoreIndex />} />
       <Route path={ROUTES.legacyPooja} element={<LegacyPoojaRedirect />} />

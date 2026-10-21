@@ -230,6 +230,11 @@ export function rememberedPoojaCode(): string | null {
 export const createPoojaCheckout = (input: PoojaCheckoutInput) =>
   request<PoojaCheckoutResult>("/checkout", { method: "POST", body: JSON.stringify(input) });
 
+export const fetchPoojaDetailsLink = (orderId: string) =>
+  request<{ token: string; url: string }>(
+    `/details-link/${encodeURIComponent(orderId)}`,
+  );
+
 export const fetchPoojaDetails = (token: string) =>
   request<PoojaOrderDetails>(`/details/${encodeURIComponent(token)}`);
 
