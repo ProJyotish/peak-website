@@ -16,9 +16,18 @@ export const ROUTES = {
   careers: "/careers",
   checkout: "/checkout",
   astrocartography: "/tools/astrocartography",
-  pooja: "/pooja",
-  poojaPage: (slug: string) => `/pooja/${slug}` as const,
-  poojaDetails: (token: string) => `/pooja/details/${token}` as const,
+  store: "/store",
+  storeCategory: (category: string) => `/store/${category}` as const,
+  pooja: "/store/pooja",
+  poojaPage: (slug: string) => `/store/pooja/${slug}` as const,
+  /** Pre-store pooja URLs, still linked from WhatsApp and ads; redirect into the store. */
+  legacyPooja: "/pooja",
+  /** Canonical post-checkout details URL (signed token). */
+  poojaDetails: (token: string) => `/store/pooja/details/${token}` as const,
+  /** Shopify Thank you handoff — exchanges order id for a signed details token. */
+  poojaContinue: (orderId: string) => `/store/pooja/continue/${orderId}` as const,
+  /** Older WhatsApp / email links; still served. */
+  legacyPoojaDetails: (token: string) => `/pooja/details/${token}` as const,
   poojaTask: (token: string) => `/pooja/task/${token}` as const,
   poojaJoin: (token: string) => `/pooja/join/${token}` as const,
 } as const;

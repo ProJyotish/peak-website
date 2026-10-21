@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { GoogleAnalytics } from "@/components/site/GoogleAnalytics";
 import { POOJA_ENABLED, ROUTES } from "@/lib/routes";
+import { AppBridge } from "@/components/site/AppBridge";
 import Index from "./pages/Index.tsx";
 import Terms from "./pages/Terms.tsx";
 import Privacy from "./pages/Privacy.tsx";
@@ -17,9 +18,11 @@ import CmsPage from "./pages/CmsPage.tsx";
 import Astrocartography from "./pages/Astrocartography.tsx";
 import ProductIndex from "./pages/ProductIndex.tsx";
 import ProductPage from "./pages/ProductPage.tsx";
-import PoojaIndex from "./pages/pooja/PoojaIndex.tsx";
+import StoreIndex from "./pages/store/StoreIndex.tsx";
+import LegacyPoojaRedirect from "./pages/store/LegacyPoojaRedirect.tsx";
 import PoojaDetail from "./pages/pooja/PoojaDetail.tsx";
 import PoojaDetailsForm from "./pages/pooja/PoojaDetailsForm.tsx";
+import PoojaContinue from "./pages/pooja/PoojaContinue.tsx";
 import PoojaTask from "./pages/pooja/PoojaTask.tsx";
 import PoojaJoin from "./pages/pooja/PoojaJoin.tsx";
 
@@ -28,6 +31,7 @@ const App = () => (
     <Toaster />
     <Sonner />
     <GoogleAnalytics />
+    <AppBridge />
     <Routes>
       <Route path={ROUTES.home} element={<Index />} />
       <Route path={ROUTES.blog} element={<Blog />} />
@@ -42,6 +46,12 @@ const App = () => (
       <Route path={ROUTES.contact} element={<Contact />} />
       <Route path={ROUTES.checkout} element={<Checkout />} />
       <Route path={ROUTES.astrocartography} element={<Astrocartography />} />
+      <Route path={ROUTES.store} element={<StoreIndex />} />
+      <Route path="/store/pooja/details/:token" element={<PoojaDetailsForm />} />
+      <Route path="/store/pooja/continue/:orderId" element={<PoojaContinue />} />
+      <Route path="/store/pooja/:slug" element={<PoojaDetail />} />
+      <Route path="/store/:category" element={<StoreIndex />} />
+      <Route path={ROUTES.legacyPooja} element={<LegacyPoojaRedirect />} />
       {POOJA_ENABLED && (
         <>
           <Route path={ROUTES.pooja} element={<PoojaIndex />} />
@@ -49,6 +59,14 @@ const App = () => (
           <Route path="/pooja/task/:token" element={<PoojaTask />} />
           <Route path="/pooja/join/:token" element={<PoojaJoin />} />
           <Route path="/pooja/:slug" element={<PoojaDetail />} />
+        </>
+      )}
+      {!POOJA_ENABLED && (
+        <>
+          <Route path="/pooja/details/:token" element={<PoojaDetailsForm />} />
+          <Route path="/pooja/task/:token" element={<PoojaTask />} />
+          <Route path="/pooja/join/:token" element={<PoojaJoin />} />
+          <Route path="/pooja/:slug" element={<LegacyPoojaRedirect />} />
         </>
       )}
       <Route path="*" element={<CmsPage />} />

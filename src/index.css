@@ -52,6 +52,47 @@
     --sidebar-border: 30 18% 80%;
     --sidebar-ring: 35 65% 46%;
   }
+
+  /* Inside the mobile app's WebView: the app's palette (AppColors), radius and Work Sans. */
+  html[data-embed="app"] {
+    --background: 41 67% 92%;        /* screenBg #F8EFDB */
+    --card: 36 65% 95%;              /* creamCard #FBF5EC */
+    --popover: 36 65% 95%;
+    --parchment-deep: 39 26% 87%;    /* creamSunken #EAE3D4 */
+    --muted-foreground: 33 11% 50%;  /* mutedWarm #8E8273 */
+    --border: 37 31% 84%;            /* dividerWarm #E2D8C8 */
+    --input: 37 31% 84%;
+    --radius: 0.75rem;
+  }
+  /* The app in dark mode (`?theme=dark`): its celestial-navy palette (peak_colors_dark.dart). */
+  html[data-embed="app"].dark {
+    color-scheme: dark;
+    --background: 227 43% 10%;       /* screenBg #0F1426 */
+    --foreground: 40 19% 91%;        /* ink #EAE7E1 */
+    --card: 225 40% 16%;             /* creamCard #182038 */
+    --card-foreground: 40 19% 91%;
+    --popover: 225 40% 16%;
+    --popover-foreground: 40 19% 91%;
+    --primary: 40 19% 91%;
+    --primary-foreground: 223 44% 13%;
+    --secondary: 225 38% 19%;
+    --secondary-foreground: 40 19% 91%;
+    --muted: 225 38% 19%;            /* creamSunken #1E2742 */
+    --muted-foreground: 229 13% 60%; /* mutedWarm #8B90A6 */
+    --accent: 39 65% 57%;            /* gold #D9A84A */
+    --gold: 39 65% 57%;
+    --clay: 40 18% 77%;              /* bodyInk #CFC8BA */
+    --ink: 40 19% 91%;
+    --parchment: 223 44% 13%;        /* cream #121A2E, text on ink/gold fills */
+    --parchment-deep: 225 38% 19%;
+    --border: 225 32% 23%;           /* dividerWarm #28314D */
+    --input: 225 32% 23%;
+    --ring: 39 65% 57%;
+  }
+  html[data-embed="app"] body,
+  html[data-embed="app"] .font-mono {
+    font-family: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  }
 }
 
 @layer base {

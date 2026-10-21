@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# One-time: create public S3 website bucket for drafts preview (no CloudFront).
+# One-time: create drafts S3 bucket. Prefer HTTPS via setup-drafts-cloudfront.sh
+# (S3 website endpoints cannot terminate trusted SSL).
 set -euo pipefail
 
 AWS_PROFILE="${AWS_PROFILE:-Peak}"

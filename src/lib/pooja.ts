@@ -176,11 +176,11 @@ export const poojaKeys = {
   detail: (slug: string) => ["pooja", slug] as const,
 };
 
-/** Prerender: put the build-time catalog where `/pooja` and `/pooja/:slug` read it. */
+/** Prerender: put the build-time catalog where the store grids and `/store/pooja/:slug` read it. */
 export function seedPoojaQueries(client: QueryClient, catalog: PoojaCatalog, url: string) {
   const updatedAt = Date.parse(catalog.generatedAt) || Date.now();
   const path = url.replace(/\/+$/, "") || "/";
-  if (path === ROUTES.pooja) {
+  if (path === ROUTES.store || path === ROUTES.pooja) {
     client.setQueryData(poojaKeys.catalog, catalog, { updatedAt });
     return;
   }
@@ -229,6 +229,11 @@ export function rememberedPoojaCode(): string | null {
 
 export const createPoojaCheckout = (input: PoojaCheckoutInput) =>
   request<PoojaCheckoutResult>("/checkout", { method: "POST", body: JSON.stringify(input) });
+
+export const fetchPoojaDetailsLink = (orderId: string) =>
+  request<{ token: string; url: string }>(
+    `/details-link/${encodeURIComponent(orderId)}`,
+  );
 
 export const fetchPoojaDetails = (token: string) =>
   request<PoojaOrderDetails>(`/details/${encodeURIComponent(token)}`);
@@ -340,8 +345,9 @@ export function poojaJsonLd(puja: Pooja): unknown[] {
       "@type": "BreadcrumbList",
       itemListElement: [
         { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl(ROUTES.home) },
-        { "@type": "ListItem", position: 2, name: "Pooja", item: absoluteUrl(ROUTES.pooja) },
-        { "@type": "ListItem", position: 3, name: puja.title, item: url },
+        { "@type": "ListItem", position: 2, name: "Store", item: absoluteUrl(ROUTES.store) },
+        { "@type": "ListItem", position: 3, name: "Pooja", item: absoluteUrl(ROUTES.pooja) },
+        { "@type": "ListItem", position: 4, name: puja.title, item: url },
       ],
     },
   ];

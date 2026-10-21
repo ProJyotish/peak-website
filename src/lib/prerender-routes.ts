@@ -2,6 +2,7 @@ import { getAllSlugs } from "@/lib/blog";
 import { getAllPages, getFolderPaths } from "@/lib/pages";
 import { PRODUCT_PAGES, productPath } from "@/lib/product";
 import { ROUTES } from "@/lib/routes";
+import { STORE_CATEGORIES } from "@/lib/store";
 
 const STATIC_ROUTES = [
   ROUTES.home,
@@ -26,11 +27,11 @@ const STATIC_ROUTES = [
 export function collectPrerenderRoutes(poojaSlugs: string[] | null = null): string[] {
   const routes = new Set<string>(STATIC_ROUTES);
 
-  if (poojaSlugs) {
-    routes.add(ROUTES.pooja);
-    for (const slug of poojaSlugs) {
-      routes.add(ROUTES.poojaPage(slug));
-    }
+  for (const category of STORE_CATEGORIES) {
+    routes.add(ROUTES.storeCategory(category.slug));
+  }
+  for (const slug of poojaSlugs) {
+    routes.add(ROUTES.poojaPage(slug));
   }
 
   for (const slug of getAllSlugs()) {
