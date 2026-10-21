@@ -35,6 +35,8 @@ jobs:
           VITE_RAZORPAY_KEY_ID: ${{ vars.VITE_RAZORPAY_KEY_ID }}
           VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
           VITE_WHATSAPP_URL: ${{ vars.VITE_WHATSAPP_URL }}
+          VITE_POOJA_ENABLED: ${{ vars.VITE_POOJA_ENABLED }}
+          POOJA_CATALOG_REQUIRED: ${{ vars.POOJA_CATALOG_REQUIRED }}
         run: npm run build
 
       - name: Sync to S3 / invalidate CloudFront

@@ -46,8 +46,8 @@ jobs:
           VITE_WHATSAPP_NUMBER: ${{ vars.VITE_WHATSAPP_NUMBER }}
           VITE_WHATSAPP_URL: ${{ vars.VITE_WHATSAPP_URL }}
           VITE_POOJA_ENABLED: ${{ vars.VITE_POOJA_ENABLED }}
-          # Re-enable once pooja is live: s3 sync --delete would drop every pooja page if the catalog fetch failed.
-          # POOJA_CATALOG_REQUIRED: "1"
+          # When "1", catalog fetch failure aborts the build (avoids s3 sync --delete wiping pooja pages).
+          POOJA_CATALOG_REQUIRED: ${{ vars.POOJA_CATALOG_REQUIRED }}
         run: npm run build
 
       - name: Sync to S3
