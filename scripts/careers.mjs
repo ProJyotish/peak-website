@@ -42,6 +42,20 @@ function countWord(n) {
   return COUNT_WORDS[n] ?? String(n);
 }
 
+/** `summary` is one paragraph (string) or several (array of strings). */
+function paragraphs(summary) {
+  return Array.isArray(summary) ? summary : [summary];
+}
+
+/** Optional "A bonus" block: nice-to-haves that should not read as requirements. */
+function bonusSection(role) {
+  if (!role.bonus?.length) return "";
+  return `
+        <h3>A bonus</h3>
+        ${bulletList(role.bonus)}
+`;
+}
+
 function bulletList(items) {
   return `<ul class="role-list">${items
     .map((item) => `<li>${esc(item)}</li>`)
@@ -65,14 +79,16 @@ function roleSection(role) {
           <div><dt>Compensation</dt><dd>${esc(role.compensation)}</dd></div>
         </dl>
 
-        <p class="role-summary">${esc(role.summary)}</p>
+        ${paragraphs(role.summary)
+          .map((text) => `<p class="role-summary">${esc(text)}</p>`)
+          .join("\n        ")}
 
         <h3>What you'll do</h3>
         ${bulletList(role.responsibilities)}
 
         <h3>What we're looking for</h3>
         ${bulletList(role.lookingFor)}
-
+${bonusSection(role)}
         <h3>What you get</h3>
         ${bulletList(role.whatYouGet)}
 
@@ -85,9 +101,12 @@ function roleSection(role) {
 function jobPostingJsonLd(roles, origin, datePosted) {
   return roles.map((role) => {
     const description = [
-      `<p>${role.summary}</p>`,
+      ...paragraphs(role.summary).map((text) => `<p>${text}</p>`),
       `<p><strong>What you'll do</strong></p><ul>${role.responsibilities.map((r) => `<li>${r}</li>`).join("")}</ul>`,
       `<p><strong>What we're looking for</strong></p><ul>${role.lookingFor.map((r) => `<li>${r}</li>`).join("")}</ul>`,
+      ...(role.bonus?.length
+        ? [`<p><strong>A bonus</strong></p><ul>${role.bonus.map((r) => `<li>${r}</li>`).join("")}</ul>`]
+        : []),
       `<p><strong>What you get</strong></p><ul>${role.whatYouGet.map((r) => `<li>${r}</li>`).join("")}</ul>`,
     ].join("");
 
@@ -109,7 +128,7 @@ function jobPostingJsonLd(roles, origin, datePosted) {
         name: "Peak",
         value: role.id,
       },
-      datePosted,
+      datePosted: role.datePosted || datePosted,
       employmentType: role.employmentType,
       hiringOrganization: {
         "@type": "Organization",
@@ -587,9 +606,9 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
       what you build ships in days rather than quarters. It also means nobody is
       going to hand you a brief and a process. You will be writing both.</p>
 
-      <p>${countWord(careers.roles.length)} roles are open. All remote. All
-      paid. Read the one you want, then use the single form at the bottom of
-      this page.</p>
+      <p>${countWord(careers.roles.length)} roles are open. All paid. Where you
+      work is listed on each one. Read the one you want, then use the single
+      form at the bottom of this page.</p>
 
       ${careers.roles.map(roleSection).join("\n")}
 
@@ -600,10 +619,10 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
     path: "careers/index.html",
     title: "Careers - Peak",
     description:
-      "Open roles at Peak: remote, paid, working directly with the founders on jyotisha built for real decisions.",
+      "Open roles at Peak: paid, remote or hybrid, working directly with the founders on jyotisha built for real decisions.",
     eyebrow: "Careers",
     heading: "Work at Peak.",
-    metaLine: `${careers.roles.length} open roles · Remote`,
+    metaLine: `${careers.roles.length} open roles`,
     backHref: "/",
     backLabel: "Home",
     extraHead: `${jsonLd}\n  <style>${PAGE_STYLES}  </style>\n`,

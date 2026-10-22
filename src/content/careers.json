@@ -9,6 +9,7 @@
       "slug": "performance-creative-associate",
       "title": "Performance Creative Associate",
       "status": "Open",
+      "datePosted": "2026-09-10",
       "commitment": "Full time",
       "employmentType": "FULL_TIME",
       "location": "Hybrid / In-office",
@@ -37,10 +38,46 @@
       "sampleHint": "Ads you actually made. A portfolio link works, or attach two or three."
     },
     {
+      "id": "PEAK-FT-02",
+      "slug": "vedic-content-writer",
+      "title": "Vedic Content Writer",
+      "status": "Open",
+      "datePosted": "2026-10-22",
+      "commitment": "Full time",
+      "employmentType": "FULL_TIME",
+      "location": "Hybrid for the right candidate, otherwise remote",
+      "remote": true,
+      "compensation": "Paid",
+      "summary": [
+        "Peak needs a writer who has read the texts. If you can write a clear page on a Vedic idea, we want to see it.",
+        "Peak is a user manual for your life, built on jyotisha. You will write the content pages that make up the Peak website, and support the research behind them."
+      ],
+      "responsibilities": [
+        "Write the content pages for peaklife.me",
+        "Write your first draft in English or Hindi. We translate Hindi drafts into English before publishing",
+        "Research the subject before you write, and support research for other content topics on the site"
+      ],
+      "lookingFor": [
+        "Real familiarity with Vedic texts, usually through study of Sanskrit, Indology or a related subject",
+        "Writing that is yours. We do not accept AI-generated copy",
+        "A passion for writing, shown in your work"
+      ],
+      "bonus": [
+        "Some exposure to jyotisha. A paper on it in your course counts"
+      ],
+      "whatYouGet": [
+        "A paid, full-time role",
+        "A byline on every article, credited on the website",
+        "Published credentials you keep"
+      ],
+      "sampleHint": "A page you wrote yourself on a Vedic idea, in English or Hindi."
+    },
+    {
       "id": "PEAK-INT-01",
       "slug": "community-outreach-associate",
       "title": "Community & Outreach Associate",
       "status": "Open",
+      "datePosted": "2026-09-10",
       "commitment": "15 hours/week",
       "employmentType": "PART_TIME",
       "location": "Remote",
@@ -71,6 +108,7 @@
       "slug": "campaign-creatives-associate",
       "title": "Campaign Creatives Associate",
       "status": "Open",
+      "datePosted": "2026-09-10",
       "commitment": "15 hours/week or full time",
       "employmentType": "PART_TIME",
       "location": "Remote",
@@ -102,6 +140,7 @@
       "slug": "writer-articles-research",
       "title": "Writer, Articles & Research",
       "status": "Open",
+      "datePosted": "2026-09-10",
       "commitment": "15 hours/week or full time",
       "employmentType": "PART_TIME",
       "location": "Remote",

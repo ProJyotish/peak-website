@@ -24,6 +24,20 @@ describe("careers data", () => {
     expect(careers.roles[0].employmentType).toBe("FULL_TIME");
   });
 
+  it("lists every full-time role before any part-time one", () => {
+    const types = careers.roles.map((r) => r.employmentType);
+    const firstPartTime = types.indexOf("PART_TIME");
+    if (firstPartTime !== -1) {
+      expect(types.slice(firstPartTime)).not.toContain("FULL_TIME");
+    }
+  });
+
+  it("gives every role a real posting date", () => {
+    for (const role of careers.roles) {
+      expect(role.datePosted, role.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    }
+  });
+
   it("uses employment types Google Jobs understands", () => {
     for (const role of careers.roles) {
       expect(["FULL_TIME", "PART_TIME", "CONTRACTOR", "INTERN"]).toContain(
@@ -63,9 +77,56 @@ describe("careers page", () => {
     );
   });
 
+  const jobPostings = [...page.extraHead.matchAll(/{"@context".*?}(?=\s*<\/script>)/g)]
+    .map((m) => JSON.parse(m[0]))
+    .filter((p) => p["@type"] === "JobPosting");
+
+  const sectionFor = (slug: string) =>
+    page.content.split(`id="${slug}"`)[1].split("</section>")[0];
+
+  it("renders A bonus only for roles that have one, in page and structured data", () => {
+    const withBonus = careers.roles.filter((r) => r.bonus?.length);
+    expect(withBonus.length).toBeGreaterThan(0);
+    for (const role of careers.roles) {
+      const posting = jobPostings.find((p) => p.identifier.value === role.id);
+      if (role.bonus?.length) {
+        expect(sectionFor(role.slug), role.id).toContain("A bonus");
+        expect(posting.description, role.id).toContain("A bonus");
+        for (const item of role.bonus) {
+          expect(sectionFor(role.slug)).toContain(item.replaceAll("&", "&amp;"));
+        }
+      } else {
+        expect(sectionFor(role.slug), role.id).not.toContain("A bonus");
+        expect(posting.description, role.id).not.toContain("A bonus");
+      }
+    }
+  });
+
+  it("renders every summary paragraph, not just the first", () => {
+    for (const role of careers.roles) {
+      const paras = Array.isArray(role.summary) ? role.summary : [role.summary];
+      for (const text of paras) {
+        expect(sectionFor(role.slug)).toContain(text.replaceAll("&", "&amp;"));
+      }
+    }
+  });
+
+  it("carries each role's own datePosted into its JobPosting", () => {
+    for (const role of careers.roles) {
+      const posting = jobPostings.find((p) => p.identifier.value === role.id);
+      expect(posting.datePosted, role.id).toBe(role.datePosted);
+    }
+  });
+
+  // This copy once said "All remote" for a page where a role had gone hybrid.
+  it("does not claim every role is remote while any role is not", () => {
+    if (careers.roles.some((r) => r.remote === false)) {
+      expect(page.content).not.toMatch(/all remote/i);
+      expect(page.metaLine).not.toMatch(/remote/i);
+    }
+  });
+
   it("never tells Google Jobs a non-remote role is fully telecommute", () => {
-    const jobPostings = [...page.extraHead.matchAll(/{"@context".*?}(?=\s*<\/script>)/g)]
-      .map((m) => JSON.parse(m[0]));
     for (const role of careers.roles) {
       const posting = jobPostings.find((p) => p.identifier.value === role.id);
       if (role.remote === false) {
