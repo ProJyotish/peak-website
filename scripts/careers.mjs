@@ -42,6 +42,20 @@ function countWord(n) {
   return COUNT_WORDS[n] ?? String(n);
 }
 
+/** "5 open roles · 2 full time · 3 part time", skipping any count that is zero. */
+function rolesSummary(roles) {
+  const count = (type) => roles.filter((r) => r.employmentType === type).length;
+  const full = count("FULL_TIME");
+  const part = count("PART_TIME");
+  return [
+    `${roles.length} open ${roles.length === 1 ? "role" : "roles"}`,
+    full ? `${full} full time` : "",
+    part ? `${part} part time` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
 /** `summary` is one paragraph (string) or several (array of strings). */
 function paragraphs(summary) {
   return Array.isArray(summary) ? summary : [summary];
@@ -622,7 +636,7 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
       "Open roles at Peak: paid, remote or hybrid, working directly with the founders on jyotisha built for real decisions.",
     eyebrow: "Careers",
     heading: "Work at Peak.",
-    metaLine: `${careers.roles.length} open roles`,
+    metaLine: rolesSummary(careers.roles),
     backHref: "/",
     backLabel: "Home",
     extraHead: `${jsonLd}\n  <style>${PAGE_STYLES}  </style>\n`,

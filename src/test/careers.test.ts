@@ -118,6 +118,19 @@ describe("careers page", () => {
     }
   });
 
+  it("splits the header count into full and part time, and the split adds up", () => {
+    const count = (type: string) =>
+      careers.roles.filter((r) => r.employmentType === type).length;
+    const full = count("FULL_TIME");
+    const part = count("PART_TIME");
+    // A CONTRACTOR or INTERN role would make the header undercount. Extend
+    // rolesSummary() in scripts/careers.mjs before adding one.
+    expect(full + part).toBe(careers.roles.length);
+    expect(page.metaLine).toBe(
+      `${careers.roles.length} open roles · ${full} full time · ${part} part time`,
+    );
+  });
+
   // This copy once said "All remote" for a page where a role had gone hybrid.
   it("does not claim every role is remote while any role is not", () => {
     if (careers.roles.some((r) => r.remote === false)) {
