@@ -7,7 +7,7 @@
  *
  * Setup is in scripts/apps-script/README.md.
  *
- * Paired with scripts/careers.mjs — if you change a field name here, change it
+ * Paired with scripts/careers.mjs: if you change a field name here, change it
  * there too.
  */
 
@@ -25,6 +25,14 @@ var SETTINGS = {
 
   // Only accept posts from these origins. Add your preview URL if you test there.
   allowedPages: ['peaklife.me', 'peaklife-website-drafts', 'localhost', '127.0.0.1'],
+
+  // Which roles are closed is read from the live site, so closing or reopening
+  // a role never needs this script redeployed. Only roles the site names as
+  // closed are refused. If the file cannot be read, the application goes
+  // through: the page already hides closed roles, and this is the backstop for
+  // a tab that was open before the role closed.
+  rolesStatusUrl: 'https://peaklife.me/careers/status.json',
+  rolesStatusCacheSeconds: 300,
 
   maxCvBytes: 5 * 1024 * 1024,
   maxSampleBytes: 10 * 1024 * 1024,
@@ -64,6 +72,11 @@ function doPost(e) {
 
     if (!pageIsAllowed(body.page)) {
       return json({ ok: false, error: 'Unrecognised origin' });
+    }
+
+    // Refuse a closed role before anything is validated or written.
+    if (closedRoleIds().indexOf(clean(body.roleId, 40)) !== -1) {
+      return json({ ok: false, code: 'role_closed', error: 'This role has closed' });
     }
 
     var name = clean(body.name, 120);
@@ -159,6 +172,27 @@ function pageIsAllowed(page) {
   return false;
 }
 
+/** Role ids the site currently marks Closed. Never throws: on any trouble, nothing is closed. */
+function closedRoleIds() {
+  if (!SETTINGS.rolesStatusUrl) return [];
+  try {
+    var cache = CacheService.getScriptCache();
+    var cached = cache.get('closedRoleIds');
+    if (cached) return JSON.parse(cached);
+
+    var response = UrlFetchApp.fetch(SETTINGS.rolesStatusUrl, { muteHttpExceptions: true });
+    if (response.getResponseCode() !== 200) return [];
+    var closed = JSON.parse(response.getContentText()).closed;
+    if (Object.prototype.toString.call(closed) !== '[object Array]') return [];
+
+    cache.put('closedRoleIds', JSON.stringify(closed), SETTINGS.rolesStatusCacheSeconds);
+    return closed;
+  } catch (err) {
+    console.error(err);
+    return [];
+  }
+}
+
 function sheet() {
   var sh = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Applications');
   if (!sh) {
@@ -224,5 +258,7 @@ function notify(row) {
 function setup() {
   sheet();
   filesFolder();
+  // Also asks Google for permission to read the site's roles file.
+  Logger.log('Closed roles right now: ' + JSON.stringify(closedRoleIds()));
   Logger.log('Ready. Now deploy: Deploy > New deployment > Web app.');
 }

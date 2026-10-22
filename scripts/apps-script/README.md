@@ -47,6 +47,26 @@ Edit the code, then **Deploy > Manage deployments > (pencil) > Version: New
 version > Deploy**. The URL stays the same. If you create a *new* deployment
 instead, you get a new URL and have to update `careers.json` again.
 
+## Closed roles
+
+Setting a role's `status` to `"Closed"` in `src/content/careers.json` removes it
+from the form's dropdown, drops it from the header count and from Google Jobs,
+and shows it as Closed at the bottom of the page.
+
+The page cannot stop a visitor whose tab was open before the role closed, or
+someone posting to this script directly. So the script also asks the site which
+roles are closed, from `https://peaklife.me/careers/status.json` (published by
+every build), and refuses them with `role_closed` before it saves anything.
+
+- Closing or reopening a role needs **no change to this script**. It reads the
+  live file, and keeps the answer for five minutes.
+- Only roles the site names as closed are refused. A brand-new role, or a site
+  outage, never blocks an applicant.
+- Adding this check needs one redeploy, and **one new permission** so the script
+  may read the site. After pasting the new code: run `setup` once and accept the
+  prompt, then Deploy > Manage deployments > (pencil) > Version: New version >
+  Deploy. The log from `setup` prints the roles currently closed.
+
 ## Checking it works
 
 Open the web app URL in a browser. You should see exactly this:
