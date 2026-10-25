@@ -41,10 +41,11 @@ export async function fetchPoojaCatalog() {
   try {
     const base = apiBase();
     if (!base) throw new Error("VITE_API_BASE_URL is not set");
-    const res = await fetch(`${base}/public/pooja/catalog`, { signal: AbortSignal.timeout(TIMEOUT_MS) });
+    const url = `${base}/public/pooja/catalog`;
+    const res = await fetch(url, { signal: AbortSignal.timeout(TIMEOUT_MS) });
     const json = await res.json().catch(() => ({}));
     if (!res.ok || !json.success || !Array.isArray(json.data?.pujas)) {
-      throw new Error(`catalog request failed (${res.status})`);
+      throw new Error(`catalog request failed (${res.status}) ${url}`);
     }
     writeSnapshot(json.data);
     return json.data;
