@@ -4,16 +4,20 @@
     <!-- Peak app WebView (?embed=app, see src/lib/embed.ts): flags <html> before first paint so CSS
          drops the site header/footer with no flash. `?theme=dark` follows the app's dark mode, as the
          paywall does. Both are remembered for the tab's session because SPA links and reloads lose the query.
-         `#peak_name=…&peak_phone=…` is the app user's checkout contact: stored, then stripped from the url
-         before GA / PostHog below can record it. Keep in sync with `appContact` in src/lib/embed.ts. -->
+         `#peak_name=…&peak_phone=…&peak_email=…` is the app user's checkout contact: stored, then stripped
+         from the url before GA / PostHog below can record it. Keep in sync with `appContact` in src/lib/embed.ts. -->
     <script>
       (function () {
         try {
           var hash = new URLSearchParams(location.hash.slice(1));
-          if (hash.has("peak_name") || hash.has("peak_phone")) {
+          if (hash.has("peak_name") || hash.has("peak_phone") || hash.has("peak_email")) {
             sessionStorage.setItem(
               "peak_contact",
-              JSON.stringify({ name: hash.get("peak_name") || "", phone: hash.get("peak_phone") || "" })
+              JSON.stringify({
+                name: hash.get("peak_name") || "",
+                phone: hash.get("peak_phone") || "",
+                email: hash.get("peak_email") || "",
+              })
             );
             history.replaceState(history.state, "", location.pathname + location.search);
           }

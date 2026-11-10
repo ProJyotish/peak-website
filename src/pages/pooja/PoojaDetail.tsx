@@ -8,6 +8,7 @@ import { AddonPicker } from "@/components/pooja/AddonPicker";
 import { BookingSummary } from "@/components/pooja/BookingSummary";
 import { CodeField } from "@/components/pooja/CodeField";
 import { SlotPicker } from "@/components/pooja/SlotPicker";
+import { VariantPicker } from "@/components/pooja/VariantPicker";
 import { ProductGallery } from "@/components/store/ProductGallery";
 import { ProductSection } from "@/components/store/ProductSection";
 import { StickyBuyBar } from "@/components/store/StickyBuyBar";
@@ -62,14 +63,32 @@ const PoojaDetail = () => {
   });
   const [schedule, setSchedule] = useState<PoojaSchedule | null>(null);
   const [selectedAddons, setSelectedAddons] = useState<SelectedAddon[]>([]);
+  const [variantId, setVariantId] = useState<string | null>(null);
 
   useEffect(() => {
     if (data?.puja) trackPooja("pooja_view", { slug, title: data.puja.title, price: data.puja.price });
   }, [data?.puja, slug]);
 
   const puja = data?.puja;
+  const variants = puja?.variants?.length ? puja.variants : puja ? [{
+    id: puja.variantId,
+    numericId: puja.numericVariantId,
+    title: "Default Title",
+    price: puja.price,
+    sku: null,
+  }] : [];
+  const selectedVariant =
+    variants.find((v) => v.id === variantId || v.numericId === variantId) ?? variants[0] ?? null;
+
+  useEffect(() => {
+    if (!puja) return;
+    setVariantId(puja.variantId);
+    setSelectedAddons([]);
+    setSchedule(null);
+  }, [puja?.id]);
+
   useAppTitle(puja?.title);
-  const panditCode = usePoojaCode(slug, selectedAddons, Boolean(puja));
+  const panditCode = usePoojaCode(slug, selectedAddons, Boolean(puja), selectedVariant?.id);
   const appliedCode = panditCode.applied?.code ?? null;
 
   // A pandit code switches to that pandit's calendar, so a slot picked before no longer applies.
@@ -142,7 +161,9 @@ const PoojaDetail = () => {
 
               <div className="order-2 space-y-5 lg:col-span-5">
                 <div>
-                  <p className="text-xl font-semibold text-ink">{formatMoney(puja.price, puja.currency)}</p>
+                  <p className="text-xl font-semibold text-ink">
+                    {formatMoney(selectedVariant?.price ?? puja.price, puja.currency)}
+                  </p>
                   <ul className="mt-4 flex flex-wrap gap-2">
                     {puja.brahmins ? (
                       <Highlight icon={Users}>
@@ -166,6 +187,16 @@ const PoojaDetail = () => {
                     </div>
                   ) : null}
                 </div>
+
+                {variants.length > 1 ? (
+                  <VariantPicker
+                    optionName={puja.optionName?.trim() || "Package"}
+                    variants={variants}
+                    value={selectedVariant?.id ?? puja.variantId}
+                    currency={puja.currency}
+                    onChange={setVariantId}
+                  />
+                ) : null}
 
                 <Step id={SCHEDULE_ID} n={1} title="Choose date & time">
                   <div className="mb-5">
@@ -206,6 +237,7 @@ const PoojaDetail = () => {
                     selectedAddons={selectedAddons}
                     schedule={schedule}
                     code={panditCode.applied}
+                    selectedVariant={selectedVariant}
                   />
                 </div>
               </div>
@@ -215,7 +247,7 @@ const PoojaDetail = () => {
       </StoreShell>
       {puja ? (
         <StickyBuyBar
-          price={formatMoney(puja.price, puja.currency)}
+          price={formatMoney(selectedVariant?.price ?? puja.price, puja.currency)}
           label={schedule ? "Book now" : "Choose date & time"}
           targetId={schedule ? BOOKING_ID : SCHEDULE_ID}
         />

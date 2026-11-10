@@ -11,6 +11,7 @@ import {
   type PoojaAddon,
   type PoojaCodeResult,
   type PoojaSchedule,
+  type PoojaVariant,
   type SelectedAddon,
 } from "@/lib/pooja";
 
@@ -21,6 +22,8 @@ type BookingSummaryProps = {
   schedule: PoojaSchedule | null;
   /** Applied pandit/discount code; its discount is priced by Shopify for this cart. */
   code?: PoojaCodeResult | null;
+  /** Selected mantra / package; defaults to the catalog's first variant. */
+  selectedVariant?: PoojaVariant | null;
 };
 
 const PHONE_RE = /^\+?[\d\s()-]{10,20}$/;
@@ -43,18 +46,37 @@ function scheduleLabel(schedule: PoojaSchedule | null): string {
 }
 
 /** Contact capture + order summary; hands off to Shopify checkout (draft-order invoice). */
-export function BookingSummary({ puja, addons, selectedAddons, schedule, code = null }: BookingSummaryProps) {
+export function BookingSummary({
+  puja,
+  addons,
+  selectedAddons,
+  schedule,
+  code = null,
+  selectedVariant = null,
+}: BookingSummaryProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
 
   // After mount, not in the initial state: the page is prerendered without it.
+  // In the Peak app WebView these come from the logged-in user (fragment → sessionStorage).
   useEffect(() => {
     const contact = appContact();
     if (!contact) return;
     if (contact.name) setName((v) => v || contact.name);
     if (contact.phone) setPhone((v) => v || contact.phone);
+    if (contact.email) setEmail((v) => v || contact.email);
   }, []);
+
+  const unit = selectedVariant ?? {
+    id: puja.variantId,
+    numericId: puja.numericVariantId,
+    title: "Default Title",
+    price: puja.price,
+    sku: null,
+  };
+  const packageLabel =
+    unit.title !== "Default Title" && (puja.variants?.length ?? 0) > 1 ? ` · ${unit.title}` : "";
 
   const lines = selectedAddons.flatMap((s) => {
     const addon = addons.find((a) => a.id === s.addonId);
@@ -64,7 +86,7 @@ export function BookingSummary({ puja, addons, selectedAddons, schedule, code = 
       variant.title === "Default Title" || addon.variants.length === 1 ? "" : ` · ${variant.title}`;
     return [{ key: addon.id, label: `${addon.title}${variantLabel}`, quantity: s.quantity, amount: variant.price * s.quantity }];
   });
-  const subtotal = puja.price + lines.reduce((sum, l) => sum + l.amount, 0);
+  const subtotal = unit.price + lines.reduce((sum, l) => sum + l.amount, 0);
   const discount = Math.min(code?.discountAmount ?? 0, subtotal);
   const total = subtotal - discount;
 
@@ -76,6 +98,7 @@ export function BookingSummary({ puja, addons, selectedAddons, schedule, code = 
     mutationFn: () =>
       createPoojaCheckout({
         slug: puja.slug,
+        variantId: unit.id,
         ...(schedule?.mode === "slot" ? { startTime: schedule.startTime } : {}),
         ...(schedule?.mode === "manual"
           ? { preferredDate: schedule.preferredDate, preferredWindow: schedule.preferredWindow }
@@ -104,8 +127,11 @@ export function BookingSummary({ puja, addons, selectedAddons, schedule, code = 
 
       <dl className="space-y-3 text-sm">
         <div className="flex justify-between gap-4">
-          <dt className="text-ink">{puja.title}</dt>
-          <dd className="font-mono">{formatMoney(puja.price, puja.currency)}</dd>
+          <dt className="text-ink">
+            {puja.title}
+            {packageLabel}
+          </dt>
+          <dd className="font-mono">{formatMoney(unit.price, puja.currency)}</dd>
         </div>
         {lines.map((l) => (
           <div key={l.key} className="flex justify-between gap-4 text-muted-foreground">

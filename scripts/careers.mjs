@@ -42,6 +42,64 @@ function countWord(n) {
   return COUNT_WORDS[n] ?? String(n);
 }
 
+/** A role takes applications only while its status is exactly "Open". */
+export function isOpen(role) {
+  return role.status === "Open";
+}
+
+/** Open roles first, closed ones after; each group keeps the order in careers.json. */
+function displayOrder(roles) {
+  return [...roles.filter(isOpen), ...roles.filter((r) => !isOpen(r))];
+}
+
+/**
+ * What the Apps Script needs to refuse a closed role. Published at
+ * /careers/status.json, so closing or reopening a role never needs the script
+ * to be redeployed.
+ */
+export function careersStatusJson(careers = loadCareers()) {
+  const ids = (open) => careers.roles.filter((r) => isOpen(r) === open).map((r) => r.id);
+  return { open: ids(true), closed: ids(false) };
+}
+
+/** "4 open roles · 1 full time · 3 part time", skipping any count that is zero. */
+function rolesSummary(roles) {
+  if (roles.length === 0) return "No open roles";
+  const count = (type) => roles.filter((r) => r.employmentType === type).length;
+  const full = count("FULL_TIME");
+  const part = count("PART_TIME");
+  return [
+    `${roles.length} open ${roles.length === 1 ? "role" : "roles"}`,
+    full ? `${full} full time` : "",
+    part ? `${part} part time` : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
+}
+
+/** The sentence under the intro that says how many roles are open. */
+function openLine(n) {
+  if (n === 0) return "No roles are open right now.";
+  if (n === 1) {
+    return "One role is open. It is paid. Read it, then use the form at the bottom of this page.";
+  }
+  return `${countWord(n)} roles are open. All paid. Where you work is listed on each one. Read the one you want, then use the single form at the bottom of this page.`;
+}
+
+/** `summary` is one paragraph (string) or several (array of strings). */
+function paragraphs(summary) {
+  return Array.isArray(summary) ? summary : [summary];
+}
+
+/** Optional "A bonus" block: nice-to-haves that should not read as requirements. */
+function bonusSection(role) {
+  if (!role.bonus?.length) return "";
+  return `
+        <h3>A bonus</h3>
+        ${bulletList(role.bonus)}
+`;
+}
+
 function bulletList(items) {
   return `<ul class="role-list">${items
     .map((item) => `<li>${esc(item)}</li>`)
@@ -49,14 +107,15 @@ function bulletList(items) {
 }
 
 function roleSection(role) {
+  const open = isOpen(role);
   return `
-      <section class="role" id="${esc(role.slug)}">
+      <section class="role${open ? "" : " role--closed"}" id="${esc(role.slug)}">
         <div class="role-head">
           <div>
             <p class="role-id">${esc(role.id)}</p>
             <h2>${esc(role.title)}</h2>
           </div>
-          <span class="role-status">${esc(role.status)}</span>
+          <span class="role-status${open ? "" : " role-status--closed"}">${esc(role.status)}</span>
         </div>
 
         <dl class="role-facts">
@@ -65,29 +124,38 @@ function roleSection(role) {
           <div><dt>Compensation</dt><dd>${esc(role.compensation)}</dd></div>
         </dl>
 
-        <p class="role-summary">${esc(role.summary)}</p>
+        ${paragraphs(role.summary)
+          .map((text) => `<p class="role-summary">${esc(text)}</p>`)
+          .join("\n        ")}
 
         <h3>What you'll do</h3>
         ${bulletList(role.responsibilities)}
 
         <h3>What we're looking for</h3>
         ${bulletList(role.lookingFor)}
-
+${bonusSection(role)}
         <h3>What you get</h3>
         ${bulletList(role.whatYouGet)}
 
-        <p class="role-apply">
+        ${
+          open
+            ? `<p class="role-apply">
           <a class="btn" href="#apply" data-role="${esc(role.id)}">apply for this role →</a>
-        </p>
+        </p>`
+            : `<p class="role-apply role-apply--closed">Applications for this role are closed.</p>`
+        }
       </section>`;
 }
 
 function jobPostingJsonLd(roles, origin, datePosted) {
   return roles.map((role) => {
     const description = [
-      `<p>${role.summary}</p>`,
+      ...paragraphs(role.summary).map((text) => `<p>${text}</p>`),
       `<p><strong>What you'll do</strong></p><ul>${role.responsibilities.map((r) => `<li>${r}</li>`).join("")}</ul>`,
       `<p><strong>What we're looking for</strong></p><ul>${role.lookingFor.map((r) => `<li>${r}</li>`).join("")}</ul>`,
+      ...(role.bonus?.length
+        ? [`<p><strong>A bonus</strong></p><ul>${role.bonus.map((r) => `<li>${r}</li>`).join("")}</ul>`]
+        : []),
       `<p><strong>What you get</strong></p><ul>${role.whatYouGet.map((r) => `<li>${r}</li>`).join("")}</ul>`,
     ].join("");
 
@@ -109,7 +177,7 @@ function jobPostingJsonLd(roles, origin, datePosted) {
         name: "Peak",
         value: role.id,
       },
-      datePosted,
+      datePosted: role.datePosted || datePosted,
       employmentType: role.employmentType,
       hiringOrganization: {
         "@type": "Organization",
@@ -177,6 +245,9 @@ const PAGE_STYLES = `
       color: var(--gold);
       white-space: nowrap;
     }
+    .role-status--closed { border-color: var(--clay); color: var(--clay); }
+    .role--closed h2 { color: var(--clay); }
+    .role-apply--closed { color: var(--clay); font-size: 0.9375rem; }
     .role-facts {
       display: flex;
       flex-wrap: wrap;
@@ -323,18 +394,30 @@ const PAGE_STYLES = `
 `;
 
 function applyFormHtml(careers) {
-  const options = careers.roles
+  const open = careers.roles.filter(isOpen);
+
+  const options = open
     .map(
       (role) =>
         `<option value="${esc(role.id)}">${esc(role.title)} (${esc(role.commitment)})</option>`,
     )
     .join("");
 
-  const sampleHints = careers.roles
+  const sampleHints = open
     .map((role) => `${role.title}: ${role.sampleHint}`)
     .join(" · ");
 
   const mailto = `mailto:${esc(careers.applyFallbackEmail)}?subject=${encodeURIComponent("Application - Peak")}`;
+
+  if (open.length === 0) {
+    return `
+      <section class="apply" id="apply">
+        <h2>Apply</h2>
+        <div class="noscript-note">
+          <p style="margin:0">Nothing is open right now. The form comes back when a role does.</p>
+        </div>
+      </section>`;
+  }
 
   if (!careers.applyEndpoint) {
     return `
@@ -450,7 +533,7 @@ function applyScript(careers) {
   var MAX_CV = ${careers.maxCvBytes};
   var MAX_SAMPLE = ${careers.maxSampleBytes};
   var ROLES = ${JSON.stringify(
-    Object.fromEntries(careers.roles.map((r) => [r.id, r.title])),
+    Object.fromEntries(careers.roles.filter(isOpen).map((r) => [r.id, r.title])),
   )};
   var FALLBACK = ${JSON.stringify(careers.applyFallbackEmail)};
 
@@ -549,6 +632,12 @@ function applyScript(careers) {
       })
       .then(function (response) { return response.json(); })
       .then(function (result) {
+        if (result && result.code === 'role_closed') {
+          // The role closed after this page loaded. Nothing was saved.
+          submit.disabled = false;
+          say('That role has just closed, so we cannot take an application for it. Pick one of the open roles instead.', 'err');
+          return;
+        }
         if (!result || !result.ok) throw new Error((result && result.error) || 'Unknown error');
         form.style.display = 'none';
         say('Your application for ' + (ROLES[roleSelect.value] || 'this role') + ' is in. We read every one ourselves. If there is a fit, you will hear from us.', 'ok');
@@ -565,11 +654,17 @@ function applyScript(careers) {
 }
 
 /** @returns {{ path: string } & Record<string, unknown>} a page for postbuild's writePage */
-export function careersPage({ origin = "https://peaklife.me", datePosted } = {}) {
-  const careers = loadCareers();
+export function careersPage({
+  origin = "https://peaklife.me",
+  datePosted,
+  careers = loadCareers(),
+} = {}) {
   const posted = datePosted || new Date().toISOString().slice(0, 10);
+  const open = careers.roles.filter(isOpen);
 
-  const jsonLd = jobPostingJsonLd(careers.roles, origin, posted)
+  // A closed role is not advertised to Google Jobs: it would stay listed as
+  // hireable until Google next recrawled.
+  const jsonLd = jobPostingJsonLd(open, origin, posted)
     .map(
       (data) =>
         `  <script type="application/ld+json">${JSON.stringify(data)}</script>`,
@@ -587,11 +682,9 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
       what you build ships in days rather than quarters. It also means nobody is
       going to hand you a brief and a process. You will be writing both.</p>
 
-      <p>${countWord(careers.roles.length)} roles are open. All remote. All
-      paid. Read the one you want, then use the single form at the bottom of
-      this page.</p>
+      <p>${openLine(open.length)}</p>
 
-      ${careers.roles.map(roleSection).join("\n")}
+      ${displayOrder(careers.roles).map(roleSection).join("\n")}
 
       ${applyFormHtml(careers)}
       ${applyScript(careers)}`;
@@ -600,10 +693,10 @@ export function careersPage({ origin = "https://peaklife.me", datePosted } = {})
     path: "careers/index.html",
     title: "Careers - Peak",
     description:
-      "Open roles at Peak: remote, paid, working directly with the founders on jyotisha built for real decisions.",
+      "Open roles at Peak: paid, remote or hybrid, working directly with the founders on jyotisha built for real decisions.",
     eyebrow: "Careers",
     heading: "Work at Peak.",
-    metaLine: `${careers.roles.length} open roles · Remote`,
+    metaLine: rolesSummary(open),
     backHref: "/",
     backLabel: "Home",
     extraHead: `${jsonLd}\n  <style>${PAGE_STYLES}  </style>\n`,

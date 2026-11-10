@@ -27,7 +27,12 @@ function useDebounced<T>(value: T, ms: number): T {
  * remembered this session, validated against Shopify for the current cart, and mirrored back into
  * the URL so the page can be shared as-is.
  */
-export function usePoojaCode(slug: string, selectedAddons: SelectedAddon[], ready: boolean) {
+export function usePoojaCode(
+  slug: string,
+  selectedAddons: SelectedAddon[],
+  ready: boolean,
+  variantId?: string | null,
+) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [code, setCode] = useState<string | null>(() => normalizePoojaCode(searchParams.get("code")));
 
@@ -42,8 +47,14 @@ export function usePoojaCode(slug: string, selectedAddons: SelectedAddon[], read
     ADDONS_DEBOUNCE_MS,
   );
   const query = useQuery({
-    queryKey: ["pooja-code", slug, code, addons],
-    queryFn: () => checkPoojaCode({ code: code as string, slug, addons }),
+    queryKey: ["pooja-code", slug, code, variantId ?? null, addons],
+    queryFn: () =>
+      checkPoojaCode({
+        code: code as string,
+        slug,
+        ...(variantId ? { variantId } : {}),
+        addons,
+      }),
     enabled: ready && Boolean(code),
     placeholderData: keepPreviousData,
     // The API throttles code checks per visitor; only that is worth retrying.

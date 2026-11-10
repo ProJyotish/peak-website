@@ -25,6 +25,10 @@ export type Pooja = {
   numericVariantId: string;
   price: number;
   currency: string;
+  /** First product option name (e.g. Mantra, Package); absent for single-variant pujas. */
+  optionName?: string | null;
+  /** All sellable variants; absent/empty on older catalog snapshots. */
+  variants?: PoojaVariant[];
   brahmins: number | null;
   tags: string[];
   bookable: boolean;
@@ -63,6 +67,8 @@ export type SelectedAddon = { addonId: string; variantId: string; quantity: numb
 
 export type PoojaCheckoutInput = {
   slug: string;
+  /** Mantra / package variant; defaults to the first catalog variant. */
+  variantId?: string;
   startTime?: string;
   preferredDate?: string;
   preferredWindow?: string;
@@ -77,6 +83,7 @@ export type PoojaCheckoutInput = {
 export type PoojaCodeInput = {
   code: string;
   slug: string;
+  variantId?: string;
   addons: Array<{ variantId: string; quantity: number }>;
 };
 

@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { blogSitemapEntries } from "./blog-posts.mjs";
 import { writeSitemap } from "./sitemap.mjs";
-import { careersPage } from "./careers.mjs";
+import { careersPage, careersStatusJson } from "./careers.mjs";
 import {
   STATIC_PATH_LABELS,
   crumbsForPath,
@@ -503,6 +503,8 @@ function writePage(page) {
 
 
 writePage(careersPage());
+// Read by the careers Apps Script so it can refuse a role marked Closed.
+writeFileSync(resolve(dist, "careers/status.json"), `${JSON.stringify(careersStatusJson())}\n`);
 
 const sitemapBlogEntries = blogSitemapEntries();
 const sitemapOpts = { domain: SITE.domain };
