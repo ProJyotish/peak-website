@@ -209,11 +209,11 @@ const Index = () => {
           <h1>{HOME.hero.title}</h1>
           <p className="lede">{HOME.hero.lede}</p>
           <div className="btn-row" style={{ justifyContent: "center" }}>
-            <a className="btn btn--primary" href={androidHero}>
-              {HOME.hero.ctaAndroid}
-            </a>
-            <a className="btn btn--on-ink" href={webHero}>
+            <a className="btn btn--primary" href={webHero}>
               {HOME.hero.ctaWeb}
+            </a>
+            <a className="btn btn--on-ink" href={androidHero}>
+              {HOME.hero.ctaAndroid}
             </a>
           </div>
           <div className="trustbar">
@@ -257,7 +257,7 @@ const Index = () => {
               </p>
               <p className="body">{product.detail}</p>
               <div className="btn-row">
-                <a className="btn btn--ghost" href={withUtm(SITE.app, `feature_${product.id}`)}>
+                <a className="btn btn--primary" href={withUtm(SITE.app, `feature_${product.id}`)}>
                   try the app
                 </a>
               </div>

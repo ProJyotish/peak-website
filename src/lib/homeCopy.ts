@@ -9,7 +9,7 @@ export const HOME = {
     lede: "Ask about work, relationships, money or timing, and get expert astrology worked out from your own chart.",
     trust: ["Instant answers", "No credit card required", "Free trial"],
     ctaAndroid: "first 5 questions free",
-    ctaWeb: "try the app free",
+    ctaWeb: "try the app",
     navCta: "try the app free",
   },
   announcement: {

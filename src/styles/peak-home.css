@@ -62,8 +62,9 @@
     border-radius: var(--radius-pill); border: 1px solid transparent;
     cursor: pointer; transition: background-color .18s ease, color .18s ease, border-color .18s ease;
   }
-  .btn--primary { background: var(--accent); color: var(--peak-cream); }
-  .btn--primary:hover { background: var(--accent-hover); }
+  /* --accent on this site is HSL channels, so a fill has to use the gold token. */
+  .btn--primary { background: var(--peak-gold); color: var(--peak-ink); border-color: var(--peak-gold); }
+  .btn--primary:hover { background: var(--peak-gold-soft); border-color: var(--peak-gold-soft); }
   .btn--ghost { background: transparent; color: var(--text-primary); border-color: var(--peak-gold-border); }
   .btn--ghost:hover { background: var(--peak-gold-tint); }
   .btn--on-ink { background: transparent; color: var(--text-on-ink); border-color: rgba(241,231,208,0.32); }
