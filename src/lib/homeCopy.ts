@@ -6,10 +6,10 @@ export const HOME = {
   },
   hero: {
     title: "No two lives come with the same user manual.",
-    lede: "Peak is an AI astrology app that helps you understand yours, with expert astrology, personalized for your everyday life.",
-    trust: ["Instant answers", "No credit card required", "Private by default"],
-    ctaAndroid: "get the android app",
-    ctaWeb: "open peak in your browser",
+    lede: "Ask about work, relationships, money or timing, and get expert astrology worked out from your own chart.",
+    trust: ["Instant answers", "No credit card required", "Free trial"],
+    ctaAndroid: "first 5 questions free",
+    ctaWeb: "try the app free",
     navCta: "try the app free",
   },
   announcement: {
