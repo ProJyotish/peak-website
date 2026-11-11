@@ -69,6 +69,8 @@ export type PoojaCheckoutInput = {
   slug: string;
   /** Mantra / package variant; defaults to the first catalog variant. */
   variantId?: string;
+  /** Brahman count for japa (line quantity). Defaults to 1. */
+  quantity?: number;
   startTime?: string;
   preferredDate?: string;
   preferredWindow?: string;
@@ -78,12 +80,15 @@ export type PoojaCheckoutInput = {
   name?: string;
   /** Pandit / discount code (Shopify discount code, optionally linked to a pandit). */
   code?: string;
+  /** `razorpay` for in-app native SDK; default `shopify` invoice URL. */
+  paymentMode?: "shopify" | "razorpay";
 };
 
 export type PoojaCodeInput = {
   code: string;
   slug: string;
   variantId?: string;
+  quantity?: number;
   addons: Array<{ variantId: string; quantity: number }>;
 };
 
@@ -96,10 +101,32 @@ export type PoojaCodeResult = {
 };
 
 export type PoojaCheckoutResult = {
+  paymentMode: "shopify" | "razorpay";
   invoiceUrl: string;
   bookingRef: string;
+  draftOrderId: string;
   draftOrderName: string;
   total: { amount: number; currency: string };
+  razorpay?: {
+    keyId: string;
+    orderId: string;
+    amount: number;
+    currency: string;
+  };
+};
+
+/** Payload the site posts to PeakBridge so the app opens razorpay_flutter. */
+export type PoojaRazorpayBridgePayload = {
+  type: "razorpay_checkout";
+  keyId: string;
+  orderId: string;
+  amount: number;
+  currency: string;
+  draftOrderId: string;
+  bookingRef: string;
+  description: string;
+  contact?: string;
+  email?: string;
 };
 
 export type PoojaDetailsFields = {
@@ -322,7 +349,7 @@ export function poojaSeoTitle(puja: Pooja): string {
 export function poojaSeoDescription(puja: Pooja): string {
   if (puja.seoDescription) return puja.seoDescription;
   const text = htmlToText(puja.descriptionHtml);
-  if (!text) return `Book ${puja.title} online, performed by Brahmins and joined live on video.`;
+  if (!text) return `Book ${puja.title} online, performed by Brahmans and joined live on video.`;
   return text.length > 160 ? `${text.slice(0, 157).replace(/\s+\S*$/, "")}…` : text;
 }
 
