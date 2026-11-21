@@ -55,21 +55,41 @@ export function PrivacyContent() {
         <p>We do not sell your personal information. We may share your data with:</p>
         <ul className="list-disc pl-5 space-y-2">
           <li>
-            <strong className="text-ink">Service Providers:</strong> Payment processors, cloud
-            hosting providers, and messaging platforms (WhatsApp, Apple) necessary to deliver our
-            services
+            <strong className="text-ink">AI providers</strong> that generate Peak&apos;s replies:
+            Amazon Web Services (Bedrock) and Anthropic.
           </li>
           <li>
-            <strong className="text-ink">Legal Requirements:</strong> When required by law, court
-            order, or government request
+            <strong className="text-ink">Anonymization provider:</strong> before any conversation is
+            used to improve Peak or shared with partners, an enterprise-grade provider under contract
+            removes personal information from it. It acts only on our instructions and keeps nothing
+            afterward.
           </li>
           <li>
-            <strong className="text-ink">Business Transfers:</strong> In connection with a merger,
-            acquisition, or sale of assets
+            <strong className="text-ink">Infrastructure and security:</strong> Amazon Web Services
+            (hosting and database) and Firebase (sign-in).
           </li>
           <li>
-            <strong className="text-ink">With Your Consent:</strong> For any other purpose with your
-            explicit permission
+            <strong className="text-ink">Analytics:</strong> PostHog and AppsFlyer. Your
+            conversations are never sent to them.
+          </li>
+          <li>
+            <strong className="text-ink">Marketing measurement:</strong> Meta, Google and AppsFlyer.
+            Your conversations are never sent to them.
+          </li>
+          <li>
+            <strong className="text-ink">Messaging:</strong> Firebase, as needed to deliver our
+            services.
+          </li>
+          <li>
+            <strong className="text-ink">Legal and safety:</strong> when required by law, or to
+            protect someone from serious harm.
+          </li>
+          <li>
+            <strong className="text-ink">Business transfers:</strong> in a merger, acquisition or
+            sale of assets, under the same commitments.
+          </li>
+          <li>
+            <strong className="text-ink">With your consent:</strong> for anything else you agree to.
           </li>
         </ul>
       </LegalSection>

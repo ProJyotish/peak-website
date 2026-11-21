@@ -24,6 +24,8 @@ export const ROUTES = {
   legacyPooja: "/pooja",
   /** Canonical post-checkout details URL (signed token). */
   poojaDetails: (token: string) => `/store/pooja/details/${token}` as const,
+  /** In-app / post-pay confirmation (relative; keep on the Store origin). */
+  poojaConfirmed: "/store/pooja/confirmed",
   /** Shopify Thank you handoff — exchanges order id for a signed details token. */
   poojaContinue: (orderId: string) => `/store/pooja/continue/${orderId}` as const,
   /** Older WhatsApp / email links; still served. */
