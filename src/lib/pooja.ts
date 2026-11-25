@@ -78,6 +78,7 @@ export type PoojaCheckoutInput = {
   name?: string;
   /** Pandit / discount code (Shopify discount code, optionally linked to a pandit). */
   code?: string;
+  userId?: string;
 };
 
 export type PoojaCodeInput = {
