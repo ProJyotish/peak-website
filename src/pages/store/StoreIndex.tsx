@@ -54,7 +54,7 @@ const StoreIndex = () => {
         title={category ? `${category.title} Online · Peak Store` : "Peak Store · Poojas & more"}
         description={
           category?.description ??
-          "Book Vedic poojas performed by experienced Brahmins, live on video, and more from Peak."
+          "Book Vedic poojas performed by experienced Brahmans, live on video, and more from Peak."
         }
         keywords={["book pooja online", "online puja booking", "vedic pooja", "peak store"]}
         path={path}

@@ -6,7 +6,7 @@ import { Chip } from "./Chip";
 
 type AddonPickerProps = {
   addons: PoojaAddon[];
-  /** Puja's Brahmin count — preselects per-Brahmin variants (e.g. Vastra Danam). */
+  /** Puja's Brahman count; preselects per-Brahman variants (e.g. Vastra Danam). */
   brahmins: number | null;
   slug: string;
   value: SelectedAddon[];

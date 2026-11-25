@@ -32,6 +32,7 @@ export function usePoojaCode(
   selectedAddons: SelectedAddon[],
   ready: boolean,
   variantId?: string | null,
+  quantity = 1,
 ) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [code, setCode] = useState<string | null>(() => normalizePoojaCode(searchParams.get("code")));
@@ -46,13 +47,15 @@ export function usePoojaCode(
     selectedAddons.map((a) => ({ variantId: a.variantId, quantity: a.quantity })),
     ADDONS_DEBOUNCE_MS,
   );
+  const qty = Math.min(100, Math.max(1, quantity));
   const query = useQuery({
-    queryKey: ["pooja-code", slug, code, variantId ?? null, addons],
+    queryKey: ["pooja-code", slug, code, variantId ?? null, qty, addons],
     queryFn: () =>
       checkPoojaCode({
         code: code as string,
         slug,
         ...(variantId ? { variantId } : {}),
+        quantity: qty,
         addons,
       }),
     enabled: ready && Boolean(code),

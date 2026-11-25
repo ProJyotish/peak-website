@@ -15,7 +15,7 @@ export const STORE_CATEGORIES: StoreCategory[] = [
     slug: "pooja",
     label: "Pooja",
     title: "Book a pooja",
-    description: "Performed by experienced Brahmins and joined live on video.",
+    description: "Performed by experienced Brahmans and joined live on video.",
   },
 ];
 
@@ -30,7 +30,7 @@ export type StoreItem = {
   subtitle: string | null;
   image: { url: string; altText: string | null } | null;
   price: string;
-  /** Short detail under the title, e.g. "2 Brahmins". */
+  /** Short detail under the title, e.g. "2 Brahmans". */
   meta: string | null;
   tags: string[];
 };
@@ -44,7 +44,7 @@ export function poojaToItem(p: Pooja): StoreItem {
     subtitle: p.titleHi,
     image: p.images[0] ?? null,
     price: formatMoney(p.price, p.currency),
-    meta: p.brahmins ? `${p.brahmins} Brahmin${p.brahmins > 1 ? "s" : ""}` : null,
+    meta: p.brahmins ? `${p.brahmins} Brahman${p.brahmins > 1 ? "s" : ""}` : null,
     tags: occasionTags(p),
   };
 }

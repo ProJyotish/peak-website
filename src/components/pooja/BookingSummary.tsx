@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { Loader2, Lock } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { appContact } from "@/lib/embed";
+import { postToApp } from "@/components/site/AppBridge";
+import { appContact, isAppEmbed } from "@/lib/embed";
 import {
   createPoojaCheckout,
   formatMoney,
@@ -10,6 +11,7 @@ import {
   type Pooja,
   type PoojaAddon,
   type PoojaCodeResult,
+  type PoojaRazorpayBridgePayload,
   type PoojaSchedule,
   type PoojaVariant,
   type SelectedAddon,
@@ -24,6 +26,8 @@ type BookingSummaryProps = {
   code?: PoojaCodeResult | null;
   /** Selected mantra / package; defaults to the catalog's first variant. */
   selectedVariant?: PoojaVariant | null;
+  /** Brahman count for japa (line quantity). Defaults to 1. */
+  quantity?: number;
 };
 
 const PHONE_RE = /^\+?[\d\s()-]{10,20}$/;
@@ -45,7 +49,7 @@ function scheduleLabel(schedule: PoojaSchedule | null): string {
   }).format(new Date(schedule.startTime));
 }
 
-/** Contact capture + order summary; hands off to Shopify checkout (draft-order invoice). */
+/** Contact capture + order summary; Shopify invoice on web, native Razorpay in the app. */
 export function BookingSummary({
   puja,
   addons,
@@ -53,10 +57,13 @@ export function BookingSummary({
   schedule,
   code = null,
   selectedVariant = null,
+  quantity = 1,
 }: BookingSummaryProps) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
+  const qty = Math.min(100, Math.max(1, quantity));
+  const inApp = typeof document !== "undefined" && isAppEmbed();
 
   // After mount, not in the initial state: the page is prerendered without it.
   // In the Peak app WebView these come from the logged-in user (fragment → sessionStorage).
@@ -77,6 +84,7 @@ export function BookingSummary({
   };
   const packageLabel =
     unit.title !== "Default Title" && (puja.variants?.length ?? 0) > 1 ? ` · ${unit.title}` : "";
+  const brahmanLabel = qty > 1 ? ` · ${qty} Brahmans` : "";
 
   const lines = selectedAddons.flatMap((s) => {
     const addon = addons.find((a) => a.id === s.addonId);
@@ -86,7 +94,8 @@ export function BookingSummary({
       variant.title === "Default Title" || addon.variants.length === 1 ? "" : ` · ${variant.title}`;
     return [{ key: addon.id, label: `${addon.title}${variantLabel}`, quantity: s.quantity, amount: variant.price * s.quantity }];
   });
-  const subtotal = unit.price + lines.reduce((sum, l) => sum + l.amount, 0);
+  const pujaAmount = unit.price * qty;
+  const subtotal = pujaAmount + lines.reduce((sum, l) => sum + l.amount, 0);
   const discount = Math.min(code?.discountAmount ?? 0, subtotal);
   const total = subtotal - discount;
 
@@ -99,6 +108,8 @@ export function BookingSummary({
       createPoojaCheckout({
         slug: puja.slug,
         variantId: unit.id,
+        quantity: qty,
+        paymentMode: inApp ? "razorpay" : "shopify",
         ...(schedule?.mode === "slot" ? { startTime: schedule.startTime } : {}),
         ...(schedule?.mode === "manual"
           ? { preferredDate: schedule.preferredDate, preferredWindow: schedule.preferredWindow }
@@ -118,7 +129,23 @@ export function BookingSummary({
         addons: selectedAddons.length,
         schedule_mode: schedule?.mode,
       });
-      window.location.assign(res.invoiceUrl);
+      if (res.paymentMode === "razorpay" && res.razorpay) {
+        const payload: PoojaRazorpayBridgePayload = {
+          type: "razorpay_checkout",
+          keyId: res.razorpay.keyId,
+          orderId: res.razorpay.orderId,
+          amount: res.razorpay.amount,
+          currency: res.razorpay.currency,
+          draftOrderId: res.draftOrderId,
+          bookingRef: res.bookingRef,
+          description: puja.title,
+          contact: phone.trim() || undefined,
+          email: email.trim() || undefined,
+        };
+        postToApp(payload);
+        return;
+      }
+      if (res.invoiceUrl) window.location.assign(res.invoiceUrl);
     },
   });
 
@@ -131,8 +158,9 @@ export function BookingSummary({
           <dt className="text-ink">
             {puja.title}
             {packageLabel}
+            {brahmanLabel}
           </dt>
-          <dd className="font-mono">{formatMoney(unit.price, puja.currency)}</dd>
+          <dd className="font-mono">{formatMoney(pujaAmount, puja.currency)}</dd>
         </div>
         {lines.map((l) => (
           <div key={l.key} className="flex justify-between gap-4 text-muted-foreground">

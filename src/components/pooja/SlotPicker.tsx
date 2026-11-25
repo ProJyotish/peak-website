@@ -113,7 +113,7 @@ export function SlotPicker({ slug, code = null, panditName = null, value, onChan
         <p className="text-sm text-muted-foreground">
           Pick a preferred date and time of day. Our team will confirm the exact muhurat with you.
         </p>
-        <div className="flex flex-col gap-8 sm:flex-row">
+        <div className="flex flex-col gap-8">
           <div>
             <FieldLabel>Preferred date</FieldLabel>
             <PickerFrame>
@@ -128,7 +128,7 @@ export function SlotPicker({ slug, code = null, panditName = null, value, onChan
               />
             </PickerFrame>
           </div>
-          <div>
+          <div className="min-w-0">
             <FieldLabel>Time of day</FieldLabel>
             <div className="flex flex-wrap gap-2">
               {PREFERRED_WINDOWS.map((w) => (

@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 type BridgeWindow = Window & { PeakBridge?: { postMessage: (message: string) => void } };
 
 /** Message to the app: the native WebView's JS channel, or the parent window around an iframe. */
-function postToApp(message: object) {
+export function postToApp(message: object) {
   const json = JSON.stringify(message);
   const w = window as BridgeWindow;
   if (w.PeakBridge) w.PeakBridge.postMessage(json);
