@@ -119,6 +119,7 @@ export function BookingSummary({
         ...(email.trim() ? { email: email.trim() } : {}),
         ...(name.trim() ? { name: name.trim() } : {}),
         ...(code ? { code: code.code } : {}),
+        ...(appContact()?.userId ? { userId: appContact()?.userId } : {}),
       }),
     onSuccess: (res) => {
       trackPooja("pooja_checkout_started", {
