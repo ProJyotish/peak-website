@@ -80,6 +80,7 @@ export type PoojaCheckoutInput = {
   name?: string;
   /** Pandit / discount code (Shopify discount code, optionally linked to a pandit). */
   code?: string;
+  userId?: string;
   /** `razorpay` for in-app native SDK; default `shopify` invoice URL. */
   paymentMode?: "shopify" | "razorpay";
 };

@@ -11,7 +11,7 @@ export function isAppEmbed(): boolean {
   return typeof document !== "undefined" && document.documentElement.dataset.embed === "app";
 }
 
-export type AppContact = { name: string; phone: string; email: string };
+export type AppContact = { userId?: string; name: string; phone: string; email: string };
 
 /**
  * The signed-in app user's contact, for prefilling checkout (and Shopify). The app sends them in the
@@ -24,6 +24,7 @@ export function appContact(): AppContact | null {
     if (!raw) return null;
     const parsed = JSON.parse(raw) as Partial<AppContact>;
     return {
+      userId: String(parsed.userId ?? "").trim() || undefined,
       name: String(parsed.name ?? "").trim(),
       phone: String(parsed.phone ?? "").trim(),
       email: String(parsed.email ?? "").trim(),

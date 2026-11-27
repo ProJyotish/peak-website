@@ -10,10 +10,11 @@
       (function () {
         try {
           var hash = new URLSearchParams(location.hash.slice(1));
-          if (hash.has("peak_name") || hash.has("peak_phone") || hash.has("peak_email")) {
+          if (hash.has("peak_name") || hash.has("peak_phone") || hash.has("peak_email") || hash.has("peak_user_id")) {
             sessionStorage.setItem(
               "peak_contact",
               JSON.stringify({
+                userId: hash.get("peak_user_id") || "",
                 name: hash.get("peak_name") || "",
                 phone: hash.get("peak_phone") || "",
                 email: hash.get("peak_email") || "",
