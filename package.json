@@ -9,6 +9,8 @@
     "build:peak": "vite build --mode peak && node scripts/prerender.mjs && node scripts/postbuild.mjs",
     "build:dev": "vite build --mode development",
     "sitemap": "node scripts/sitemap.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
+    "indexnow:dry": "node scripts/indexnow.mjs --dry-run",
     "lint": "eslint .",
     "preview": "vite preview",
     "preview:pages": "node scripts/serve-pages.mjs",

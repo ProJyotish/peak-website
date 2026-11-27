@@ -60,3 +60,8 @@ jobs:
           aws cloudfront create-invalidation \
             --distribution-id E3JRZB3NUFKIKH \
             --paths "/*"
+
+      # After the key file + pages are on the origin, notify IndexNow engines
+      # (Bing, Yandex, Naver, Seznam, Yep, Amazon). Google uses Search Console / sitemap.
+      - name: Submit sitemap URLs to IndexNow
+        run: node scripts/indexnow.mjs --wait-key

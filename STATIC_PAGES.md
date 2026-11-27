@@ -31,6 +31,8 @@ empty `<div id="root">`.
 | `/careers` | zero-JS form page from `scripts/careers.mjs` |
 | `404.html` | prerendered not-found page |
 | `/sitemap.xml` | regenerated every build |
+| `/llms.txt` | curated overview for AI assistants (from `public/`) |
+| `/{indexnow-key}.txt` | IndexNow ownership key (from `public/`) |
 
 ## Careers
 

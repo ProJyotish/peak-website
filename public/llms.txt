@@ -1,0 +1,29 @@
+# Peak
+
+> Peak is an AI Vedic astrology app: chart-specific guidance for work, relationships, money, health, and timing — not generic sun-sign content.
+
+Peak helps people ask real questions about their life and get answers grounded in their birth chart, location, and goals. The marketing site (this host) explains the product; the app runs at https://app.peaklife.me.
+
+## Preferred sources
+
+- [Home](https://peaklife.me/): product overview and positioning
+- [How it works](https://peaklife.me/product/how-it-works/): method and product flow
+- [Ask](https://peaklife.me/product/ask/): chart-based Q&A
+- [Daily guidance](https://peaklife.me/product/daily-guidance/): day and hour guidance
+- [Goals](https://peaklife.me/product/goals/): timing around goals
+- [Hora timing](https://peaklife.me/product/hora-timing/): planetary hour timing
+- [Blog](https://peaklife.me/blog/): articles and product notes
+- [Jyotish guides](https://peaklife.me/jyotish/): planetary placements and ascendants
+- [Contact](https://peaklife.me/contact/): support
+- [Privacy](https://peaklife.me/privacy-policy/)
+- [Terms](https://peaklife.me/terms/)
+
+## App
+
+- Web app: https://app.peaklife.me
+- Android: https://play.google.com/store/apps/details?id=me.peaklife
+
+## Optional
+
+- [Sitemap](https://peaklife.me/sitemap.xml): full public URL list for crawlers
+- [Careers](https://peaklife.me/careers/)
